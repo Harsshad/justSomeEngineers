@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "836368545332",
+    "project_id": "codefusion-f6d69",
+    "storage_bucket": "codefusion-f6d69.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:836368545332:android:c2b95c2274a504f3d5fc61",
+        "android_client_info": {
+          "package_name": "com.example.codefusion"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "836368545332-d61a5fgipi1neq2osb2a28f53vvfist6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.codefusion",
+            "certificate_hash": "24d3420d26af07d2c62f2cf0adddd424c687dafc"
+          }
+        },
+        {
+          "client_id": "836368545332-ojjgo1op24lsg76dmmgil1921s8n28o5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAweinjOYxjtCtDNEF9dU_uZjL6kBMDvio"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "836368545332-ojjgo1op24lsg76dmmgil1921s8n28o5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

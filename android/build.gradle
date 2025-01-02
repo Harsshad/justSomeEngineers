@@ -1,0 +1,43 @@
+buildscript {
+    ext.kotlin_version = '2.1.0' // Updated Kotlin version
+    repositories {
+        google()
+        mavenCentral() // Replaced jcenter() with mavenCentral()
+        // jcenter()
+    }
+    dependencies {
+        // classpath 'com.android.tools.build:gradle:3.6.3'
+        classpath 'com.android.tools.build:gradle:8.7.0' // Updated AGP version
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        // Include Google Services if needed for Firebase or other integrations
+        classpath 'com.google.gms:google-services:4.4.2'
+        
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+
+rootProject.buildDir = "../build"
+subprojects {
+    project.buildDir = "${rootProject.buildDir}/${project.name}"
+}
+// subprojects {
+//     project.evaluationDependsOn(":app")
+//     afterEvaluate { project ->
+//         if (project.name == 'google_sign_in_android') {
+//             project.tasks.withType(JavaCompile) {
+//                 enabled = false
+//             }
+//         }
+//     }
+// }
+
+tasks.register("clean", Delete) {
+    delete rootProject.buildDir
+}
+
