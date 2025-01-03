@@ -1,6 +1,7 @@
 import 'package:codefusion/resources/auth_methods.dart';
 import 'package:codefusion/screens/home_screen.dart';
 import 'package:codefusion/screens/login_screen.dart';
+import 'package:codefusion/screens/video_call_screen.dart';
 import 'package:codefusion/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -24,6 +25,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/login': (context) => const LoginScreen(),
         '/home':(context)=>const HomeScreen(),
+        '/video-call': (context)=> const VideoCallScreen(),
       },
       home: StreamBuilder(
         stream: AuthMethods().authChanges,

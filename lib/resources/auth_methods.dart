@@ -4,11 +4,45 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
+
 class AuthMethods {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   Stream<User?> get authChanges => _auth.authStateChanges();
+  User get user=>_auth.currentUser!;
+
+  //signOut method
+  Future<void> signOut() async {
+    await _auth.signOut();
+  }
+  //signUp method
+  Future<String> signUp({
+    required String name,
+    required String email,
+    required String password,
+    required BuildContext context,
+  }) async {
+    try {
+      UserCredential result = await _auth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      User? user = result.user;
+      if (user != null) {
+        await _firestore.collection('users').doc(user.uid).set({
+          'name': name,
+          'email': email,
+          'uid': user.uid,
+          'profilePhoto': '',
+        });
+      }
+      return 'Success';
+    } on FirebaseAuthException catch (e) {
+      showSnackBar(context, e.message!);
+      return e.message!;
+    }
+  }
 
   Future<bool> signInWithGoogle(BuildContext context) async {
     bool res = false;
