@@ -7,7 +7,6 @@ import 'screens/login_screen.dart';
 import 'screens/video_call_screen.dart';
 import 'utils/colors.dart';
 
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -31,18 +30,19 @@ class MyApp extends StatelessWidget {
         '/video-call': (context) => const VideoCallScreen(),
       },
       home: StreamBuilder(
-          stream: AuthMethods().authChanges,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-            if (snapshot.hasData) {
-              return const HomeScreen();
-            }
-            return const LoginScreen();
-          }),
+        stream: AuthMethods().authChanges,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+          if (snapshot.hasData) {
+            return const HomeScreen();
+          }
+          return const LoginScreen();
+        },
+      ),
     );
   }
 }
