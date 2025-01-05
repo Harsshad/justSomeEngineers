@@ -21,31 +21,21 @@
 
 <h2 align="left">🌟 Features</h2>
 <ul>
-  <li>🗣️ <b>Q&A Forums:</b> Exchange ideas, solve coding challenges, and learn from the community.</li>
-  <li>🧑‍🏫 <b>Personalized Mentorship:</b> Connect with industry experts for career guidance and technical help.</li>
-  <li>📚 <b>Resource Library:</b> A curated collection of the best coding tutorials, projects, and references.</li>
-  <li>🌍 <b>Global Events & Webinars:</b> Stay updated with developer meetups and tech conferences.</li>
-  <li>💼 <b>Job Board:</b> Explore job opportunities tailored for developers.</li>
-</ul>
-
----
-
-<h2 align="left">📷 Screenshots</h2>
-<p align="center">
-  <img src="https://via.placeholder.com/600x300?text=Dashboard" alt="Dashboard" width="45%" />
-  <img src="https://via.placeholder.com/600x300?text=Mentorship" alt="Mentorship" width="45%" />
-  <img src="https://via.placeholder.com/600x300?text=Forums" alt="Forums" width="45%" />
-</p>
-
----
-
-<h2 align="left">🔧 Tech Stack</h2>
-<ul>
-  <li><b>Frontend:</b> React.js, TypeScript, TailwindCSS</li>
-  <li><b>Backend:</b> Node.js, Express, PostgreSQL</li>
-  <li><b>Real-Time Communication:</b> WebSockets, Socket.io</li>
-  <li><b>Search:</b> Elasticsearch</li>
-  <li><b>Other:</b> WebRTC, Zoom API Integration, JWT for authentication</li>
+  <li>🗣️ <b>Q&A Forums:</b> A dedicated space for developers to ask questions, share knowledge, and solve complex coding challenges. The forums promote a collaborative approach to learning and problem-solving. <br><br>
+    <img src="https://via.placeholder.com/300x150?text=Q%26A+Forums" alt="Q&A Forums" width="50%" />
+  </li>
+  <li>🧑‍🏫 <b>Personalized Mentorship:</b> Get guidance from seasoned industry experts who provide tailored advice on career growth, technical skills, and industry trends. Mentorship sessions are designed to accelerate your learning. <br><br>
+    <img src="https://via.placeholder.com/300x150?text=Mentorship" alt="Personalized Mentorship" width="50%" />
+  </li>
+  <li>📚 <b>Resource Library:</b> Access an extensive library of high-quality coding tutorials, project templates, and technical references curated to suit all levels of expertise. <br><br>
+    <img src="https://via.placeholder.com/300x150?text=Resource+Library" alt="Resource Library" width="50%" />
+  </li>
+  <li>🌍 <b>Global Events & Webinars:</b> Stay connected with the developer community by participating in global meetups, hackathons, and live webinars featuring tech pioneers. <br><br>
+    <img src="https://via.placeholder.com/300x150?text=Events+%26+Webinars" alt="Global Events" width="50%" />
+  </li>
+  <li>💼 <b>Job Board:</b> Discover developer-centric job openings from top companies. Whether you’re a fresher or an experienced professional, find opportunities that align with your skills. <br><br>
+    <img src="https://via.placeholder.com/300x150?text=Job+Board" alt="Job Board" width="50%" />
+  </li>
 </ul>
 
 ---
@@ -79,13 +69,13 @@
 
 <h2 align="left">🤝 Connect with Us</h2>
 <p align="left">
-  <a href="https://linkedin.com/in/harsshad-sivsharan003" target="blank">
+  <a href="https://linkedin.com/in/harsshad-sivsharan003" target="_blank">
     <img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/linked-in-alt.svg" alt="LinkedIn" height="30" width="40" />
   </a>
-  <a href="https://instagram.com/the_hashborg011_" target="blank">
+  <a href="https://instagram.com/the_hashborg011_" target="_blank">
     <img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/instagram.svg" alt="Instagram" height="30" width="40" />
   </a>
-  <a href="mailto:hexadron003@gmail.com" target="blank">
+  <a href="mailto:hexadron003@gmail.com" target="_blank">
     <img align="center" src="https://cdn-icons-png.flaticon.com/512/732/732200.png" alt="Email" height="30" width="40" />
   </a>
 </p>
