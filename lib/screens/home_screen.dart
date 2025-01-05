@@ -1,67 +1,72 @@
-import 'package:codefusion/screens/history_metting_screen.dart';
 import 'package:codefusion/screens/meeting_screen.dart';
 import 'package:codefusion/utils/colors.dart';
-import 'package:codefusion/widgets/home_meeting_button.dart';
 import 'package:flutter/material.dart';
 
+
+import 'history_meeting_screen.dart';
+
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  const HomeScreen({Key? key}) : super(key: key);
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  @override
   int _page = 0;
-  onPageChanged(int page) {
-    setState(() {
-      _page = page;
-    });
+
+  onPagedChanged(int page) {
+    _page = page;
+    setState(() {});
   }
 
   List<Widget> pages = [
-    MeetingScreens(),
-    const HistoryMettingScreen(),
-    //Contacts
-    //settings
+    const MeetingScreen(),
+    const HostoryMeetingScreen(),
+    const Text('Contacts'),
+    const Text('Settings'),
   ];
 
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: backgroundColor,
         elevation: 0,
-        title: const Text("Meet & Chat"),
+        backgroundColor: backgroundColor,
+        title: const Text('Meet & Chat'),
         centerTitle: true,
       ),
       body: pages[_page],
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: footerColor,
-        selectedItemColor: Colors.white,
-        selectedIconTheme: IconThemeData(color: Colors.white),
-        unselectedItemColor: Colors.grey,
-        showUnselectedLabels: false,
-        onTap: onPageChanged,
-        currentIndex: _page,
         type: BottomNavigationBarType.fixed,
+        backgroundColor: footerColor,
+        selectedFontSize: 14,
+        unselectedFontSize: 14,
+        selectedItemColor: Colors.white,
+        unselectedItemColor: Colors.grey,
+        currentIndex: _page,
+        onTap: onPagedChanged,
         items: const [
           BottomNavigationBarItem(
-            icon: Icon(Icons.comment_bank),
-            label: 'Meet & Chat',
-          ),
+              icon: Icon(
+                Icons.comment_bank,
+              ),
+              label: 'Meet & Chat'),
           BottomNavigationBarItem(
-            icon: Icon(Icons.lock_clock),
-            label: 'Meetings',
-          ),
+              icon: Icon(
+                Icons.lock_clock,
+              ),
+              label: 'Meetings'),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person_outline),
-            label: 'Contacts',
-          ),
+              icon: Icon(
+                Icons.person_outline,
+              ),
+              label: 'Contacts'),
           BottomNavigationBarItem(
-            icon: Icon(Icons.settings_outlined),
-            label: 'Settings',
-          ),
+              icon: Icon(
+                Icons.settings,
+              ),
+              label: 'Settings'),
         ],
       ),
     );

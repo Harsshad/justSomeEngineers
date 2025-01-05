@@ -1,16 +1,17 @@
-import 'package:codefusion/utils/colors.dart';
 import 'package:flutter/material.dart';
+
+import '../utils/colors.dart';
 
 class HomeMeetingButton extends StatelessWidget {
   final VoidCallback onPressed;
   final IconData icon;
   final String text;
-  const HomeMeetingButton({
-    super.key,
-    required this.onPressed,
-    required this.icon,
-    required this.text,
-  });
+  const HomeMeetingButton(
+      {Key? key,
+      required this.onPressed,
+      required this.icon,
+      required this.text})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -20,16 +21,15 @@ class HomeMeetingButton extends StatelessWidget {
         children: [
           Container(
             decoration: BoxDecoration(
-              color: buttonColor,
-              borderRadius: BorderRadius.circular(10),
-              boxShadow: [
-                BoxShadow(
-                  blurRadius: 10,
-                  color: Colors.black.withOpacity(0.06),
-                  offset: const Offset(0, 4),
-                ),
-              ],
-            ),
+                color: buttonColor,
+                borderRadius: BorderRadius.circular(16),
+                boxShadow: [
+                  BoxShadow(
+                    blurRadius: 10,
+                    color: Colors.black.withOpacity(0.06),
+                    offset: const Offset(0, 4),
+                  )
+                ]),
             width: 60,
             height: 60,
             child: Icon(
@@ -38,11 +38,17 @@ class HomeMeetingButton extends StatelessWidget {
               size: 30,
             ),
           ),
-          const SizedBox(height: 10),
-          Text(text, style: const TextStyle(color: Colors.grey,),),
+          const SizedBox(
+            height: 10,
+          ),
+          Text(
+            text,
+            style: const TextStyle(
+              color: Colors.grey,
+            ),
+          )
         ],
       ),
     );
   }
 }
-

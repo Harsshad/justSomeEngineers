@@ -1,9 +1,11 @@
 import 'package:codefusion/resources/auth_methods.dart';
-import 'package:codefusion/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 
+
+import '../widgets/custom_button.dart';
+
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+  const LoginScreen({Key? key}) : super(key: key);
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -20,23 +22,24 @@ class _LoginScreenState extends State<LoginScreen> {
         children: [
           const Text(
             'Start or join a meeting',
-            style: TextStyle(
-              fontSize: 32,
-              fontWeight: FontWeight.bold,
-            ),
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 38.0),
-            child: Image.asset('assets/images/onboarding.jpg'),
+            padding: const EdgeInsets.symmetric(vertical: 40.0),
+            child: Image.asset(
+              'assets/images/onboarding.png',
+              fit: BoxFit.cover,
+            ),
           ),
           CustomButton(
-              text: 'Google Sign in',
-              onPressed: () async {
-                bool res = await _authMethods.signInWithGoogle(context);
-                if (res) {
-                  Navigator.pushNamed(context, '/home');
-                }
-              }),
+            text: 'Google Sign In',
+            onPressed: () async {
+              bool res = await _authMethods.signInWithGoogle(context);
+              if (res) {
+                Navigator.pushNamed(context, '/home');
+              }
+            },
+          ),
         ],
       ),
     );

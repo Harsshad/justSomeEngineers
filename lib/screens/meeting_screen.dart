@@ -1,16 +1,27 @@
 import 'dart:math';
-import 'package:codefusion/resources/jitsi_meet_methods.dart';
-import 'package:codefusion/widgets/home_meeting_button.dart';
+
+import 'package:codefusion/resources/jitsi_meet_wrapper_method.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:jitsi_meet_wrapper/jitsi_meet_wrapper.dart';
+import 'dart:core';
 
-class MeetingScreens extends StatelessWidget {
-  MeetingScreens({super.key});
+import '../resources/auth_methods.dart';
+import '../widgets/home_meeting_button.dart';
 
-  final JitsiMeetMethods _jitsiMeetMethods = JitsiMeetMethods();
+class MeetingScreen extends StatefulWidget {
+  const MeetingScreen({Key? key}) : super(key: key);
+
+  @override
+  State<MeetingScreen> createState() => _MeetingScreenState();
+}
+class _MeetingScreenState extends State<MeetingScreen> {
+  final AuthMethods _authMethods = AuthMethods();
+  final JitsiMeetMethod _jitsiMeetMethods = JitsiMeetMethod();
+
   createNewMeeting() async {
     var random = Random();
     String roomName = (random.nextInt(10000000) + 10000000).toString();
-
     _jitsiMeetMethods.createMeeting(
         roomName: roomName, isAudioMuted: true, isVideoMuted: true);
   }
@@ -27,7 +38,9 @@ class MeetingScreens extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             HomeMeetingButton(
-              onPressed: createNewMeeting,
+              onPressed: () {
+                createNewMeeting();
+              },
               text: 'New Meeting',
               icon: Icons.videocam,
             ),
@@ -49,19 +62,16 @@ class MeetingScreens extends StatelessWidget {
           ],
         ),
         const Expanded(
-          child: Center(
-            child: Text(
-              'Create/Join Meetings with just a click!',
-              style: TextStyle(
-                color: Colors.grey,
-                fontWeight: FontWeight.bold,
-                fontSize: 18,
-              ),
-            ),
+            child: Center(
+          child: Text(
+            'Create/Join Meeting with just a click',
+            style: TextStyle(
+                color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
           ),
-        ),
+        ))
       ],
     );
-    ;
   }
+
+
 }

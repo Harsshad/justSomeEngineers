@@ -1,15 +1,18 @@
-import 'package:codefusion/utils/colors.dart';
 import 'package:flutter/material.dart';
+
+import '../utils/colors.dart';
+
 
 class MeetingOption extends StatelessWidget {
   final String text;
   final bool isMute;
   final Function(bool) onChange;
-  const MeetingOption(
-      {super.key,
-      required this.text,
-      required this.isMute,
-      required this.onChange});
+  const MeetingOption({
+    Key? key,
+    required this.text,
+    required this.isMute,
+    required this.onChange,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -20,18 +23,13 @@ class MeetingOption extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(10.0),
             child: Text(
               text,
-              style: const TextStyle(
-                fontSize: 16,
-              ),
+              style: const TextStyle(fontSize: 16),
             ),
           ),
-          Switch(
-            value: isMute,
-            onChanged: onChange,
-          ),
+          Switch.adaptive(value: isMute, onChanged: onChange)
         ],
       ),
     );
