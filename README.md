@@ -21,10 +21,10 @@
 
 <h2 align="left">🌟 Features</h2>
 <ul>
-  <li>🗣️ <b>Q&A Forums:</b> Exchange ideas, solve coding challenges, and learn from the community. Find answers to your coding problems and discuss emerging tech trends in a vibrant, supportive environment. <img src="https://mediamatchmaker.co.uk/what-is-the-job-of-a-qa-sheet-and-why-do-i-need-one/" alt="Q&A Forums" width="600" /></li>
-  <li>🧑‍🏫 <b>Personalized Mentorship:</b> Connect with industry experts for career guidance and technical help. Get one-on-one mentorship tailored to your goals. <img src="https://www.freepik.com/free-photos-vectors/mentorship" alt="Mentorship" width="600" /></li>
-  <li>📚 <b>Resource Library:</b> A curated collection of the best coding tutorials, projects, and references. Stay ahead with the latest tools and techniques. <img src="https://www.wirelesscs.com/what-resources-are-best-for-learning-to-code-online" alt="Resource Library" width="600" /></li>
-  <li>💼 <b>Job Board:</b> Explore job opportunities tailored for developers. Get connected with top recruiters and secure your dream job. <img src="https://timesofindia.indiatimes.com/education/news/google-jobs-6-easy-steps-to-get-hired-by-this-search-engine-giant/articleshow/104886218.cms" alt="Job Board" width="600" /></li>
+  <li>🗣️ <b>Q&A Forums:</b> Exchange ideas, solve coding challenges, and learn from the community. Find answers to your coding problems and discuss emerging tech trends in a vibrant, supportive environment. </li>
+  <li>🧑‍🏫 <b>Personalized Mentorship:</b> Connect with industry experts for career guidance and technical help. Get one-on-one mentorship tailored to your goals. </li>
+  <li>📚 <b>Resource Library:</b> A curated collection of the best coding tutorials, projects, and references. Stay ahead with the latest tools and techniques. </li>
+  <li>💼 <b>Job Board:</b> Explore job opportunities tailored for developers. Get connected with top recruiters and secure your dream job. </li>
 </ul>
 
 ---
