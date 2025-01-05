@@ -1,9 +1,16 @@
+import 'package:codefusion/screens/profile_screen.dart';
+import 'package:codefusion/screens/resources_screen.dart';
+import 'package:codefusion/screens/settings_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 import 'resources/auth_methods.dart';
 import 'screens/home_screen.dart';
+import 'screens/job_recommend_screen.dart';
 import 'screens/login_screen.dart';
+import 'screens/main_home_screen.dart';
+import 'screens/mentorship_screen.dart';
+import 'screens/ques_ans_screen.dart';
 import 'screens/video_call_screen.dart';
 import 'utils/colors.dart';
 
@@ -26,8 +33,15 @@ class MyApp extends StatelessWidget {
       ),
       routes: {
         '/login': (context) => const LoginScreen(),
-        '/home': (context) => const HomeScreen(),
+        '/meet-home': (context) => const HomeScreen(),
         '/video-call': (context) => const VideoCallScreen(),
+        '/main-home': (context) => const MainHomeScreen(),
+        '/job-recommend': (context) => const JobRecommendScreen(),
+        '/resources': (context) => const ResourcesScreen(),
+        '/mentorship': (context) => const MentorshipScreen(),
+        '/que-answer': (context) => const QuesAnsScreen(),
+        '/settings': (context) => const SettingsScreen(),
+        '/profile': (context) => const ProfileScreen(),
       },
       home: StreamBuilder(
         stream: AuthMethods().authChanges,
@@ -38,7 +52,8 @@ class MyApp extends StatelessWidget {
             );
           }
           if (snapshot.hasData) {
-            return const HomeScreen();
+            // return const HomeScreen();
+            return const MainHomeScreen();
           }
           return const LoginScreen();
         },
