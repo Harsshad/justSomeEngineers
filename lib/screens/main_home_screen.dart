@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../resources/auth_methods.dart';
 import '../utils/colors.dart';
 
 class MainHomeScreen extends StatelessWidget {
@@ -70,10 +71,10 @@ class MainHomeScreen extends StatelessWidget {
               },
             ),
             ListTile(
-              title: const Text('Meet & Chat'),
-              leading: const Icon(Icons.group),
+              title: const Text('Chat Bot'),
+              leading: const Icon(Icons.smart_toy_outlined),
               onTap: () {
-                Navigator.pushNamed(context, '/meet-home');
+                Navigator.pushNamed(context, '/chat-bot');
               },
             ),
             ListTile(
@@ -81,6 +82,13 @@ class MainHomeScreen extends StatelessWidget {
               leading: const Icon(Icons.forum_outlined),
               onTap: () {
                 Navigator.pushNamed(context, '/que-answer');
+              },
+            ),
+            ListTile(
+              title: const Text('Meet & Chat'),
+              leading: const Icon(Icons.group),
+              onTap: () {
+                Navigator.pushNamed(context, '/meet-home');
               },
             ),
             ListTile(
@@ -98,6 +106,13 @@ class MainHomeScreen extends StatelessWidget {
               },
             ),
             ListTile(
+              title: const Text('Job Form'),
+              leading: const Icon(Icons.file_copy_rounded),
+              onTap: () {
+                Navigator.pushNamed(context, '/job-form');
+              },
+            ),
+            ListTile(
               title: const Text('Job Recommendations'),
               leading: const Icon(Icons.business_center_rounded),
               onTap: () {
@@ -108,13 +123,13 @@ class MainHomeScreen extends StatelessWidget {
               title: Text('Settings'),
               leading: Icon(Icons.settings),
               onTap: () {
-                Navigator.pushNamed(context, '/job-recommend');
+                Navigator.pushNamed(context, '/settings');
               },
             ),
-            const ListTile(
-              title: Text('Logout'),
-              leading: Icon(Icons.logout),
-              onTap: null,
+            ListTile(
+              title: const Text('Logout'),
+              leading: const Icon(Icons.logout),
+              onTap: () => AuthMethods().signOut(),
             ),
           ],
         ),

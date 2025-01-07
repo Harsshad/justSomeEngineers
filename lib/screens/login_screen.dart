@@ -21,13 +21,14 @@ class _LoginScreenState extends State<LoginScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const Text(
-            'Start or join a meeting',
+            'Start your Journey where Innovators Connect and Opportunities Ignite! 🚀 \nCodeFusion',
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            textAlign: TextAlign.center,
           ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 40.0),
             child: Image.asset(
-              'assets/images/onboarding.png',
+              'assets/images/logo.png',
               fit: BoxFit.cover,
             ),
           ),

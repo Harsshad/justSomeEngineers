@@ -10,7 +10,7 @@ class JitsiMeetMethod {
 
   final serverText = TextEditingController();
   final roomText = TextEditingController(text: "jitsi-meet-wrapper-test-room");
-  final subjectText = TextEditingController(text: "My Plugin Test Meeting");
+  final subjectText = TextEditingController(text: "Plugin Test");
   final tokenText = TextEditingController();
 
   bool isAudioMuted = true;
@@ -49,7 +49,7 @@ class JitsiMeetMethod {
       );
 
       // Start the meeting
-      await JitsiMeetWrapper.joinMeeting(
+      await JitsiMeetWrapper.joinMeeting(  //call this in video_call_screen.dart
         options: options,
         listener: JitsiMeetingListener(
           onOpened: () => debugPrint("onOpened"),

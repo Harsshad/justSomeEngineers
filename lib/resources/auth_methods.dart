@@ -4,7 +4,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-
 class AuthMethods {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -44,5 +43,13 @@ class AuthMethods {
       res = false;
     }
     return res;
+  }
+
+  void signOut() async {
+    try {
+      _auth.signOut();
+    } catch (e) {
+      print(e);
+    }
   }
 }

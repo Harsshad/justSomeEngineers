@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jitsi_meet_wrapper/jitsi_meet_wrapper.dart';
 
 
 import '../resources/auth_methods.dart';
@@ -37,6 +38,10 @@ class _VideoCallScreenState extends State<VideoCallScreen> {
   }
 
   _joinMeeting() {
+  //how can I call here join meeting method from jitsi_meet_wrapper_method.dart
+  
+  
+
     JitsiMeetMethod().createMeeting(
       roomName: meetingIdController.text,
       isAudioMuted: isAudioMuted,

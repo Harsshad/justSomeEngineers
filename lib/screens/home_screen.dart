@@ -3,6 +3,8 @@ import 'package:codefusion/utils/colors.dart';
 import 'package:flutter/material.dart';
 
 
+import '../resources/auth_methods.dart';
+import '../widgets/custom_button.dart';
 import 'history_meeting_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -23,7 +25,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   List<Widget> pages = [
     const MeetingScreen(),
-    const HostoryMeetingScreen(),
+    const HistoryMeetingScreen(),
     const Text('Contacts'),
     const Text('Settings'),
   ];
