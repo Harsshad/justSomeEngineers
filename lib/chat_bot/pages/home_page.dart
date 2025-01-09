@@ -32,7 +32,7 @@ class _BotHomePageState extends State<BotHomePage> {
             padding: !kIsWeb ? const EdgeInsets.all(8.0) : EdgeInsets.zero,
             child: Column(
               children: [
-                Expanded(
+                const Expanded(
                   child: SearchSection(),
                 ),
                 // footer

@@ -71,7 +71,7 @@ class MainHomeScreen extends StatelessWidget {
               },
             ),
             ListTile(
-              title: const Text('Chat Bot'),
+              title: const Text('CodeMate'),
               leading: const Icon(Icons.smart_toy_outlined),
               onTap: () {
                 Navigator.pushNamed(context, '/chat-bot');
@@ -103,6 +103,13 @@ class MainHomeScreen extends StatelessWidget {
               leading: const Icon(Icons.menu_book_rounded),
               onTap: () {
                 Navigator.pushNamed(context, '/resources');
+              },
+            ),
+            ListTile(
+              title: const Text('Resume'),
+              leading: const Icon(Icons.book_outlined),
+              onTap: () {
+                Navigator.pushNamed(context, '/resume');
               },
             ),
             ListTile(

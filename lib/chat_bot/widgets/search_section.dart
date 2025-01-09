@@ -69,12 +69,12 @@ class _SearchSectionState extends State<SearchSection> {
                 padding: const EdgeInsets.all(10.0),
                 child: Row(
                   children: [
-                    SearchBarButton(
+                    const SearchBarButton(
                       icon: Icons.auto_awesome_outlined,
                       text: 'Focus',
                     ),
                     const SizedBox(width: 12),
-                    SearchBarButton(
+                    const SearchBarButton(
                       icon: Icons.add_circle_outline_outlined,
                       text: 'Attach',
                     ),

@@ -1,11 +1,11 @@
 import 'package:codefusion/chat_bot/pages/home_page.dart';
+import 'package:codefusion/resume/page/resume_input_page.dart';
 import 'package:codefusion/screens/job_preference_form.dart';
 import 'package:codefusion/screens/profile_screen.dart';
 import 'package:codefusion/screens/resources_screen.dart';
 import 'package:codefusion/screens/settings_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-
 import 'resources/auth_methods.dart';
 import 'screens/home_screen.dart';
 import 'screens/job_list_screen.dart';
@@ -15,10 +15,13 @@ import 'screens/mentorship_screen.dart';
 import 'screens/ques_ans_screen.dart';
 import 'screens/video_call_screen.dart';
 import 'utils/colors.dart';
+import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MyApp());
 }
 
@@ -59,22 +62,56 @@ class MyApp extends StatelessWidget {
         '/settings': (context) => const SettingsScreen(),
         '/profile': (context) => const ProfileScreen(),
         '/chat-bot': (context) => const BotHomePage() ,
+        '/resume': (context) => const ResumeInputPage() ,
       },
       home: StreamBuilder(
-        stream: AuthMethods().authChanges,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-          if (snapshot.hasData) {
-            // return const HomeScreen();
-            return const MainHomeScreen();
-          }
-          return const LoginScreen();
-        },
-      ),
+  stream: AuthMethods().authChanges,
+  builder: (context, snapshot) {
+    if (snapshot.connectionState == ConnectionState.waiting) {
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+    }
+    
+    // Handling if the snapshot has data (authenticated user)
+    if (snapshot.hasData) {
+      return const MainHomeScreen();
+    }
+    
+    // Handling if the snapshot has no data (not authenticated)
+    if (!snapshot.hasData) {
+      return const LoginScreen();
+      // return const MainHomeScreen(); // Or LoginScreen() if that's what you prefer
+    }
+
+    // In case of error, display an error message
+    if (snapshot.hasError) {
+      return Center(
+        child: Text('Error: ${snapshot.error}'),
+      );
+    }
+
+    // If none of the above cases are met, fallback to default widget
+    return const MainHomeScreen(); // Or LoginScreen()
+  },
+),
+
+      // home: StreamBuilder(
+      //   stream: AuthMethods().authChanges,
+      //   builder: (context, snapshot) {
+      //     if (snapshot.connectionState == ConnectionState.waiting) {
+      //       return const Center(
+      //         child: CircularProgressIndicator(),
+      //       );
+      //     }
+      //     if (snapshot.hasData) {
+      //       // return const HomeScreen();
+      //       return const MainHomeScreen();
+      //     }
+      //     // return const LoginScreen();
+      //     return const MainHomeScreen();
+      //   },
+      // ),
     );
   }
 }

@@ -35,7 +35,8 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_markdown: ^0.7.5
-  google_fonts: ^6.2.1
+  flutter_resume_template: ^1.2.1
+  google_fonts: 4.0.5
   google_sign_in: ^6.2.2
   intl: ^0.20.1
   jitsi_meet_wrapper: ^0.2.0+1
