@@ -1,11 +1,12 @@
-import 'package:codefusion/screens/meeting_screen.dart';
-import 'package:codefusion/utils/colors.dart';
+
 import 'package:flutter/material.dart';
 
 
+import '../Mentorship/screens/history_meeting_screen.dart';
+import '../Mentorship/screens/meeting_screen.dart';
+import '../mentorship/utils/colors.dart';
 import '../resources/auth_methods.dart';
-import '../widgets/custom_button.dart';
-import 'history_meeting_screen.dart';
+
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);

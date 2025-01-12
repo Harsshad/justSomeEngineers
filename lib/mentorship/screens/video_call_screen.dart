@@ -1,11 +1,12 @@
+import 'package:codefusion/mentorship/resources/jitsi_meet_wrapper_method.dart';
+import 'package:codefusion/mentorship/utils/colors.dart';
+import 'package:codefusion/mentorship/widgets/meeting_option.dart';
 import 'package:flutter/material.dart';
 import 'package:jitsi_meet_wrapper/jitsi_meet_wrapper.dart';
+import '../../resources/auth_methods.dart';
 
 
-import '../resources/auth_methods.dart';
-import '../resources/jitsi_meet_wrapper_method.dart';
-import '../utils/colors.dart';
-import '../widgets/meeting_option.dart';
+
 
 class VideoCallScreen extends StatefulWidget {
   const VideoCallScreen({Key? key}) : super(key: key);

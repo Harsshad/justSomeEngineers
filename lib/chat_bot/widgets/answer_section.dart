@@ -57,7 +57,7 @@ As play concluded for the day, Australia stood at **311/6**, with Steve Smith ho
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Perplexity',
+          'CodeMate',
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,

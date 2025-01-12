@@ -1,13 +1,18 @@
 import 'dart:math';
 
-import 'package:codefusion/resources/jitsi_meet_wrapper_method.dart';
+import 'package:codefusion/mentorship/resources/jitsi_meet_wrapper_method.dart';
+import 'package:codefusion/mentorship/widgets/home_meeting_button.dart';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:jitsi_meet_wrapper/jitsi_meet_wrapper.dart';
 import 'dart:core';
 
-import '../resources/auth_methods.dart';
-import '../widgets/home_meeting_button.dart';
+import '../../resources/auth_methods.dart';
+
+
+
+
 
 class MeetingScreen extends StatefulWidget {
   const MeetingScreen({Key? key}) : super(key: key);

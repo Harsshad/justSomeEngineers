@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../mentorship/utils/colors.dart';
 import '../resources/auth_methods.dart';
-import '../utils/colors.dart';
+
 
 class MainHomeScreen extends StatelessWidget {
   const MainHomeScreen({Key? key}) : super(key: key);

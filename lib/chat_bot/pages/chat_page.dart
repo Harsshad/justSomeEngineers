@@ -30,26 +30,26 @@ class ChatPage extends StatelessWidget {
                   children: [
                     Text(
                       question,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 40,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SizedBox(height: 24),
-                    SourcesSection(),
-                    SizedBox(height: 24),
-                    AnswerSection(),
+                    const SizedBox(height: 24),
+                    const SourcesSection(),
+                    const SizedBox(height: 24),
+                    const AnswerSection(),
                   ],
                 ),
               ),
             ),
           ),
           kIsWeb
-              ? Placeholder(
+              ? const Placeholder(
                   strokeWidth: 0,
                   color: AppColors.background,
                 )
-              : SizedBox(),
+              : const SizedBox(),
         ],
       ),
     );
