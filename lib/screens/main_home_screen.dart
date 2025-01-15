@@ -1,7 +1,11 @@
+
+import 'package:codefusion/global_resources/auth/auth_methods.dart';
 import 'package:flutter/material.dart';
 
-import '../mentorship/utils/colors.dart';
-import '../resources/auth_methods.dart';
+import '../meet & chat/utils/colors.dart';
+import '../profile & Q&A/core/constants/constants.dart';
+
+
 
 
 class MainHomeScreen extends StatelessWidget {
@@ -10,15 +14,17 @@ class MainHomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      
       appBar: AppBar(
+
         leading: Builder(
           builder: (context) => IconButton(
             onPressed: () {
               Scaffold.of(context).openDrawer();
             },
-            icon: const Icon(
+            icon: Icon(
               Icons.menu,
-              color: Colors.white,
+              color: Theme.of(context).colorScheme.inversePrimary,
             ),
           ),
         ),
@@ -37,15 +43,16 @@ class MainHomeScreen extends StatelessWidget {
         ],
       ),
       drawer: Drawer(
+        backgroundColor: Theme.of(context).colorScheme.background,
         child: ListView(
           children: [
             DrawerHeader(
-              decoration: const BoxDecoration(
-                color: backgroundColor,
+              decoration: BoxDecoration(
+                // color: lightMode.primaryColor,
               ),
               child: Column(
                 children: [
-                  Image.asset('assets/images/logo.png', height: 80),
+                  Image.asset(Constants.logoPath, height: 80),
                   const Text(
                     'CodeFusion',
                     style: TextStyle(
@@ -61,6 +68,7 @@ class MainHomeScreen extends StatelessWidget {
               title: const Text('Home'),
               leading: const Icon(Icons.home),
               onTap: () {
+                Navigator.pop(context);
                 Navigator.pushNamed(context, '/main-home');
               },
             ),
@@ -68,6 +76,7 @@ class MainHomeScreen extends StatelessWidget {
               title: Text('Profile'),
               leading: Icon(Icons.person),
               onTap: () {
+                Navigator.pop(context);
                 Navigator.pushNamed(context, '/profile');
               },
             ),
@@ -75,6 +84,7 @@ class MainHomeScreen extends StatelessWidget {
               title: const Text('CodeMate'),
               leading: const Icon(Icons.smart_toy_outlined),
               onTap: () {
+                Navigator.pop(context);
                 Navigator.pushNamed(context, '/chat-bot');
               },
             ),
@@ -82,6 +92,7 @@ class MainHomeScreen extends StatelessWidget {
               title: const Text('Ques & Ans'),
               leading: const Icon(Icons.forum_outlined),
               onTap: () {
+                Navigator.pop(context);
                 Navigator.pushNamed(context, '/que-answer');
               },
             ),
@@ -89,6 +100,7 @@ class MainHomeScreen extends StatelessWidget {
               title: const Text('Meet & Chat'),
               leading: const Icon(Icons.group),
               onTap: () {
+                Navigator.pop(context);
                 Navigator.pushNamed(context, '/meet-home');
               },
             ),
@@ -96,6 +108,7 @@ class MainHomeScreen extends StatelessWidget {
               title: const Text('Mentorship'),
               leading: const Icon(Icons.school_rounded),
               onTap: () {
+                Navigator.pop(context);
                 Navigator.pushNamed(context, '/mentorship');
               },
             ),
@@ -103,6 +116,7 @@ class MainHomeScreen extends StatelessWidget {
               title: const Text('Resources'),
               leading: const Icon(Icons.menu_book_rounded),
               onTap: () {
+                Navigator.pop(context);
                 Navigator.pushNamed(context, '/resources');
               },
             ),
@@ -110,6 +124,7 @@ class MainHomeScreen extends StatelessWidget {
               title: const Text('Resume'),
               leading: const Icon(Icons.book_outlined),
               onTap: () {
+                Navigator.pop(context);
                 Navigator.pushNamed(context, '/resume');
               },
             ),
@@ -117,6 +132,7 @@ class MainHomeScreen extends StatelessWidget {
               title: const Text('Job Form'),
               leading: const Icon(Icons.file_copy_rounded),
               onTap: () {
+                Navigator.pop(context);
                 Navigator.pushNamed(context, '/job-form');
               },
             ),
@@ -124,6 +140,7 @@ class MainHomeScreen extends StatelessWidget {
               title: const Text('Job Recommendations'),
               leading: const Icon(Icons.business_center_rounded),
               onTap: () {
+                Navigator.pop(context);
                 Navigator.pushNamed(context, '/job-recommend');
               },
             ),
@@ -131,6 +148,7 @@ class MainHomeScreen extends StatelessWidget {
               title: Text('Settings'),
               leading: Icon(Icons.settings),
               onTap: () {
+                Navigator.pop(context);
                 Navigator.pushNamed(context, '/settings');
               },
             ),
@@ -138,11 +156,13 @@ class MainHomeScreen extends StatelessWidget {
               title: const Text('Logout'),
               leading: const Icon(Icons.logout),
               onTap: () => AuthMethods().signOut(),
+              
             ),
           ],
         ),
       ),
       body: ListView(
+        // I want to add a theme to this scaffold and it should be theme: lightMode something like this 
         padding: const EdgeInsets.all(16.0),
         children: const [
           SearchBar(),
@@ -207,17 +227,17 @@ class PersonalizedCards extends StatelessWidget {
         scrollDirection: Axis.horizontal,
         children: const [
           CompanyCard(
-            imagePath: 'assets/images/google.png',
+            imagePath: Constants.google1,
             companyName: 'Google',
             jobCount: '1,200+ software engineer jobs',
           ),
           CompanyCard(
-            imagePath: 'assets/images/facebook.png',
+            imagePath: Constants.facebook,
             companyName: 'Facebook',
             jobCount: '1,000+ developer jobs',
           ),
           CompanyCard(
-            imagePath: 'assets/images/amazon.png',
+            imagePath: Constants.amazon,
             companyName: 'Amazon',
             jobCount: '900+ developer jobs',
           ),
@@ -281,8 +301,8 @@ class NotificationList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: const [
+    return const Column(
+      children: [
         NotificationTile(
           title: 'New job post from Google',
           subtitle:

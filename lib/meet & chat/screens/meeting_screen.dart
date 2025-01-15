@@ -1,18 +1,13 @@
 import 'dart:math';
 
-import 'package:codefusion/mentorship/resources/jitsi_meet_wrapper_method.dart';
-import 'package:codefusion/mentorship/widgets/home_meeting_button.dart';
+import 'package:codefusion/global_resources/auth/auth_methods.dart';
+import 'package:codefusion/meet%20&%20chat/resources/jitsi_meet_wrapper_method.dart';
+import 'package:codefusion/meet%20&%20chat/widgets/home_meeting_button.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:jitsi_meet_wrapper/jitsi_meet_wrapper.dart';
 import 'dart:core';
-
-import '../../resources/auth_methods.dart';
-
-
-
-
 
 class MeetingScreen extends StatefulWidget {
   const MeetingScreen({Key? key}) : super(key: key);
@@ -20,6 +15,7 @@ class MeetingScreen extends StatefulWidget {
   @override
   State<MeetingScreen> createState() => _MeetingScreenState();
 }
+
 class _MeetingScreenState extends State<MeetingScreen> {
   final AuthMethods _authMethods = AuthMethods();
   final JitsiMeetMethod _jitsiMeetMethods = JitsiMeetMethod();
@@ -66,17 +62,17 @@ class _MeetingScreenState extends State<MeetingScreen> {
             ),
           ],
         ),
-        const Expanded(
+        Expanded(
             child: Center(
           child: Text(
             'Create/Join Meeting with just a click',
             style: TextStyle(
-                color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+                color: Theme.of(context).colorScheme.primary,
+                fontSize: 18,
+                fontWeight: FontWeight.bold),
           ),
         ))
       ],
     );
   }
-
-
 }

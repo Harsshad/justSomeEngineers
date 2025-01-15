@@ -1,7 +1,9 @@
+
+import 'package:codefusion/global_resources/auth/firestore_methods.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import '../../resources/firestore_methods.dart';
+
 
 
 

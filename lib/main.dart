@@ -1,19 +1,27 @@
-import 'package:codefusion/Mentorship/screens/video_call_screen.dart';
+
+
 import 'package:codefusion/chat_bot/pages/home_page.dart';
+import 'package:codefusion/global_resources/auth/auth_gate.dart';
+import 'package:codefusion/global_resources/auth/auth_methods.dart';
+import 'package:codefusion/global_resources/themes/theme_provider.dart';
 import 'package:codefusion/job%20board/screens/job_list_screen.dart';
 import 'package:codefusion/job%20board/screens/job_preference_form.dart';
-import 'package:codefusion/mentorship/screens/mentorship_screen.dart';
-import 'package:codefusion/mentorship/utils/colors.dart';
+import 'package:codefusion/meet%20&%20chat/screens/video_call_screen.dart';
+import 'package:codefusion/mentorship/screens/home_ui.dart';
+import 'package:codefusion/meet%20&%20chat/screens/mentorship_screen.dart';
+import 'package:codefusion/meet%20&%20chat/utils/colors.dart';
+
 import 'package:codefusion/resume/page/resume_input_page.dart';
 import 'package:codefusion/screens/profile_screen.dart';
 import 'package:codefusion/screens/resources_screen.dart';
 import 'package:codefusion/screens/settings_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
-import 'resources/auth_methods.dart';
-import 'screens/home_screen.dart';
+
+import 'meet & chat/screens/home_screen.dart';
 import 'screens/login_screen.dart';
 import 'screens/main_home_screen.dart';
 import 'screens/ques_ans_screen.dart';
@@ -24,7 +32,12 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => ThemeProvider(),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -35,23 +48,24 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'CodeFusion',
-      theme: ThemeData.dark().copyWith(
-        scaffoldBackgroundColor: backgroundColor,
-      ),
+      theme: Provider.of<ThemeProvider>(context).themeData,
+      // theme: ThemeData.dark().copyWith(
+      //   scaffoldBackgroundColor: backgroundColor,
+      // ),
       routes: {
-        '/login': (context) => const LoginScreen(),
+        '/login': (context) => const AuthGate(),
         '/meet-home': (context) => const HomeScreen(),
         '/video-call': (context) => const VideoCallScreen(),
         '/main-home': (context) => const MainHomeScreen(),
         '/job-form': (context) => JobPreferenceForm(),
         '/job-recommend': (context) => JobListScreen(),
         '/resources': (context) => const ResourcesScreen(),
-        '/mentorship': (context) => const MentorshipScreen(),
+        '/mentorship': (context) =>  MentorshipPage(),
         '/que-answer': (context) => const QuesAnsScreen(),
         '/settings': (context) => const SettingsScreen(),
         '/profile': (context) => const ProfileScreen(),
         '/chat-bot': (context) => const BotHomePage(),
-        '/resume': (context) =>  ResumeInputPage(),
+        '/resume': (context) => ResumeInputPage(),
       },
       home: StreamBuilder(
         stream: AuthMethods().authChanges,
@@ -73,7 +87,7 @@ class MyApp extends StatelessWidget {
           }
 
           if (!snapshot.hasData) {
-            return const LoginScreen();
+            return const AuthGate();
             // return const MainHomeScreen();
           }
 

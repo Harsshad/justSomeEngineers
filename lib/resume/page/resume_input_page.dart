@@ -1,8 +1,10 @@
 import 'dart:io';
-import 'package:codefusion/resources/auth_methods.dart';
+
 import 'package:codefusion/resume/page/resume_display_page.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+
+import '../../global_resources/auth/auth_methods.dart';
 
 class ResumeInputPage extends StatefulWidget {
   const ResumeInputPage({Key? key}) : super(key: key);
@@ -170,7 +172,10 @@ class _ResumeInputPageState extends State<ResumeInputPage> {
           const SizedBox(height: 20),
           ElevatedButton(
             onPressed: submitData,
-            child: const Text('Generate Resume'),
+            child: const Text('Generate Resume', style: TextStyle(color: Colors.white),),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Theme.of(context).colorScheme.primary,
+            ),
           ),
         ],
       ),

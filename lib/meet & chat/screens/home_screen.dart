@@ -2,10 +2,10 @@
 import 'package:flutter/material.dart';
 
 
-import '../Mentorship/screens/history_meeting_screen.dart';
-import '../Mentorship/screens/meeting_screen.dart';
-import '../mentorship/utils/colors.dart';
-import '../resources/auth_methods.dart';
+import 'history_meeting_screen.dart';
+import 'meeting_screen.dart';
+import '../utils/colors.dart';
+
 
 
 class HomeScreen extends StatefulWidget {
@@ -35,14 +35,19 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: backgroundColor,
+        backgroundColor: Theme.of(context).colorScheme.primary,
         title: const Text('Meet & Chat'),
         centerTitle: true,
       ),
-      body: pages[_page],
+      body: Column(
+        children: [
+          SizedBox(height: 25,),
+          Expanded(child: pages[_page]),
+        ],
+      ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
-        backgroundColor: footerColor,
+        backgroundColor: Theme.of(context).colorScheme.background,
         selectedFontSize: 14,
         unselectedFontSize: 14,
         selectedItemColor: Colors.white,

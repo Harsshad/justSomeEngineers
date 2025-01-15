@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
 
-import '../utils/colors.dart';
-
-class HomeMeetingButton extends StatelessWidget {
+class IconButton extends StatelessWidget {
   final VoidCallback onPressed;
   final IconData icon;
   final String text;
-  const HomeMeetingButton(
-      {Key? key,
-      required this.onPressed,
-      required this.icon,
-      required this.text})
-      : super(key: key);
+  const IconButton({
+    super.key,
+    required this.onPressed,
+    required this.icon,
+    required this.text,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +19,7 @@ class HomeMeetingButton extends StatelessWidget {
         children: [
           Container(
             decoration: BoxDecoration(
-                color: buttonColor,
+                color: Theme.of(context).colorScheme.primary,
                 borderRadius: BorderRadius.circular(16),
                 boxShadow: [
                   BoxShadow(

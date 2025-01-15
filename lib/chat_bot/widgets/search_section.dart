@@ -40,7 +40,7 @@ class _SearchSectionState extends State<SearchSection> {
         Container(
           width: 700,
           decoration: BoxDecoration(
-            color: AppColors.searchBar,
+            color: Theme.of(context).colorScheme.secondary,
             borderRadius: BorderRadius.circular(8),
             border: Border.all(
               color: AppColors.searchBarBorder,

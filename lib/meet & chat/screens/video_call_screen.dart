@@ -1,9 +1,11 @@
-import 'package:codefusion/mentorship/resources/jitsi_meet_wrapper_method.dart';
-import 'package:codefusion/mentorship/utils/colors.dart';
-import 'package:codefusion/mentorship/widgets/meeting_option.dart';
+import 'package:codefusion/global_resources/auth/auth_methods.dart';
+import 'package:codefusion/meet%20&%20chat/resources/jitsi_meet_wrapper_method.dart';
+import 'package:codefusion/meet%20&%20chat/widgets/meeting_option.dart';
+
 import 'package:flutter/material.dart';
 import 'package:jitsi_meet_wrapper/jitsi_meet_wrapper.dart';
-import '../../resources/auth_methods.dart';
+
+
 
 
 
@@ -56,7 +58,7 @@ class _VideoCallScreenState extends State<VideoCallScreen> {
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: Colors.blueAccent,
+        backgroundColor: Theme.of(context).colorScheme.primary,
         title: const Text(
           'Join Meeting',
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
@@ -72,8 +74,8 @@ class _VideoCallScreenState extends State<VideoCallScreen> {
               maxLines: 1,
               textAlign: TextAlign.center,
               keyboardType: TextInputType.number,
-              decoration: const InputDecoration(
-                fillColor: secondaryBackgroundColor,
+              decoration: InputDecoration(
+                fillColor: Theme.of(context).colorScheme.secondary,
                 filled: true,
                 border: InputBorder.none,
                 hintText: 'Room ID',
@@ -88,8 +90,8 @@ class _VideoCallScreenState extends State<VideoCallScreen> {
               maxLines: 1,
               textAlign: TextAlign.center,
               keyboardType: TextInputType.text,
-              decoration: const InputDecoration(
-                fillColor: secondaryBackgroundColor,
+              decoration:  InputDecoration(
+                fillColor: Theme.of(context).colorScheme.secondary,
                 filled: true,
                 border: InputBorder.none,
                 hintText: 'Name',
@@ -101,9 +103,12 @@ class _VideoCallScreenState extends State<VideoCallScreen> {
             height: 20,
           ),
           InkWell(
+            splashColor:  Theme.of(context).colorScheme.primary,
             onTap: _joinMeeting,
             child: const Padding(
               padding: EdgeInsets.all(10),
+              //adding color to inkwell
+              
               child: Text(
                 'Join',
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
@@ -116,9 +121,7 @@ class _VideoCallScreenState extends State<VideoCallScreen> {
           MeetingOption(
             text: 'Mute Audio',
             isMute: isAudioMuted,
-            onChange: (bool) {
-              // onAudioMuted;
-            },
+            onChange: (value) => onAudioMuted(value),
           ),
           const SizedBox(
             height: 20,
@@ -126,9 +129,7 @@ class _VideoCallScreenState extends State<VideoCallScreen> {
           MeetingOption(
             text: 'Turn off My video',
             isMute: isVideoMuted,
-            onChange: (bool) {
-              onVideoMuted;
-            },
+            onChange: (value) => onVideoMuted(value),
           ),
         ],
       ),
