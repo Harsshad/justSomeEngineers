@@ -109,7 +109,7 @@ class MainHomeScreen extends StatelessWidget {
               leading: const Icon(Icons.school_rounded),
               onTap: () {
                 Navigator.pop(context);
-                Navigator.pushNamed(context, '/mentorship');
+                Navigator.pushNamed(context, '/mentor-list-screen');
               },
             ),
             ListTile(

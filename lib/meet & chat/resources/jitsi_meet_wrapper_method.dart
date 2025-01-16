@@ -1,7 +1,7 @@
 
 
 import 'package:codefusion/global_resources/auth/auth_methods.dart';
-import 'package:codefusion/global_resources/auth/firestore_methods.dart';
+import 'package:codefusion/meet%20&%20chat/auth/firestore_methods.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:jitsi_meet_wrapper/jitsi_meet_wrapper.dart';
 

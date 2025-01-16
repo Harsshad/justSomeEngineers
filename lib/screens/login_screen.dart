@@ -100,7 +100,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 controller: _passwordController,
                 focusNode: FocusNode(),
               ),
-              const SizedBox(height: 25),
+              const SizedBox(height: 15),
               // Login button
               MyButton(
                 text: "Login Here",
@@ -142,7 +142,29 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ],
               ),
-              const SizedBox(height: 25),
+              const SizedBox(height: 5),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "Want to become a Mentor? ",
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () => Navigator.pushNamed(context, '/mentor_register'),
+                    child: Text(
+                      "Register now.. ",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 75),
+                ],
+              ),
             ],
           ),
         ),

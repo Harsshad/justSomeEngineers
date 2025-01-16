@@ -192,5 +192,12 @@ class _ResumeInputPageState extends State<ResumeInputPage> {
         maxLines: maxLines,
       ),
     );
+
   }
 }
+
+
+
+
+
+

@@ -58,8 +58,37 @@ class AuthMethods {
     }
   }
 
-  //errors
+  // Mentor sign-up
+  Future<UserCredential> mentorSignUp(String email, String password, Map<String, dynamic> mentorDetails) async {
+    try {
+      UserCredential userCredential = await _auth.createUserWithEmailAndPassword(email: email, password: password);
+
+      // Save mentor details
+      await _firestore.collection('mentors').doc(userCredential.user!.uid).set({
+        "uid": userCredential.user!.uid,
+        "email": email,
+        ...mentorDetails,
+      });
+
+      return userCredential;
+    } on FirebaseAuthException catch (e) {
+      throw Exception(e.code);
+    }
+  }
+
+  // Mentor sign-in
+  Future<UserCredential> mentorSignIn(String email, String password) async {
+    try {
+      UserCredential userCredential = await _auth.signInWithEmailAndPassword(email: email, password: password);
+      return userCredential;
+    } on FirebaseAuthException catch (e) {
+      throw Exception(e.code);
+    }
+  }
 }
+
+  //errors
+
 
 //sign in and out functionality
 class AuthService {

@@ -1,5 +1,5 @@
 
-import 'package:codefusion/global_resources/auth/firestore_methods.dart';
+import 'package:codefusion/meet%20&%20chat/auth/firestore_methods.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 

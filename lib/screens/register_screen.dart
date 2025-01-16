@@ -142,6 +142,25 @@ class RegisterScreen extends StatelessWidget {
                   ),
                 ],
               ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "Already have an account as a Mentor? ",
+                    style:
+                        TextStyle(color: Theme.of(context).colorScheme.primary),
+                  ),
+                  GestureDetector(
+                    onTap: ()=> Navigator.pushNamed(context, '/mentor_login'),
+                    child: Text(
+                      "Login now.. ",
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).colorScheme.primary),
+                    ),
+                  ),
+                ],
+              ),
             ],
           ),
         ),
