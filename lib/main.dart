@@ -7,7 +7,7 @@ import 'package:codefusion/job%20board/screens/job_preference_form.dart';
 import 'package:codefusion/meet%20&%20chat/screens/video_call_screen.dart';
 import 'package:codefusion/mentorship/screens/mentor_list_screen.dart';
 import 'package:codefusion/mentorship/screens/mentor_detail_screen.dart';
-import 'package:codefusion/mentorship/screens/mentor_form_widget.dart';
+import 'package:codefusion/mentorship/screens/mentor_form.dart';
 import 'package:codefusion/mentorship/screens/mentor_login_screen.dart';
 import 'package:codefusion/mentorship/screens/mentor_register_screen.dart';
 import 'package:codefusion/resume/page/resume_input_page.dart';

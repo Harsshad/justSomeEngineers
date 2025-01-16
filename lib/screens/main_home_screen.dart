@@ -128,14 +128,14 @@ class MainHomeScreen extends StatelessWidget {
                 Navigator.pushNamed(context, '/resume');
               },
             ),
-            ListTile(
-              title: const Text('Job Form'),
-              leading: const Icon(Icons.file_copy_rounded),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.pushNamed(context, '/job-form');
-              },
-            ),
+            // ListTile(
+            //   title: const Text('Job Form'),
+            //   leading: const Icon(Icons.file_copy_rounded),
+            //   onTap: () {
+            //     Navigator.pop(context);
+            //     Navigator.pushNamed(context, '/job-form');
+            //   },
+            // ),
             ListTile(
               title: const Text('Job Recommendations'),
               leading: const Icon(Icons.business_center_rounded),

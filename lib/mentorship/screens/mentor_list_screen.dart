@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:codefusion/mentorship/screens/mentor_detail_screen.dart';
-import 'package:codefusion/mentorship/screens/mentor_form_widget.dart';
+import 'package:codefusion/mentorship/screens/mentor_form.dart';
+import 'package:codefusion/mentorship/screens/mentor_profile_page.dart';
 import 'package:codefusion/mentorship/widgets/mentor_card_widget.dart';
-import 'package:codefusion/mentorship/widgets/search_bar_widget.dart';
 import 'package:flutter/material.dart';
 
 class MentorListScreens extends StatefulWidget {
@@ -14,6 +14,18 @@ class MentorListScreens extends StatefulWidget {
 
 class _MentorListScreensState extends State<MentorListScreens> {
   int _page = 0;
+  final TextEditingController _searchController = TextEditingController();
+  String _searchQuery = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _searchController.addListener(() {
+      setState(() {
+        _searchQuery = _searchController.text.toLowerCase();
+      });
+    });
+  }
 
   onPagedChanged(int page) {
     setState(() {
@@ -21,66 +33,56 @@ class _MentorListScreensState extends State<MentorListScreens> {
     });
   }
 
-  List<Widget> pages = [
-    const MentorListPage(),   // Mentor List page widget
-    const MentorForms(),      // Mentor Form widget
-  ];
+  List<Widget> pages(BuildContext context) {
+    return [
+      MentorListPage(searchQuery: _searchQuery), // Pass search query
+      const MentorForms(),
+      MentorProfilePage(),  
+    ];
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Available Mentors'),
-        bottom: _page == 0 // Display search bar only on Mentor List page
+        bottom: _page == 0
             ? PreferredSize(
                 preferredSize: const Size.fromHeight(56.0),
-                child: SearchBarWidget(
-                  searchController: TextEditingController(),
-                  onChanged: (value) {
-                    // search logic
-                  },
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: TextField(
+                    controller: _searchController,
+                    decoration: InputDecoration(
+                      hintText: 'Search mentors...',
+                      prefixIcon: const Icon(Icons.search),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12.0),
+                      ),
+                    ),
+                  ),
                 ),
               )
             : null,
       ),
       bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        backgroundColor: Theme.of(context).colorScheme.background,
-        selectedFontSize: 14,
-        unselectedFontSize: 14,
-        selectedItemColor: Colors.white,
-        unselectedItemColor: Colors.grey,
         currentIndex: _page,
         onTap: onPagedChanged,
         items: const [
-          BottomNavigationBarItem(
-              icon: Icon(Icons.comment_bank),
-              label: 'Mentor List'),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.lock_clock),
-              label: 'Mentor Form'),
+          BottomNavigationBarItem(icon: Icon(Icons.list), label: 'Mentor List'),
+          BottomNavigationBarItem(icon: Icon(Icons.description_outlined), label: 'Mentor Form'),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Mentor Profile'),
         ],
       ),
-      body: Column(
-        children: [
-          const SizedBox(height: 25),
-          Expanded(child: pages[_page]),
-        ],
-      ),
+      body: pages(context)[_page],
     );
   }
 }
 
-class MentorListPage extends StatefulWidget {
-  const MentorListPage({Key? key}) : super(key: key);
+class MentorListPage extends StatelessWidget {
+  final String searchQuery;
 
-  @override
-  _MentorListPageState createState() => _MentorListPageState();
-}
-
-class _MentorListPageState extends State<MentorListPage> {
-  String _searchQuery = '';
-  final TextEditingController _searchController = TextEditingController();
+  const MentorListPage({Key? key, required this.searchQuery}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -101,7 +103,7 @@ class _MentorListPageState extends State<MentorListPage> {
           final mentor = doc.data() as Map<String, dynamic>;
           final name = (mentor['fullName'] ?? '').toLowerCase();
           final role = (mentor['role'] ?? '').toLowerCase();
-          return name.contains(_searchQuery) || role.contains(_searchQuery);
+          return name.contains(searchQuery) || role.contains(searchQuery);
         }).toList();
 
         if (mentors.isEmpty) {
@@ -118,7 +120,6 @@ class _MentorListPageState extends State<MentorListPage> {
               mentor: mentor,
               mentorId: mentorId,
               onTap: () {
-                // Move the onTap logic here
                 Navigator.push(
                   context,
                   MaterialPageRoute(

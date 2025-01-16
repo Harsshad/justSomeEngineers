@@ -1,3 +1,4 @@
+import 'package:codefusion/components/my_textfield.dart';
 import 'package:codefusion/global_resources/auth/auth_methods.dart';
 import 'package:codefusion/meet%20&%20chat/utils/utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -26,7 +27,8 @@ class _MentorLoginScreenState extends State<MentorLoginScreen> {
     );
     if (userCredential.user != null) {
       // Navigate to mentor's home screen or desired page
-      Navigator.pushNamed(context, '/mentor-form-widget');
+      // Navigator.pushNamed(context, '/mentor-form-widget');  //instead redirect to home
+      Navigator.pushNamed(context, '/main-home');  //instead redirect to home
       // Navigator.pushNamed(context, '/mentorship');
     } else {
       showDialog(
@@ -64,26 +66,35 @@ class _MentorLoginScreenState extends State<MentorLoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.background,
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            TextField(
-              controller: _emailController,
-              decoration: const InputDecoration(hintText: 'Email'),
-            ),
-            const SizedBox(height: 10),
-            TextField(
-              controller: _passwordController,
-              decoration: const InputDecoration(hintText: 'Password'),
-              obscureText: true,
-            ),
+            MyTextfield(
+                hintText: 'Email',
+                obscureText: false,
+                controller: _emailController,
+                focusNode: FocusNode(),
+              ),
+              const SizedBox(height: 10),
+              // Password textfield
+              MyTextfield(
+                hintText: 'Password',
+                obscureText: true,
+                controller: _passwordController,
+                focusNode: FocusNode(),
+              ),
             const SizedBox(height: 20),
             ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Theme.of(context).colorScheme.secondary,
+              ),
               onPressed: login,
               child: const Text('Login as Mentor'),
             ),
+            const SizedBox(height: 15,),
             TextButton(
               onPressed: () => Navigator.pushNamed(
                 context,

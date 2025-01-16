@@ -6,6 +6,8 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../../components/my_textfield.dart';
+
 class MentorForms extends StatefulWidget {
   const MentorForms({Key? key}) : super(key: key);
 
@@ -52,58 +54,68 @@ class _MentorFormsState extends State<MentorForms> {
     return await storageRef.getDownloadURL();
   }
 
-  Future<void> _saveDetails() async {
-    if (_formKey.currentState!.validate()) {
-      _formKey.currentState!.save();
+Future<void> _saveDetails() async {
+  if (_formKey.currentState!.validate()) {
+    _formKey.currentState!.save();
 
-      // Upload the profile image if selected
-      if (_profileImage != null) {
-        try {
-          _profileImageUrl = await _uploadImage(_profileImage!);
-        } catch (e) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Error uploading image: $e')),
-          );
-          return;
-        }
-      }
-
-      User? user = _auth.currentUser;
-      if (user != null) {
-        Map<String, dynamic> mentorData = {
-          'experience': experience,
-          'expertise': expertise,
-          'linkedinUrl': linkedinUrl,
-          'portfolioUrl': portfolioUrl,
-          'hourlyRate': hourlyRate,
-          'bio': bio,
-          'isPaid': isPaid,
-          'profileImage': _profileImageUrl,
-          'updatedAt': FieldValue.serverTimestamp(),
-        };
-
-        try {
-          // Update the existing mentor document
-          await _firestore
-              .collection('mentors')
-              .doc(user.uid)
-              .update(mentorData);
-
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Mentor details saved successfully!')),
-          );
-        } catch (e) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Error saving details: $e')),
-          );
-        }
-      } else {
+    // Upload the profile image if selected
+    if (_profileImage != null) {
+      try {
+        _profileImageUrl = await _uploadImage(_profileImage!);
+      } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('User not logged in!')),
+          SnackBar(content: Text('Error uploading image: $e')),
         );
+        return;
       }
     }
+
+    User? user = _auth.currentUser;
+    if (user != null) {
+      Map<String, dynamic> mentorData = {
+        'experience': experience,
+        'expertise': expertise,
+        'linkedinUrl': linkedinUrl,
+        'portfolioUrl': portfolioUrl,
+        'hourlyRate': hourlyRate,
+        'bio': bio,
+        'isPaid': isPaid,
+        'profileImage': _profileImageUrl,
+        'updatedAt': FieldValue.serverTimestamp(),
+      };
+
+      try {
+        await _firestore.runTransaction((transaction) async {
+          DocumentReference mentorDocRef =
+              _firestore.collection('mentors').doc(user.uid);
+
+          DocumentSnapshot mentorSnapshot = await transaction.get(mentorDocRef);
+
+          if (mentorSnapshot.exists) {
+            // Merge new data with existing data
+            transaction.update(mentorDocRef, mentorData);
+          } else {
+            // Create new document
+            transaction.set(mentorDocRef, mentorData);
+          }
+        });
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Mentor details saved successfully!')),
+        );
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error saving details: $e')),
+        );
+      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('User not logged in!')),
+      );
+    }
   }
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -115,7 +127,11 @@ class _MentorFormsState extends State<MentorForms> {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                const Text('Mentor Form',style: TextStyle(fontWeight: FontWeight.w700,fontSize: 30),),
+                const SizedBox(height: 26),
+                const Text(
+                  'Mentor Form',
+                  style: TextStyle(fontWeight: FontWeight.w700, fontSize: 30),
+                ),
                 GestureDetector(
                   onTap: _pickProfileImage,
                   child: CircleAvatar(
@@ -132,7 +148,10 @@ class _MentorFormsState extends State<MentorForms> {
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
-                  decoration: const InputDecoration(labelText: 'Experience'),
+                  decoration: InputDecoration(
+                    labelText: 'Experience',
+                    fillColor: Theme.of(context).colorScheme.secondary,
+                  ),
                   onSaved: (value) => experience = value,
                 ),
                 TextFormField(

@@ -32,7 +32,8 @@ class MentorCardWidget extends StatelessWidget {
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(mentor['role'] ?? 'N/A', style: TextStyle(color: Colors.grey[600])),
+            // Text(mentor['role'] ?? 'N/A', style: TextStyle(color: Colors.grey[600])),
+            Text(mentor['expertise'] ?? 'N/A', style: TextStyle(color: Colors.grey[600])),
             Text('\$${mentor['hourlyRate'] ?? '0'}/hour'),
             Text(
               mentor['bio'] ?? 'No description available',
@@ -44,7 +45,7 @@ class MentorCardWidget extends StatelessWidget {
         trailing: ElevatedButton(
           onPressed: onTap,  // Use the passed onTap function
           style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.blueAccent,
+            backgroundColor: Theme.of(context).colorScheme.secondary,
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
           ),
           child: const Text('View Profile'),

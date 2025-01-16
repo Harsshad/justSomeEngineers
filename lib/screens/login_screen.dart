@@ -52,15 +52,15 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        actions: [
-          TextButton(
-            onPressed: () {},
-            child: const Text(
-              'Skip',
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-          ),
-        ],
+        // actions: [
+        //   TextButton(
+        //     onPressed: () {},
+        //     child: const Text(
+        //       'Skip',
+        //       style: TextStyle(fontWeight: FontWeight.bold),
+        //     ),
+        //   ),
+        // ],
       ),
       backgroundColor: Theme.of(context).colorScheme.background,
       body: Padding(
@@ -109,7 +109,7 @@ class _LoginScreenState extends State<LoginScreen> {
               // const SizedBox(height: 15),
 
               // Google Sign-In button
-              const SignInButton(),
+              // const SignInButton(),
               CustomButton(
                 text: 'Google Sign In',
                 onPressed: () async {

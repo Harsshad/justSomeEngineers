@@ -15,7 +15,7 @@ class _JobListScreenState extends State<JobListScreen> {
   @override
   void initState() {
     super.initState();
-    jobs = JobService().fetchJobs();
+    jobs = JobService().fetchJobs('Data Engineer', 'India'); // Add your job title and location filter here
   }
 
   void _filterJobs(String query) {
@@ -71,7 +71,7 @@ class _JobListScreenState extends State<JobListScreen> {
                     trailing: IconButton(
                       icon: Icon(Icons.link),
                       onPressed: () {
-                        launchUrl(Uri.parse(job.url));
+                        _launchUrl(Uri.parse(job.url));
                       },
                     ),
                   ),
@@ -90,9 +90,10 @@ class _JobListScreenState extends State<JobListScreen> {
     );
   }
 
-  void launchUrl(Uri url) async {
-    if (await canLaunchUrl(url)) {
-      launchUrl(url);
+  // Fixed method to launch URL
+  void _launchUrl(Uri url) async {
+    if (await canLaunch(url.toString())) {
+      await launch(url.toString());
     } else {
       throw 'Could not launch $url';
     }
@@ -108,7 +109,7 @@ class JobSearchDelegate extends SearchDelegate {
   List<Widget> buildActions(BuildContext context) {
     return [
       IconButton(
-        icon: Icon(Icons.clear,),
+        icon: Icon(Icons.clear),
         onPressed: () {
           query = '';
         },
@@ -132,7 +133,7 @@ class JobSearchDelegate extends SearchDelegate {
       future: jobs,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator(),);
+          return const Center(child: CircularProgressIndicator());
         } else if (snapshot.hasError) {
           return Center(child: Text('Error: ${snapshot.error}'));
         } else if (snapshot.hasData) {
@@ -151,7 +152,7 @@ class JobSearchDelegate extends SearchDelegate {
                 trailing: IconButton(
                   icon: Icon(Icons.link),
                   onPressed: () {
-                    launchUrl(Uri.parse(job.url));
+                    _launchUrl(Uri.parse(job.url));
                   },
                 ),
               );
@@ -167,5 +168,14 @@ class JobSearchDelegate extends SearchDelegate {
   @override
   Widget buildSuggestions(BuildContext context) {
     return Container();
+  }
+
+  // Fixed method to launch URL
+  void _launchUrl(Uri url) async {
+    if (await canLaunch(url.toString())) {
+      await launch(url.toString());
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 }
