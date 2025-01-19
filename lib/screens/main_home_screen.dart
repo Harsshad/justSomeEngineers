@@ -1,12 +1,8 @@
-
 import 'package:codefusion/global_resources/auth/auth_methods.dart';
 import 'package:flutter/material.dart';
 
 import '../meet & chat/utils/colors.dart';
 import '../profile & Q&A/core/constants/constants.dart';
-
-
-
 
 class MainHomeScreen extends StatelessWidget {
   const MainHomeScreen({Key? key}) : super(key: key);
@@ -14,9 +10,7 @@ class MainHomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      
       appBar: AppBar(
-
         leading: Builder(
           builder: (context) => IconButton(
             onPressed: () {
@@ -48,8 +42,8 @@ class MainHomeScreen extends StatelessWidget {
           children: [
             DrawerHeader(
               decoration: BoxDecoration(
-                // color: lightMode.primaryColor,
-              ),
+                  // color: lightMode.primaryColor,
+                  ),
               child: Column(
                 children: [
                   Image.asset(Constants.logoPath, height: 80),
@@ -155,14 +149,15 @@ class MainHomeScreen extends StatelessWidget {
             ListTile(
               title: const Text('Logout'),
               leading: const Icon(Icons.logout),
-              onTap: () => AuthMethods().signOut(),
-              
+              onTap: () async {
+                await AuthMethods().signOut();
+                Navigator.of(context).pushReplacementNamed('/login');
+              },
             ),
           ],
         ),
       ),
       body: ListView(
-        // I want to add a theme to this scaffold and it should be theme: lightMode something like this 
         padding: const EdgeInsets.all(16.0),
         children: const [
           SearchBar(),

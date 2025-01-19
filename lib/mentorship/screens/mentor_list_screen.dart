@@ -1,9 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:codefusion/profile%20&%20Q&A/core/constants/constants.dart';
+import 'package:flutter/material.dart';
 import 'package:codefusion/mentorship/screens/mentor_detail_screen.dart';
 import 'package:codefusion/mentorship/screens/mentor_form.dart';
 import 'package:codefusion/mentorship/screens/mentor_profile_page.dart';
 import 'package:codefusion/mentorship/widgets/mentor_card_widget.dart';
-import 'package:flutter/material.dart';
 
 class MentorListScreens extends StatefulWidget {
   const MentorListScreens({Key? key}) : super(key: key);
@@ -35,17 +36,21 @@ class _MentorListScreensState extends State<MentorListScreens> {
 
   List<Widget> pages(BuildContext context) {
     return [
-      MentorListPage(searchQuery: _searchQuery), // Pass search query
+      MentorListPage(searchQuery: _searchQuery),
       const MentorForms(),
-      MentorProfilePage(),  
+      MentorProfilePage(),
     ];
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.deepPurple.shade200,
       appBar: AppBar(
-        title: const Text('Available Mentors'),
+        title: const Text(
+          'Available Mentors',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
         bottom: _page == 0
             ? PreferredSize(
                 preferredSize: const Size.fromHeight(56.0),
@@ -59,6 +64,8 @@ class _MentorListScreensState extends State<MentorListScreens> {
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12.0),
                       ),
+                      filled: true,
+                      fillColor: Colors.grey[200],
                     ),
                   ),
                 ),
@@ -123,8 +130,7 @@ class MentorListPage extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) =>
-                        MentorDetailsScreen(mentorId: mentorId),
+                    builder: (context) => MentorDetailsScreen(mentorId: mentorId),
                   ),
                 );
               },
