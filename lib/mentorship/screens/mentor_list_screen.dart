@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:codefusion/profile%20&%20Q&A/core/constants/constants.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:codefusion/mentorship/screens/mentor_detail_screen.dart';
 import 'package:codefusion/mentorship/screens/mentor_form.dart';
@@ -17,6 +18,7 @@ class _MentorListScreensState extends State<MentorListScreens> {
   int _page = 0;
   final TextEditingController _searchController = TextEditingController();
   String _searchQuery = '';
+  bool _isMentor = false;
 
   @override
   void initState() {
@@ -26,6 +28,21 @@ class _MentorListScreensState extends State<MentorListScreens> {
         _searchQuery = _searchController.text.toLowerCase();
       });
     });
+
+      // Check if the current user is a mentor
+    _checkIfUserIsMentor();
+  }
+   // Check if the current user is a mentor
+  Future<void> _checkIfUserIsMentor() async {
+    final currentUser = FirebaseAuth.instance.currentUser;
+    if (currentUser != null) {
+      final userDoc = await FirebaseFirestore.instance.collection('mentors').doc(currentUser.uid).get();
+      if (userDoc.exists) {
+        setState(() {
+          _isMentor = true;
+        });
+      }
+    }
   }
 
   onPagedChanged(int page) {
@@ -37,8 +54,8 @@ class _MentorListScreensState extends State<MentorListScreens> {
   List<Widget> pages(BuildContext context) {
     return [
       MentorListPage(searchQuery: _searchQuery),
-      const MentorForms(),
-      MentorProfilePage(),
+      if (_isMentor)  MentorForms(),
+      if (_isMentor) const MentorProfilePage(),
     ];
   }
 
@@ -47,10 +64,13 @@ class _MentorListScreensState extends State<MentorListScreens> {
     return Scaffold(
       backgroundColor: Colors.deepPurple.shade200,
       appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        //const SizedBox(height: 10),
         title: const Text(
           'Available Mentors',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
+        
         bottom: _page == 0
             ? PreferredSize(
                 preferredSize: const Size.fromHeight(56.0),
@@ -72,15 +92,17 @@ class _MentorListScreensState extends State<MentorListScreens> {
               )
             : null,
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _page,
-        onTap: onPagedChanged,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.list), label: 'Mentor List'),
-          BottomNavigationBarItem(icon: Icon(Icons.description_outlined), label: 'Mentor Form'),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Mentor Profile'),
-        ],
-      ),
+      bottomNavigationBar: _isMentor
+          ? BottomNavigationBar(
+              currentIndex: _page,
+              onTap: onPagedChanged,
+              items: const [
+                BottomNavigationBarItem(icon: Icon(Icons.list), label: 'Mentor List'),
+                BottomNavigationBarItem(icon: Icon(Icons.description_outlined), label: 'Mentor Form'),
+                BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Mentor Profile'),
+              ],
+            )
+          : null, // No BottomNavigationBar for non-mentor users
       body: pages(context)[_page],
     );
   }
@@ -110,7 +132,8 @@ class MentorListPage extends StatelessWidget {
           final mentor = doc.data() as Map<String, dynamic>;
           final name = (mentor['fullName'] ?? '').toLowerCase();
           final role = (mentor['role'] ?? '').toLowerCase();
-          return name.contains(searchQuery) || role.contains(searchQuery);
+          final expertise = (mentor['expertise'] ?? '').toLowerCase();
+          return name.contains(searchQuery) || role.contains(searchQuery) || expertise.contains(searchQuery);
         }).toList();
 
         if (mentors.isEmpty) {

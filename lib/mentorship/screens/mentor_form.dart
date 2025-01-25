@@ -1,11 +1,13 @@
+import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:codefusion/profile%20&%20Q&A/core/constants/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-
+import 'package:http/http.dart' as http;
 import '../../components/my_textfield.dart';
 
 class MentorForms extends StatefulWidget {
@@ -19,6 +21,7 @@ class _MentorFormsState extends State<MentorForms> {
   final _formKey = GlobalKey<FormState>();
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseStorage _storage = FirebaseStorage.instance;
 
   final experienceController = TextEditingController();
   final expertiseController = TextEditingController();
@@ -26,7 +29,9 @@ class _MentorFormsState extends State<MentorForms> {
   final linkedinUrlController = TextEditingController();
   final portfolioUrlController = TextEditingController();
   final bioController = TextEditingController();
+  final roleController = TextEditingController();
 
+  final roleFocus = FocusNode();
   final experienceFocus = FocusNode();
   final expertiseFocus = FocusNode();
   final hourlyRateFocus = FocusNode();
@@ -36,7 +41,7 @@ class _MentorFormsState extends State<MentorForms> {
 
   bool isPaid = false;
 
-  File? _profileImage;
+  Uint8List? _profileImage;
   String? _profileImageUrl;
 
   Future<void> _pickProfileImage() async {
@@ -44,8 +49,9 @@ class _MentorFormsState extends State<MentorForms> {
       final pickedFile =
           await ImagePicker().pickImage(source: ImageSource.gallery);
       if (pickedFile != null) {
+        Uint8List imageBytes = await pickedFile.readAsBytes();
         setState(() {
-          _profileImage = File(pickedFile.path);
+          _profileImage = imageBytes;
         });
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -59,16 +65,37 @@ class _MentorFormsState extends State<MentorForms> {
     }
   }
 
-  Future<String> _uploadImage(File image) async {
-    final storageRef = FirebaseStorage.instance
-        .ref()
-        .child('mentor_profiles/${DateTime.now().toIso8601String()}');
-    await storageRef.putFile(image);
-    return await storageRef.getDownloadURL();
+  // Updated function to upload profile image to ImageKit
+  Future<String> _uploadImageToImageKit(Uint8List file) async {
+    const String imagekitUrl = 'https://upload.imagekit.io/api/v1/files/upload';
+    const String publicKey = 'public_LWSZ9j/yFXM2LoFPod9qfzBEFow='; // Updated
+    const String privateKey = 'private_rG5Lp3157I1V+9yV+EIkVfHnCoA='; // Updated
+
+    try {
+      var request = http.MultipartRequest('POST', Uri.parse(imagekitUrl));
+      request.headers['Authorization'] =
+          'Basic ' + base64Encode(utf8.encode(privateKey + ':'));
+      request.fields['fileName'] = '${_auth.currentUser!.uid}.jpg';
+      request.fields['publicKey'] = publicKey; // Updated
+      request.files.add(
+          http.MultipartFile.fromBytes('file', file, filename: 'profile.jpg'));
+
+      var response = await request.send();
+      if (response.statusCode == 200) {
+        final responseData = await response.stream.bytesToString();
+        final decodedData = jsonDecode(responseData);
+        return decodedData['url'];
+      } else {
+        throw Exception('Failed to upload image');
+      }
+    } catch (e) {
+      throw Exception('Image upload error: $e');
+    }
   }
 
   Future<void> _saveDetails() async {
     if (_formKey.currentState!.validate()) {
+      final role = roleController.text;
       final experience = experienceController.text;
       final expertise = expertiseController.text;
       final hourlyRate = hourlyRateController.text;
@@ -78,7 +105,9 @@ class _MentorFormsState extends State<MentorForms> {
 
       if (_profileImage != null) {
         try {
-          _profileImageUrl = await _uploadImage(_profileImage!);
+          _profileImageUrl =
+              await _uploadImageToImageKit(_profileImage!); // Updated
+          print("Image uploaded successfully: $_profileImageUrl");
         } catch (e) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('Error uploading image: $e')),
@@ -90,6 +119,7 @@ class _MentorFormsState extends State<MentorForms> {
       User? user = _auth.currentUser;
       if (user != null) {
         Map<String, dynamic> mentorData = {
+          'role': role,
           'experience': experience,
           'expertise': expertise,
           'linkedinUrl': linkedinUrl,
@@ -97,7 +127,8 @@ class _MentorFormsState extends State<MentorForms> {
           'hourlyRate': hourlyRate,
           'bio': bio,
           'isPaid': isPaid,
-          'profileImage': _profileImageUrl,
+          'profileImage':
+              _profileImageUrl ?? '', // Ensure a default empty string if null
           'updatedAt': FieldValue.serverTimestamp(),
         };
 
@@ -108,7 +139,7 @@ class _MentorFormsState extends State<MentorForms> {
 
             DocumentSnapshot mentorSnapshot =
                 await transaction.get(mentorDocRef);
-
+            Navigator.pushNamed(context, '/main-home');
             if (mentorSnapshot.exists) {
               transaction.update(mentorDocRef, mentorData);
             } else {
@@ -176,7 +207,7 @@ class _MentorFormsState extends State<MentorForms> {
                       child: CircleAvatar(
                         radius: 60,
                         backgroundImage: _profileImage != null
-                            ? FileImage(_profileImage!)
+                            ? MemoryImage(_profileImage!)
                             : (_profileImageUrl != null
                                 ? NetworkImage(_profileImageUrl!)
                                 : const AssetImage(Constants.default_profile)
@@ -186,6 +217,11 @@ class _MentorFormsState extends State<MentorForms> {
                             : null,
                       ),
                     ),
+                  ),
+                  const SizedBox(height: 16),
+                  const Text(
+                    "Upload an Image ",
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                   ),
                   const SizedBox(height: 16),
                   ..._buildFormFields(),
@@ -208,8 +244,8 @@ class _MentorFormsState extends State<MentorForms> {
                       elevation: 5,
                     ),
                     child: Padding(
-                      padding:
-                          const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 12, horizontal: 24),
                       child: Text(
                         'Save Details',
                         style: TextStyle(
@@ -230,6 +266,13 @@ class _MentorFormsState extends State<MentorForms> {
 
   List<Widget> _buildFormFields() {
     return [
+      MyTextfield(
+        hintText: 'Role',
+        obscureText: false,
+        controller: roleController,
+        focusNode: roleFocus,
+      ),
+      const SizedBox(height: 15),
       MyTextfield(
         hintText: 'Experience',
         obscureText: false,

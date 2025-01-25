@@ -47,6 +47,4 @@ class MentorAuthMethods {
       throw Exception('Error adding meeting to mentor history: $e');
     }
   }
-
- 
 }

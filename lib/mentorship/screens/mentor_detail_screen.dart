@@ -68,6 +68,16 @@ class MentorDetailsScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
+                          'Role:',
+                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color:Colors.deepPurple[200]),
+                        ),
+                        Text(
+                          mentor['role'] ?? 'N/A',
+                          style: const TextStyle(fontSize: 14),
+                        ),
+                        const SizedBox(height: 8),
+
+                        Text(
                           'Bio:',
                           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color:Colors.deepPurple[200]),
                         ),

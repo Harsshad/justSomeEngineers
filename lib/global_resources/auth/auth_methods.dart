@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:codefusion/meet%20&%20chat/utils/utils.dart';
@@ -7,6 +8,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:uuid/uuid.dart';
+
 
 
 class AuthMethods {
@@ -95,25 +98,13 @@ class AuthService {
   //instance of auth
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseStorage _storage = FirebaseStorage.instance;
 
   //get current user
   User? getCurrentUser() {
     return _auth.currentUser;
   }
 
-  Future<String> uploadImageToStorage(File image) async {
-    try {
-      Reference storageRef = FirebaseStorage.instance
-          .ref()
-          .child('profile_images/${DateTime.now().toIso8601String()}');
-      UploadTask uploadTask = storageRef.putFile(image);
-
-      final TaskSnapshot snapshot = await uploadTask;
-      return await snapshot.ref.getDownloadURL(); // Return the public URL
-    } catch (e) {
-      throw Exception("Error uploading image: $e");
-    }
-  }
 
   //sign in
   Future<UserCredential> signInWithEmailPassword(String email, password) async {
@@ -153,4 +144,24 @@ class AuthService {
       throw Exception(e.code);
     }
   }
+
+  // //adding image to firebase storage
+  //this wont work since firebase storage has made their sevices paid so switched to https://imagekit.io/dashboard/media-library and now its working
+  // Future<String> uploadImageToStorage(
+  //     String childName, Uint8List file, bool isPost) async {
+  //   Reference ref =
+  //       _storage.ref().child(childName).child(_auth.currentUser!.uid);
+
+  //   if (isPost) {
+  //     String id = const Uuid().v1();
+  //     ref = ref.child(id);
+  //   }
+
+  //   UploadTask uploadTask = ref.putData(file);
+  //   TaskSnapshot snap = await uploadTask;
+  //   String downloadUrl = await snap.ref.getDownloadURL();
+  //   return downloadUrl;
+  // }
 }
+
+

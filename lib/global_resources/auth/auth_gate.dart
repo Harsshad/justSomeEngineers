@@ -26,11 +26,11 @@ class AuthGate extends StatelessWidget {
                 .get()
                 .then((doc) {
               if (doc.exists) {
-                return const MentorListScreens(); // Mentor home screen
+                return const MentorListScreens(); 
               }
             });
 
-            return const MainHomeScreen(); // User home screen
+            return  MainHomeScreen(); // User home screen
           } else {
             // User not logged in
             return const LoginOrRegister();

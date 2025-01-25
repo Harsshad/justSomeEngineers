@@ -54,10 +54,11 @@ class InfoCard extends StatelessWidget {
                 const SizedBox(height: 4),
                 Text(
                   content,
-                  style: const TextStyle(
+                  style:  TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
-                    color: Colors.black87,
+                    // color: Colors.black87,
+                    color: Theme.of(context).colorScheme.primary,
                   ),
                 ),
               ],

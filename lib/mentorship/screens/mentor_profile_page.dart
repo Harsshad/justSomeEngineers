@@ -64,6 +64,11 @@ class MentorProfilePage extends StatelessWidget {
                     icon: Icons.person,
                   ),
                   InfoCard(
+                    title: 'Role',
+                    content: data['role'] ?? 'N/A',
+                    icon: Icons.assignment_ind,
+                  ),
+                  InfoCard(
                     title: 'Expertise',
                     content: data['expertise'] ?? 'N/A',
                     icon: Icons.school,
