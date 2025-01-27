@@ -32,7 +32,7 @@ class ArticleListState extends State<ArticleList> {
   void _fetchArticles(String tag) async {
     try {
       setState(() {
-        _articles = []; 
+        _articles = [];
       });
       final articles = await fetchArticles(tag);
       setState(() {
@@ -45,7 +45,8 @@ class ArticleListState extends State<ArticleList> {
 
   void _fetchMentors() async {
     try {
-      final snapshot = await FirebaseFirestore.instance.collection('mentors').get();
+      final snapshot =
+          await FirebaseFirestore.instance.collection('mentors').get();
       final mentors = snapshot.docs.map((doc) => doc.data()).toList();
       setState(() {
         _mentors = mentors;
@@ -67,17 +68,21 @@ class ArticleListState extends State<ArticleList> {
             children: [
               Text(
                 article['title'] ?? 'No title available',
-                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                style:
+                    const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 12),
               Text(
                 article['description'] ?? 'No description available',
-                style: TextStyle(fontSize: 14, color: Theme.of(context).colorScheme.primary),
+                style: TextStyle(
+                    fontSize: 14, color: Theme.of(context).colorScheme.primary),
+                // maxLines: 7,
               ),
               const SizedBox(height: 12),
               Text(
                 'Published on: ${article['published_at'] ?? 'Unknown date'}',
-                style: TextStyle(fontSize: 12, color: Theme.of(context).colorScheme.primary),
+                style: TextStyle(
+                    fontSize: 12, color: Theme.of(context).colorScheme.primary),
               ),
               const SizedBox(height: 12),
               ElevatedButton.icon(
@@ -109,6 +114,7 @@ class ArticleListState extends State<ArticleList> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return _articles.isEmpty
         ? const Center(child: CircularProgressIndicator())
         : ListView.builder(
@@ -119,48 +125,60 @@ class ArticleListState extends State<ArticleList> {
               return Column(
                 children: [
                   if (index % 7 == 0 && _mentors.isNotEmpty)
-                    CarouselSlider(
-                      options: CarouselOptions(height: 200.0),
-                      items: [
-                        ..._mentors.take(7).map((mentor) {
-                          return Builder(
-                            builder: (BuildContext context) {
-                              return ArticleMentorCard(
-                                mentor: mentor,
-                                mentorId: mentor['uid'] ?? '',
-                                onTap: () {
-                                  // Navigator.push(
-                                  //   context,
-                                  //   MaterialPageRoute(
-                                  //     builder: (context) => MentorDetailsScreen(mentorId: mentor['uid']),
-                                  //   ),
-                                  // );
+                    Column(
+                      children: [
+                        CarouselSlider(
+                          options: CarouselOptions(height: 200.0),
+                          items: [
+                            ..._mentors.take(7).map((mentor) {
+                              return Builder(
+                                builder: (BuildContext context) {
+                                  return ArticleMentorCard(
+                                    mentor: mentor,
+                                    mentorId: mentor['uid'] ?? '',
+                                    onTap: () {
+                                      // Navigator.push(
+                                      //   context,
+                                      //   MaterialPageRoute(
+                                      //     builder: (context) => MentorDetailsScreen(mentorId: mentor['uid']),
+                                      //   ),
+                                      // );
+                                    },
+                                  );
                                 },
                               );
-                            },
-                          );
-                        }).toList(),
-                        Builder(
-                          builder: (BuildContext context) {
-                            return GestureDetector(
-                              onTap: () {
-                                Navigator.pushNamed(context, '/mentor-list-screen');
+                            }).toList(),
+                            Builder(
+                              builder: (BuildContext context) {
+                                return GestureDetector(
+                                  onTap: () {
+                                    Navigator.pushNamed(
+                                        context, '/mentor-list-screen');
+                                  },
+                                  child: Container(
+                                    width: double.infinity,
+                                    color: Colors.transparent,
+                                    child: const Center(
+                                      child: Icon(
+                                        Icons.arrow_forward_rounded,
+                                        size: 50,
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                  ),
+                                );
                               },
-                              child: Container(
-                                width: double.infinity,
-                                color: Colors.transparent,
-                                child: const Center(
-                                  child: Icon(Icons.arrow_forward_rounded, size: 50, color: Colors.grey),
-                                ),
-                              ),
-                            );
-                          },
+                            ),
+                          ],
                         ),
+                        const SizedBox(height: 16),
                       ],
                     ),
                   Card(
+                    margin: const EdgeInsets.only(bottom: 22),
                     elevation: 4,
                     shape: RoundedRectangleBorder(
+                      // bordercolor: theme.colorScheme.secondary,
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Column(
@@ -168,7 +186,11 @@ class ArticleListState extends State<ArticleList> {
                       children: [
                         if (article['cover_image'] != null)
                           ClipRRect(
-                            borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+                            borderRadius: const BorderRadius.vertical(
+                              top: Radius.circular(
+                                12,
+                              ),
+                            ),
                             child: Image.network(
                               article['cover_image'],
                               height: 180,
@@ -183,29 +205,46 @@ class ArticleListState extends State<ArticleList> {
                             children: [
                               Text(
                                 article['title'] ?? 'No title available',
-                                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: theme.colorScheme.inversePrimary,
+                                ),
                               ),
                               const SizedBox(height: 8),
                               Text(
-                                article['description'] ?? 'No description available',
-                                style: const TextStyle(fontSize: 14, color: Colors.grey),
+                                article['description'] ??
+                                    'No description available',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: theme.colorScheme.primary,
+                                ),
                                 maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
                               ),
                               const SizedBox(height: 12),
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
                                     '❤️ ${article['positive_reactions_count'] ?? 0} Likes',
-                                    style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+                                    style: const TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w500),
                                   ),
                                   ElevatedButton(
-                                    style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
-                                    onPressed: () => _showArticleDetails(context, article),
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor:
+                                          theme.colorScheme.secondary,
+                                    ),
+                                    onPressed: () =>
+                                        _showArticleDetails(context, article),
                                     child: Text(
-                                      'Read More',
-                                      style: TextStyle(color: Theme.of(context).colorScheme.secondary),
+                                      'Read More 📖',
+                                      style: TextStyle(
+                                          color:
+                                              theme.colorScheme.inversePrimary),
                                     ),
                                   ),
                                 ],

@@ -56,7 +56,7 @@ class ArticleMentorCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      '\$${mentor['hourlyRate'] ?? '0'}/hour',
+                      '\$${mentor['monthlyRate'] ?? '0'}/month',
                       style: const TextStyle(
                         color: Colors.green,
                         fontWeight: FontWeight.bold,

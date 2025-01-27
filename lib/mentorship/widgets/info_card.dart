@@ -18,7 +18,7 @@ class InfoCard extends StatelessWidget {
       margin: const EdgeInsets.symmetric(vertical: 8),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Colors.white.withOpacity(0.7),
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
@@ -36,7 +36,7 @@ class InfoCard extends StatelessWidget {
               color: Colors.deepPurple.withOpacity(0.1),
               borderRadius: BorderRadius.circular(8),
             ),
-            child: Icon(icon, color: Colors.deepPurple),
+            child: Icon(icon, color:  Theme.of(context).colorScheme.primary,),
           ),
           const SizedBox(width: 16),
           Expanded(

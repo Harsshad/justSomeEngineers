@@ -27,21 +27,21 @@ class _HomeScreenState extends State<HomeScreen> {
   List<Widget> pages = [
     const MeetingScreen(),
     const HistoryMeetingScreen(),
-    const Text('Contacts'),
-    const Text('Settings'),
+    // const Text('Contacts'),
+    // const Text('Settings'),
   ];
 
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: Theme.of(context).colorScheme.primary,
+        backgroundColor: Theme.of(context).colorScheme.background,
         title: const Text('Meet & Chat'),
         centerTitle: true,
       ),
       body: Column(
         children: [
-          SizedBox(height: 25,),
+          const SizedBox(height: 25,),
           Expanded(child: pages[_page]),
         ],
       ),
@@ -50,8 +50,8 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor: Theme.of(context).colorScheme.background,
         selectedFontSize: 14,
         unselectedFontSize: 14,
-        selectedItemColor: Colors.white,
-        unselectedItemColor: Colors.grey,
+        selectedItemColor: Colors.grey[600],
+        unselectedItemColor: Colors.grey[400],
         currentIndex: _page,
         onTap: onPagedChanged,
         items: const [
@@ -65,16 +65,16 @@ class _HomeScreenState extends State<HomeScreen> {
                 Icons.lock_clock,
               ),
               label: 'Meetings'),
-          BottomNavigationBarItem(
-              icon: Icon(
-                Icons.person_outline,
-              ),
-              label: 'Contacts'),
-          BottomNavigationBarItem(
-              icon: Icon(
-                Icons.settings,
-              ),
-              label: 'Settings'),
+          // BottomNavigationBarItem(
+          //     icon: Icon(
+          //       Icons.person_outline,
+          //     ),
+          //     label: 'Contacts'),
+          // BottomNavigationBarItem(
+          //     icon: Icon(
+          //       Icons.settings,
+          //     ),
+          //     label: 'Settings'),
         ],
       ),
     );

@@ -29,7 +29,7 @@ class _MentorCardWidgetState extends State<MentorCardWidget> {
         duration: const Duration(milliseconds: 300),
         margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10.0),
         decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.secondary,
+          color: Colors.white.withOpacity(0.7),
           borderRadius: BorderRadius.circular(15.0),
           boxShadow: [
             if (isHovered)
@@ -63,7 +63,7 @@ class _MentorCardWidgetState extends State<MentorCardWidget> {
                 widget.mentor['expertise'] ?? 'N/A',
                 style: TextStyle(color: Colors.grey[600]),
               ),
-              Text('\$${widget.mentor['hourlyRate'] ?? '0'}/hour'),
+              Text('\$${widget.mentor['monthlyRate'] ?? '0'}/month'),
               Text(
                 widget.mentor['bio'] ?? 'No description available',
                 maxLines: 1,
@@ -77,14 +77,16 @@ class _MentorCardWidgetState extends State<MentorCardWidget> {
             style: ElevatedButton.styleFrom(
               backgroundColor: isHovered
                   ? const Color.fromARGB(255, 127, 72, 216).withOpacity(0.4)
-                  : Theme.of(context).colorScheme.secondary,
+                  : Theme.of(context).colorScheme.primary,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8.0),
               ),
             ),
             child: Text(
               'View Profile',
-              style: TextStyle(color: Theme.of(context).colorScheme.primary),
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.secondary,
+              ),
             ),
           ),
         ),

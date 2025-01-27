@@ -51,15 +51,24 @@ class _MeetingScreenState extends State<MeetingScreen> {
               icon: Icons.add_box_rounded,
             ),
             HomeMeetingButton(
-              onPressed: () {},
-              text: 'Schedule',
+              onPressed: () {
+                //show a calendar with current date
+                showDatePicker(
+                  context: context,
+                  initialDate: DateTime.now(),
+                  firstDate: DateTime(2000),
+                  lastDate: DateTime(2100),
+                );
+              }, //show a calendar with current date
+
+              text: 'Calendar',
               icon: Icons.calendar_today,
             ),
-            HomeMeetingButton(
-              onPressed: () {},
-              text: 'Share Screen',
-              icon: Icons.arrow_upward_rounded,
-            ),
+            // HomeMeetingButton(
+            //   onPressed: () {},
+            //   text: 'Share Screen',
+            //   icon: Icons.arrow_upward_rounded,
+            // ),
           ],
         ),
         Expanded(

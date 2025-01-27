@@ -29,14 +29,18 @@ class _MentorListScreensState extends State<MentorListScreens> {
       });
     });
 
-      // Check if the current user is a mentor
+    // Check if the current user is a mentor
     _checkIfUserIsMentor();
   }
-   // Check if the current user is a mentor
+
+  // Check if the current user is a mentor
   Future<void> _checkIfUserIsMentor() async {
     final currentUser = FirebaseAuth.instance.currentUser;
     if (currentUser != null) {
-      final userDoc = await FirebaseFirestore.instance.collection('mentors').doc(currentUser.uid).get();
+      final userDoc = await FirebaseFirestore.instance
+          .collection('mentors')
+          .doc(currentUser.uid)
+          .get();
       if (userDoc.exists) {
         setState(() {
           _isMentor = true;
@@ -54,7 +58,7 @@ class _MentorListScreensState extends State<MentorListScreens> {
   List<Widget> pages(BuildContext context) {
     return [
       MentorListPage(searchQuery: _searchQuery),
-      if (_isMentor)  MentorForms(),
+      if (_isMentor) MentorForms(),
       if (_isMentor) const MentorProfilePage(),
     ];
   }
@@ -62,7 +66,7 @@ class _MentorListScreensState extends State<MentorListScreens> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.deepPurple.shade200,
+      backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         //const SizedBox(height: 10),
@@ -70,7 +74,7 @@ class _MentorListScreensState extends State<MentorListScreens> {
           'Available Mentors',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        
+
         bottom: _page == 0
             ? PreferredSize(
                 preferredSize: const Size.fromHeight(56.0),
@@ -85,7 +89,7 @@ class _MentorListScreensState extends State<MentorListScreens> {
                         borderRadius: BorderRadius.circular(12.0),
                       ),
                       filled: true,
-                      fillColor: Colors.grey[200],
+                      fillColor: Theme.of(context).colorScheme.secondary,
                     ),
                   ),
                 ),
@@ -94,12 +98,24 @@ class _MentorListScreensState extends State<MentorListScreens> {
       ),
       bottomNavigationBar: _isMentor
           ? BottomNavigationBar(
+              backgroundColor: Theme.of(context).colorScheme.tertiary,
+              selectedFontSize: 14,
+              unselectedFontSize: 14,
+              selectedItemColor: Colors.grey[600],
+              unselectedItemColor: Colors.grey[400],
               currentIndex: _page,
               onTap: onPagedChanged,
               items: const [
-                BottomNavigationBarItem(icon: Icon(Icons.list), label: 'Mentor List'),
-                BottomNavigationBarItem(icon: Icon(Icons.description_outlined), label: 'Mentor Form'),
-                BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Mentor Profile'),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.list_alt_rounded,),
+                  label: 'Mentor List',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.description_outlined),
+                  label: 'Mentor Form',
+                ),
+                BottomNavigationBarItem(
+                    icon: Icon(Icons.person), label: 'Mentor Profile',),
               ],
             )
           : null, // No BottomNavigationBar for non-mentor users
@@ -133,7 +149,9 @@ class MentorListPage extends StatelessWidget {
           final name = (mentor['fullName'] ?? '').toLowerCase();
           final role = (mentor['role'] ?? '').toLowerCase();
           final expertise = (mentor['expertise'] ?? '').toLowerCase();
-          return name.contains(searchQuery) || role.contains(searchQuery) || expertise.contains(searchQuery);
+          return name.contains(searchQuery) ||
+              role.contains(searchQuery) ||
+              expertise.contains(searchQuery);
         }).toList();
 
         if (mentors.isEmpty) {
@@ -153,7 +171,8 @@ class MentorListPage extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => MentorDetailsScreen(mentorId: mentorId),
+                    builder: (context) =>
+                        MentorDetailsScreen(mentorId: mentorId),
                   ),
                 );
               },

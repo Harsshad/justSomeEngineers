@@ -13,11 +13,14 @@ class MentorDetailsScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Mentor Details'),
-        backgroundColor: Colors.deepPurple[200],
+        backgroundColor: Theme.of(context).colorScheme.background,
         elevation: 4.0,
       ),
       body: FutureBuilder<DocumentSnapshot>(
-        future: FirebaseFirestore.instance.collection('mentors').doc(mentorId).get(),
+        future: FirebaseFirestore.instance
+            .collection('mentors')
+            .doc(mentorId)
+            .get(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -41,18 +44,18 @@ class MentorDetailsScreen extends StatelessWidget {
                     radius: 60,
                     backgroundImage: mentor['profileImage'] != null
                         ? NetworkImage(mentor['profileImage'])
-                        : const AssetImage(Constants.default_profile) as ImageProvider,
-                    backgroundColor: Colors.grey[200],
+                        : const AssetImage(Constants.default_profile)
+                            as ImageProvider,
+                    backgroundColor: Theme.of(context).colorScheme.background,
                   ),
                 ),
                 const SizedBox(height: 20),
                 Center(
                   child: Text(
                     mentor['fullName'] ?? 'N/A',
-                    style: Theme.of(context)
-                        .textTheme
-                        .headlineSmall!
-                        .copyWith(color: Colors.deepPurple[200], fontWeight: FontWeight.bold),
+                    style: Theme.of(context).textTheme.headlineSmall!.copyWith(
+                        color: Theme.of(context).colorScheme.primary,
+                        fontWeight: FontWeight.bold),
                   ),
                 ),
                 const SizedBox(height: 10),
@@ -69,17 +72,24 @@ class MentorDetailsScreen extends StatelessWidget {
                       children: [
                         Text(
                           'Role:',
-                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color:Colors.deepPurple[200]),
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
                         ),
                         Text(
                           mentor['role'] ?? 'N/A',
                           style: const TextStyle(fontSize: 14),
                         ),
                         const SizedBox(height: 8),
-
                         Text(
                           'Bio:',
-                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color:Colors.deepPurple[200]),
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
                         ),
                         Text(
                           mentor['bio'] ?? 'N/A',
@@ -88,7 +98,11 @@ class MentorDetailsScreen extends StatelessWidget {
                         const SizedBox(height: 8),
                         Text(
                           'Experience:',
-                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.deepPurple[200]),
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
                         ),
                         Text(
                           '${mentor['experience'] ?? 'N/A'} years',
@@ -97,7 +111,11 @@ class MentorDetailsScreen extends StatelessWidget {
                         const SizedBox(height: 8),
                         Text(
                           'Expertise:',
-                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.deepPurple[200]),
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
                         ),
                         Text(
                           mentor['expertise'] ?? 'N/A',
@@ -106,36 +124,58 @@ class MentorDetailsScreen extends StatelessWidget {
                         const SizedBox(height: 8),
                         Text(
                           'LinkedIn:',
-                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.deepPurple[200]),
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
                         ),
                         Text(
                           mentor['linkedinUrl'] ?? 'N/A',
-                          style: const TextStyle(fontSize: 14, decoration: TextDecoration.underline),
+                          style: const TextStyle(
+                              fontSize: 14,
+                              decoration: TextDecoration.underline,
+                              color: Colors.blue),
                         ),
                         const SizedBox(height: 8),
                         Text(
                           'Portfolio:',
-                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.deepPurple[200]),
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
                         ),
                         Text(
                           mentor['portfolioUrl'] ?? 'N/A',
-                          style: const TextStyle(fontSize: 14, decoration: TextDecoration.underline),
+                          style: const TextStyle(
+                              fontSize: 14,
+                              decoration: TextDecoration.underline,
+                              color: Colors.blue),
                         ),
                         const SizedBox(height: 8),
                         Text(
-                          'Hourly Rate:',
-                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.deepPurple[200]),
+                          'Monthly Rate:',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
                         ),
                         Text(
-                          '\$${mentor['hourlyRate'] ?? '0'}/hour',
+                          '\$${mentor['monthlyRate'] ?? '0'}/month',
                           style: const TextStyle(fontSize: 14),
                         ),
                         const SizedBox(height: 16),
                         Row(
                           children: [
                             Icon(
-                              mentor['isPaid'] == true ? Icons.monetization_on : Icons.volunteer_activism,
-                              color: mentor['isPaid'] == true ? Colors.green : Colors.blue,
+                              mentor['isPaid'] == true
+                                  ? Icons.monetization_on
+                                  : Icons.volunteer_activism,
+                              color: mentor['isPaid'] == true
+                                  ? Colors.green
+                                  : Colors.blue,
                             ),
                             const SizedBox(width: 8),
                             Text(
@@ -144,7 +184,9 @@ class MentorDetailsScreen extends StatelessWidget {
                                   : 'This mentor offers free mentorship.',
                               style: TextStyle(
                                 fontSize: 14,
-                                color: mentor['isPaid'] == true ? Colors.green : Colors.blue,
+                                color: mentor['isPaid'] == true
+                                    ? Colors.green
+                                    : Colors.blue,
                               ),
                             ),
                           ],

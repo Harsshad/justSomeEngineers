@@ -20,7 +20,7 @@ class MentorProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.deepPurple.shade100,
+      backgroundColor:  Theme.of(context).colorScheme.background,
       body: StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
         stream: _getMentorStream(),
         builder: (context, snapshot) {

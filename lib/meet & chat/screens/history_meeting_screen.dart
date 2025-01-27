@@ -3,11 +3,6 @@ import 'package:codefusion/meet%20&%20chat/auth/firestore_methods.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-
-
-
-
-
 class HistoryMeetingScreen extends StatelessWidget {
   const HistoryMeetingScreen({Key? key}) : super(key: key);
 

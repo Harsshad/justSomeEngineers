@@ -1,12 +1,14 @@
 import 'dart:convert';
 import 'dart:typed_data';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:codefusion/profile%20&%20Q&A/core/constants/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
+
 import '../../components/my_textfield.dart';
 
 class MentorForms extends StatefulWidget {
@@ -24,7 +26,7 @@ class _MentorFormsState extends State<MentorForms> {
 
   final experienceController = TextEditingController();
   final expertiseController = TextEditingController();
-  final hourlyRateController = TextEditingController();
+  final monthlyRateController = TextEditingController();
   final linkedinUrlController = TextEditingController();
   final portfolioUrlController = TextEditingController();
   final bioController = TextEditingController();
@@ -33,7 +35,7 @@ class _MentorFormsState extends State<MentorForms> {
   final roleFocus = FocusNode();
   final experienceFocus = FocusNode();
   final expertiseFocus = FocusNode();
-  final hourlyRateFocus = FocusNode();
+  final monthlyRateFocus = FocusNode();
   final linkedinFocus = FocusNode();
   final portfolioFocus = FocusNode();
   final bioFocus = FocusNode();
@@ -97,7 +99,7 @@ class _MentorFormsState extends State<MentorForms> {
       final role = roleController.text;
       final experience = experienceController.text;
       final expertise = expertiseController.text;
-      final hourlyRate = hourlyRateController.text;
+      final monthlyRate = monthlyRateController.text;
       final linkedinUrl = linkedinUrlController.text;
       final portfolioUrl = portfolioUrlController.text;
       final bio = bioController.text;
@@ -123,7 +125,7 @@ class _MentorFormsState extends State<MentorForms> {
           'expertise': expertise,
           'linkedinUrl': linkedinUrl,
           'portfolioUrl': portfolioUrl,
-          'hourlyRate': hourlyRate,
+          'monthlyRate': monthlyRate,
           'bio': bio,
           'isPaid': isPaid,
           'profileImage':
@@ -168,7 +170,10 @@ class _MentorFormsState extends State<MentorForms> {
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [Colors.deepPurple.shade100, Colors.deepPurple.shade50],
+            colors: [
+              Theme.of(context).colorScheme.primary,
+              Theme.of(context).colorScheme.secondary
+            ],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
           ),
@@ -234,7 +239,7 @@ class _MentorFormsState extends State<MentorForms> {
                   ..._buildFormFields(),
                   const SizedBox(height: 16),
                   CheckboxListTile(
-                    activeColor: Colors.deepPurple,
+                    activeColor: Theme.of(context).colorScheme.primary,
                     title: const Text('Paid Mentorship',
                         style: TextStyle(fontSize: 18)),
                     value: isPaid,
@@ -244,7 +249,7 @@ class _MentorFormsState extends State<MentorForms> {
                   ElevatedButton(
                     onPressed: _saveDetails,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color.fromARGB(255, 137, 87, 223),
+                      backgroundColor: Theme.of(context).colorScheme.primary,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
@@ -256,9 +261,10 @@ class _MentorFormsState extends State<MentorForms> {
                       child: Text(
                         'Save Details',
                         style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: Theme.of(context).colorScheme.surface),
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).colorScheme.surface,
+                        ),
                       ),
                     ),
                   ),
@@ -295,10 +301,10 @@ class _MentorFormsState extends State<MentorForms> {
       ),
       const SizedBox(height: 15),
       MyTextfield(
-        hintText: 'Hourly Rate',
+        hintText: 'Monthly Rate',
         obscureText: false,
-        controller: hourlyRateController,
-        focusNode: hourlyRateFocus,
+        controller: monthlyRateController,
+        focusNode: monthlyRateFocus,
       ),
       const SizedBox(height: 15),
       MyTextfield(
