@@ -1,6 +1,8 @@
 import 'package:codefusion/profile%20&%20Q&A/core/constants/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:codefusion/global_resources/auth/auth_methods.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
+import 'dart:io' show Platform;
 
 class DrawerWidget extends StatelessWidget {
   const DrawerWidget({Key? key}) : super(key: key);
@@ -36,21 +38,22 @@ class DrawerWidget extends StatelessWidget {
             },
           ),
           ListTile(
-            title: Text('Profile'),
-            leading: Icon(Icons.person),
+            title: const Text('Profile'),
+            leading: const Icon(Icons.person),
             onTap: () {
               Navigator.pop(context);
               Navigator.pushNamed(context, '/profile');
             },
           ),
-          ListTile(
-            title: const Text('CodeMate'),
-            leading: const Icon(Icons.smart_toy_outlined),
-            onTap: () {
-              Navigator.pop(context);
-              Navigator.pushNamed(context, '/chat-bot');
-            },
-          ),
+          if (kIsWeb || Platform.isMacOS || Platform.isWindows || Platform.isLinux)
+            ListTile(
+              title: const Text('CodeMate'),
+              leading: const Icon(Icons.smart_toy_outlined),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.pushNamed(context, '/chat-bot');
+              },
+            ),
           ListTile(
             title: const Text('Ques & Ans'),
             leading: const Icon(Icons.forum_outlined),
@@ -59,14 +62,15 @@ class DrawerWidget extends StatelessWidget {
               Navigator.pushNamed(context, '/que-answer');
             },
           ),
-          ListTile(
-            title: const Text('Meet & Chat'),
-            leading: const Icon(Icons.group),
-            onTap: () {
-              Navigator.pop(context);
-              Navigator.pushNamed(context, '/meet-home');
-            },
-          ),
+          if (!kIsWeb && (Platform.isAndroid || Platform.isIOS))
+            ListTile(
+              title: const Text('Meet & Chat'),
+              leading: const Icon(Icons.group),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.pushNamed(context, '/meet-home');
+              },
+            ),
           ListTile(
             title: const Text('Mentorship'),
             leading: const Icon(Icons.school_rounded),
@@ -80,7 +84,7 @@ class DrawerWidget extends StatelessWidget {
             leading: const Icon(Icons.menu_book_rounded),
             onTap: () {
               Navigator.pop(context);
-              Navigator.pushNamed(context, '/resources');
+              Navigator.pushNamed(context, '/resource_hub');
             },
           ),
           ListTile(
@@ -91,14 +95,6 @@ class DrawerWidget extends StatelessWidget {
               Navigator.pushNamed(context, '/resume');
             },
           ),
-          // ListTile(
-          //   title: const Text('Job Form'),
-          //   leading: const Icon(Icons.file_copy_rounded),
-          //   onTap: () {
-          //     Navigator.pop(context);
-          //     Navigator.pushNamed(context, '/job-form');
-          //   },
-          // ),
           ListTile(
             title: const Text('Job Recommendations'),
             leading: const Icon(Icons.business_center_rounded),
@@ -108,8 +104,8 @@ class DrawerWidget extends StatelessWidget {
             },
           ),
           ListTile(
-            title: Text('Settings'),
-            leading: Icon(Icons.settings),
+            title: const Text('Settings'),
+            leading: const Icon(Icons.settings),
             onTap: () {
               Navigator.pop(context);
               Navigator.pushNamed(context, '/settings');

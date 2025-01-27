@@ -28,6 +28,7 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+  cached_network_image: ^3.3.1
   carousel_slider: ^5.0.0
   cloud_firestore: ^5.6.0
   cupertino_icons: ^1.0.8
@@ -53,6 +54,9 @@ dependencies:
   uuid: ^4.5.1
   vertical_card_pager: ^1.6.3
   web_socket_client: ^0.1.5
+  xml: ^6.5.0
+  youtube_explode_dart: ^1.10.0
+
 
 dev_dependencies:
   flutter_lints: ^4.0.0

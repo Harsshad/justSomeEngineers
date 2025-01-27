@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:codefusion/profile%20&%20Q&A/core/constants/constants.dart';
@@ -166,13 +165,6 @@ class _MentorFormsState extends State<MentorForms> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   title: const Text('Mentor Form', style: TextStyle(fontSize: 24)),
-      //   centerTitle: true,
-      //   backgroundColor: Colors.deepPurple,
-      //   elevation: 5,
-      //   shadowColor: Colors.deepPurpleAccent,
-      // ),
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
@@ -188,35 +180,50 @@ class _MentorFormsState extends State<MentorForms> {
             child: SingleChildScrollView(
               child: Column(
                 children: [
-                  GestureDetector(
-                    onTap: _pickProfileImage,
-                    child: AnimatedContainer(
-                      duration: const Duration(milliseconds: 300),
-                      curve: Curves.easeInOut,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.5),
-                            spreadRadius: 5,
-                            blurRadius: 7,
-                            offset: const Offset(0, 3),
+                  const SizedBox(height: 20), // Add spacing above CircleAvatar
+                  Stack(
+                    children: [
+                      GestureDetector(
+                        onTap: _pickProfileImage,
+                        child: AnimatedContainer(
+                          duration: const Duration(milliseconds: 300),
+                          curve: Curves.easeInOut,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.5),
+                                spreadRadius: 5,
+                                blurRadius: 7,
+                                offset: const Offset(0, 3),
+                              ),
+                            ],
                           ),
-                        ],
+                          child: CircleAvatar(
+                            radius: 60,
+                            backgroundImage: _profileImage != null
+                                ? MemoryImage(_profileImage!)
+                                : (_profileImageUrl != null
+                                    ? NetworkImage(_profileImageUrl!)
+                                    : const AssetImage(
+                                            Constants.default_profile)
+                                        as ImageProvider),
+                          ),
+                        ),
                       ),
-                      child: CircleAvatar(
-                        radius: 60,
-                        backgroundImage: _profileImage != null
-                            ? MemoryImage(_profileImage!)
-                            : (_profileImageUrl != null
-                                ? NetworkImage(_profileImageUrl!)
-                                : const AssetImage(Constants.default_profile)
-                                    as ImageProvider),
-                        child: _profileImage == null && _profileImageUrl == null
-                            ? const Icon(Icons.add_a_photo, size: 30)
-                            : null,
+                      Positioned(
+                        bottom: -6,
+                        left: 80,
+                        child: IconButton(
+                          icon: Icon(
+                            Icons.add_a_photo,
+                            size: 26,
+                            color: Theme.of(context).colorScheme.tertiary,
+                          ),
+                          onPressed: _pickProfileImage,
+                        ),
                       ),
-                    ),
+                    ],
                   ),
                   const SizedBox(height: 16),
                   const Text(

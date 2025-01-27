@@ -1,7 +1,10 @@
+import 'package:codefusion/mentorship/screens/mentor_detail_screen.dart';
 import 'package:codefusion/news/services/article_functions.dart';
+import 'package:codefusion/news/widgets/article_mentor_card.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
-
+import 'package:carousel_slider/carousel_slider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ArticleList extends StatefulWidget {
   const ArticleList({Key? key}) : super(key: key);
@@ -12,11 +15,13 @@ class ArticleList extends StatefulWidget {
 
 class ArticleListState extends State<ArticleList> {
   static List<dynamic> _articles = [];
+  List<Map<String, dynamic>> _mentors = [];
 
   @override
   void initState() {
     super.initState();
     _fetchArticles(" ");
+    _fetchMentors();
   }
 
   static void refreshArticles(BuildContext context) {
@@ -27,7 +32,7 @@ class ArticleListState extends State<ArticleList> {
   void _fetchArticles(String tag) async {
     try {
       setState(() {
-        _articles = []; // Clear existing articles
+        _articles = []; 
       });
       final articles = await fetchArticles(tag);
       setState(() {
@@ -35,6 +40,18 @@ class ArticleListState extends State<ArticleList> {
       });
     } catch (e) {
       print('Error fetching articles: $e');
+    }
+  }
+
+  void _fetchMentors() async {
+    try {
+      final snapshot = await FirebaseFirestore.instance.collection('mentors').get();
+      final mentors = snapshot.docs.map((doc) => doc.data()).toList();
+      setState(() {
+        _mentors = mentors;
+      });
+    } catch (e) {
+      print('Error fetching mentors: $e');
     }
   }
 
@@ -49,17 +66,17 @@ class ArticleListState extends State<ArticleList> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                article['title'],
+                article['title'] ?? 'No title available',
                 style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 12),
               Text(
-                article['description'] ?? "No description available",
+                article['description'] ?? 'No description available',
                 style: TextStyle(fontSize: 14, color: Theme.of(context).colorScheme.primary),
               ),
               const SizedBox(height: 12),
               Text(
-                'Published on: ${article['published_at']}',
+                'Published on: ${article['published_at'] ?? 'Unknown date'}',
                 style: TextStyle(fontSize: 12, color: Theme.of(context).colorScheme.primary),
               ),
               const SizedBox(height: 12),
@@ -99,63 +116,107 @@ class ArticleListState extends State<ArticleList> {
             itemCount: _articles.length,
             itemBuilder: (context, index) {
               final article = _articles[index];
-              return Card(
-                elevation: 4,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    if (article['cover_image'] != null)
-                      ClipRRect(
-                        borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
-                        child: Image.network(
-                          article['cover_image'],
-                          height: 180,
-                          width: double.infinity,
-                          fit: BoxFit.cover,
+              return Column(
+                children: [
+                  if (index % 7 == 0 && _mentors.isNotEmpty)
+                    CarouselSlider(
+                      options: CarouselOptions(height: 200.0),
+                      items: [
+                        ..._mentors.take(7).map((mentor) {
+                          return Builder(
+                            builder: (BuildContext context) {
+                              return ArticleMentorCard(
+                                mentor: mentor,
+                                mentorId: mentor['uid'] ?? '',
+                                onTap: () {
+                                  // Navigator.push(
+                                  //   context,
+                                  //   MaterialPageRoute(
+                                  //     builder: (context) => MentorDetailsScreen(mentorId: mentor['uid']),
+                                  //   ),
+                                  // );
+                                },
+                              );
+                            },
+                          );
+                        }).toList(),
+                        Builder(
+                          builder: (BuildContext context) {
+                            return GestureDetector(
+                              onTap: () {
+                                Navigator.pushNamed(context, '/mentor-list-screen');
+                              },
+                              child: Container(
+                                width: double.infinity,
+                                color: Colors.transparent,
+                                child: const Center(
+                                  child: Icon(Icons.arrow_forward_rounded, size: 50, color: Colors.grey),
+                                ),
+                              ),
+                            );
+                          },
                         ),
-                      ),
-                    Padding(
-                      padding: const EdgeInsets.all(12.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            article['title'],
-                            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      ],
+                    ),
+                  Card(
+                    elevation: 4,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        if (article['cover_image'] != null)
+                          ClipRRect(
+                            borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+                            child: Image.network(
+                              article['cover_image'],
+                              height: 180,
+                              width: double.infinity,
+                              fit: BoxFit.cover,
+                            ),
                           ),
-                          const SizedBox(height: 8),
-                          Text(
-                            article['description'] ?? "No description available",
-                            style: const TextStyle(fontSize: 14, color: Colors.grey),
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          const SizedBox(height: 12),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        Padding(
+                          padding: const EdgeInsets.all(12.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                '❤️ ${article['positive_reactions_count']} Likes',
-                                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+                                article['title'] ?? 'No title available',
+                                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                               ),
-                              ElevatedButton(
-                                style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
-                                onPressed: () => _showArticleDetails(context, article),
-                                child: Text(
-                                  'Read More',
-                                  style: TextStyle(color: Theme.of(context).colorScheme.secondary),
-                                ),
+                              const SizedBox(height: 8),
+                              Text(
+                                article['description'] ?? 'No description available',
+                                style: const TextStyle(fontSize: 14, color: Colors.grey),
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              const SizedBox(height: 12),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    '❤️ ${article['positive_reactions_count'] ?? 0} Likes',
+                                    style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+                                  ),
+                                  ElevatedButton(
+                                    style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
+                                    onPressed: () => _showArticleDetails(context, article),
+                                    child: Text(
+                                      'Read More',
+                                      style: TextStyle(color: Theme.of(context).colorScheme.secondary),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ],
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                ],
               );
             },
           );

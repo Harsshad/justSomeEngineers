@@ -10,6 +10,7 @@ import 'package:codefusion/mentorship/screens/mentor_detail_screen.dart';
 import 'package:codefusion/mentorship/screens/mentor_form.dart';
 import 'package:codefusion/mentorship/screens/mentor_login_screen.dart';
 import 'package:codefusion/mentorship/screens/mentor_register_screen.dart';
+import 'package:codefusion/resources_hub/screens/resources_page.dart';
 import 'package:codefusion/resume/page/resume_input_page.dart';
 import 'package:codefusion/screens/profile_screen.dart';
 import 'package:codefusion/screens/resources_screen.dart';
@@ -84,6 +85,7 @@ class MyApp extends StatelessWidget {
         '/profile': (context) => const ProfileScreen(),
         '/chat-bot': (context) => const BotHomePage(),
         '/resume': (context) => const ResumeInputPage(),
+        '/resource_hub': (context)=> const ResourcesPage(),
       },
       home: StreamBuilder(
         stream: AuthMethods().authChanges,
