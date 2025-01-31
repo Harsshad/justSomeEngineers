@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:codefusion/profile%20&%20Q&A/core/constants/constants.dart';
+import 'package:codefusion/global_resources/constants/constants.dart';
 import 'package:flutter/material.dart';
 
 class MentorDetailsScreen extends StatelessWidget {

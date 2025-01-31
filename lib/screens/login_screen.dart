@@ -4,7 +4,7 @@ import 'package:codefusion/global_resources/auth/auth_methods.dart';
 import 'package:codefusion/profile%20&%20Q&A/core/common/sign_in_button.dart';
 import 'package:flutter/material.dart';
 import '../meet & chat/widgets/custom_button.dart';
-import '../profile & Q&A/core/constants/constants.dart';
+import '../global_resources/constants/constants.dart';
 
 class LoginScreen extends StatefulWidget {
   // Constructor with `onTap` callback
@@ -52,15 +52,15 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        // actions: [
-        //   TextButton(
-        //     onPressed: () {},
-        //     child: const Text(
-        //       'Skip',
-        //       style: TextStyle(fontWeight: FontWeight.bold),
-        //     ),
-        //   ),
-        // ],
+        actions: [
+          TextButton(
+            onPressed: () {},
+            child: const Text(
+              'Skip',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ),
+        ],
       ),
       backgroundColor: Theme.of(context).colorScheme.background,
       body: Padding(
@@ -109,16 +109,16 @@ class _LoginScreenState extends State<LoginScreen> {
               // const SizedBox(height: 15),
 
               // Google Sign-In button
-              // const SignInButton(),
-              CustomButton(
-                text: 'Google Sign In',
-                onPressed: () async {
-                  bool res = await _authMethods.signInWithGoogle(context);
-                  if (res) {
-                    Navigator.pushNamed(context, '/home');
-                  }
-                },
-              ),
+              const SignInButton(),
+              // CustomButton( 
+              //   text: 'Google Sign In',
+              //   onPressed: () async {
+              //     bool res = await _authMethods.signInWithGoogle(context);
+              //     if (res) {
+              //       Navigator.pushNamed(context, '/home');
+              //     }
+              //   },
+              // ),
               const SizedBox(height: 15),
               // Register now
               Row(

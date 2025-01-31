@@ -2,7 +2,7 @@
 
 import 'dart:convert';
 import 'dart:typed_data';
-import 'package:codefusion/profile%20&%20Q&A/core/constants/constants.dart';
+import 'package:codefusion/global_resources/constants/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;

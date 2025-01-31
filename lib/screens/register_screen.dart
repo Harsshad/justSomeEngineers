@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 
 import '../components/my_button.dart';
 import '../components/my_textfield.dart';
-import '../profile & Q&A/core/constants/constants.dart';
+import '../global_resources/constants/constants.dart';
 
 
 class RegisterScreen extends StatelessWidget {

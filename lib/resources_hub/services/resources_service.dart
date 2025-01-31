@@ -1,6 +1,7 @@
 import 'package:codefusion/resources_hub/services/medium_service.dart';
 import 'package:codefusion/resources_hub/services/youtube_explode_service.dart';
 import 'package:codefusion/resources_hub/services/devto_service.dart';
+import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
 class ResourcesService {
   final MediumService _mediumService = MediumService();
@@ -17,5 +18,9 @@ class ResourcesService {
       'videos': videos,
       'devToArticles': devToArticles,
     };
+  }
+
+  Future<List<Video>> searchVideos(String query) async {
+    return await _youtubeService.searchVideos(query);
   }
 }

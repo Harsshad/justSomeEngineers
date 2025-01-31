@@ -1,16 +1,17 @@
+import 'package:codefusion/global_resources/constants/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 
-class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({super.key});
+class DeveloperScreen extends StatelessWidget {
+  const DeveloperScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'User Profile',
+          'Developer Screen',
           style: TextStyle(
             fontWeight: FontWeight.bold,
           ),
@@ -22,14 +23,15 @@ class ProfileScreen extends StatelessWidget {
       ),
       body: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            // Lottie.asset(
-            //   'assets/animations/profile.json', // Path to your Lottie animation
-            //   height: 200,
-            //   width: 200,
-            //   fit: BoxFit.cover,
-            // ),
+            const SizedBox(height: 20),
+            Lottie.asset(
+              Constants.profile_gif,
+              height: 250,
+              width: 250,
+              fit: BoxFit.cover,
+            ),
             const SizedBox(height: 20),
             AnimatedContainer(
               duration: const Duration(seconds: 2),
@@ -49,7 +51,7 @@ class ProfileScreen extends StatelessWidget {
                 ],
               ),
               child: Text(
-                'Welcome to your Profile!',
+                'Harsshad Sivsharan aka HashBorg aka Hawk Specter \n At your Service',
                 style: GoogleFonts.lobster(
                   textStyle: TextStyle(
                     fontSize: 24,
@@ -61,30 +63,37 @@ class ProfileScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                // Add your onPressed code here!
-              },
-              style: ElevatedButton.styleFrom(
-                foregroundColor: Theme.of(context).colorScheme.primary,
-                backgroundColor: Theme.of(context).colorScheme.background,
-                shadowColor: Theme.of(context).colorScheme.secondary,
-                elevation: 10,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-              ),
-              child: Text(
-                'Edit Profile',
-                style: GoogleFonts.lobster(
-                  textStyle: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
+            Lottie.asset(
+              Constants.laptop_gif,
+              height: 250,
+              width: 250,
+              fit: BoxFit.cover,
             ),
+            const SizedBox(height: 20),
+            // ElevatedButton(
+            //   onPressed: () {
+            //     // Add your onPressed code here!
+            //   },
+            //   style: ElevatedButton.styleFrom(
+            //     foregroundColor: Theme.of(context).colorScheme.primary,
+            //     backgroundColor: Theme.of(context).colorScheme.background,
+            //     shadowColor: Theme.of(context).colorScheme.secondary,
+            //     elevation: 10,
+            //     shape: RoundedRectangleBorder(
+            //       borderRadius: BorderRadius.circular(20),
+            //     ),
+            //     padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+            //   ),
+            //   child: Text(
+            //     'Contact Me',
+            //     style: GoogleFonts.lobster(
+            //       textStyle: const TextStyle(
+            //         fontSize: 18,
+            //         fontWeight: FontWeight.bold,
+            //       ),
+            //     ),
+            //   ),
+            // ),
           ],
         ),
       ),

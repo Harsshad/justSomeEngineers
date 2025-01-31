@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:codefusion/profile%20&%20Q&A/core/constants/constants.dart';
+import 'package:codefusion/global_resources/constants/constants.dart';
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:codefusion/mentorship/screens/mentor_detail_screen.dart';
@@ -66,15 +67,14 @@ class _MentorListScreensState extends State<MentorListScreens> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBody: true,
       backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        //const SizedBox(height: 10),
         title: const Text(
           'Available Mentors',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
-
         bottom: _page == 0
             ? PreferredSize(
                 preferredSize: const Size.fromHeight(56.0),
@@ -97,28 +97,57 @@ class _MentorListScreensState extends State<MentorListScreens> {
             : null,
       ),
       bottomNavigationBar: _isMentor
-          ? BottomNavigationBar(
-              backgroundColor: Theme.of(context).colorScheme.tertiary,
-              selectedFontSize: 14,
-              unselectedFontSize: 14,
-              selectedItemColor: Colors.grey[600],
-              unselectedItemColor: Colors.grey[400],
-              currentIndex: _page,
-              onTap: onPagedChanged,
-              items: const [
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.list_alt_rounded,),
-                  label: 'Mentor List',
+          ? CurvedNavigationBar(
+              color:Theme.of(context).colorScheme.background,
+              buttonBackgroundColor: Colors.transparent,  //transparency not working 
+              backgroundColor: Colors.transparent,
+              items: <Widget>[
+                Icon(
+                  Icons.list_alt_rounded,
+                  size: 30,
+                  color: Theme.of(context).colorScheme.primary,
                 ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.description_outlined),
-                  label: 'Mentor Form',
+                Icon(
+                  Icons.description_outlined,
+                  size: 30,
+                  color: Theme.of(context).colorScheme.primary,
                 ),
-                BottomNavigationBarItem(
-                    icon: Icon(Icons.person), label: 'Mentor Profile',),
+                Icon(
+                  Icons.person,
+                  size: 30,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
               ],
+              onTap: onPagedChanged,
+              index: _page,
             )
           : null, // No BottomNavigationBar for non-mentor users
+      // Commenting out the existing BottomNavigationBar
+      // bottomNavigationBar: _isMentor
+      //     ? BottomNavigationBar(
+      //         backgroundColor: Theme.of(context).colorScheme.tertiary,
+      //         selectedFontSize: 14,
+      //         unselectedFontSize: 14,
+      //         selectedItemColor: Colors.grey[600],
+      //         unselectedItemColor: Colors.grey[400],
+      //         currentIndex: _page,
+      //         onTap: onPagedChanged,
+      //         items: const [
+      //           BottomNavigationBarItem(
+      //             icon: Icon(Icons.list_alt_rounded),
+      //             label: 'Mentor List',
+      //           ),
+      //           BottomNavigationBarItem(
+      //             icon: Icon(Icons.description_outlined),
+      //             label: 'Mentor Form',
+      //           ),
+      //           BottomNavigationBarItem(
+      //             icon: Icon(Icons.person),
+      //             label: 'Mentor Profile',
+      //           ),
+      //         ],
+      //       )
+      //     : null, // No BottomNavigationBar for non-mentor users
       body: pages(context)[_page],
     );
   }

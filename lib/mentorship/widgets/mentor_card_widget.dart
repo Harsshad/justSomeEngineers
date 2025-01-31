@@ -1,4 +1,4 @@
-import 'package:codefusion/profile%20&%20Q&A/core/constants/constants.dart';
+import 'package:codefusion/global_resources/constants/constants.dart';
 import 'package:flutter/material.dart';
 
 class MentorCardWidget extends StatefulWidget {
@@ -76,7 +76,7 @@ class _MentorCardWidgetState extends State<MentorCardWidget> {
             onPressed: widget.onTap,
             style: ElevatedButton.styleFrom(
               backgroundColor: isHovered
-                  ? const Color.fromARGB(255, 127, 72, 216).withOpacity(0.4)
+                  ? Colors.blue
                   : Theme.of(context).colorScheme.primary,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8.0),
