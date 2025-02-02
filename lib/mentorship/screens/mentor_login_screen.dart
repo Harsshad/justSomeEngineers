@@ -1,4 +1,4 @@
-import 'package:codefusion/components/my_textfield.dart';
+import 'package:codefusion/global_resources/components/my_textfield.dart';
 import 'package:codefusion/global_resources/auth/auth_methods.dart';
 import 'package:codefusion/meet%20&%20chat/utils/utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';

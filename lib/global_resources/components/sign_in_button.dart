@@ -1,8 +1,9 @@
 import 'package:codefusion/global_resources/auth/auth_methods.dart';
-import 'package:codefusion/profile%20&%20Q&A/theme/pallete.dart';
+import 'package:codefusion/global_resources/themes/pallete.dart';
+
 import 'package:flutter/material.dart';
 
-import '../../../global_resources/constants/constants.dart';
+import '../../../../global_resources/constants/constants.dart';
 
 class SignInButton extends StatelessWidget {
   const SignInButton({super.key});

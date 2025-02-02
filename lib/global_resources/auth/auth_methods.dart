@@ -2,19 +2,26 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:codefusion/global_resources/constants/constants.dart';
+import 'package:codefusion/global_resources/constants/firebase_constants.dart';
 import 'package:codefusion/meet%20&%20chat/utils/utils.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 
-
+// final authMehtodsProvider = Provider<AuthMethods>(
+//   create: (context) => AuthMethods.instance,
+// );
 
 class AuthMethods {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  // CollectionReference get _users => //added this for user profile and q&a
+  //     _firestore.collection(FirebaseConstants.usersCollection);
 
   Stream<User?> get authChanges => _auth.authStateChanges();
   User get user => _auth.currentUser!;
@@ -34,6 +41,21 @@ class AuthMethods {
 
       UserCredential userCredential =
           await _auth.signInWithCredential(credential);
+
+      // if (userCredential.additionalUserInfo!.isNewUser) {
+      //   UserModel userModel = UserModel(
+      //     //added this for user profile and q&a
+      //     name: userCredential.user!.displayName ?? 'N/A',
+      //     profilePic:
+      //         userCredential.user!.photoURL ?? Constants.default_profile,
+      //     banner: Constants.default_banner,
+      //     uid: userCredential.user!.uid,
+      //     isAuthenticated: true,
+      //     karma: 0,
+      //     awards: [],
+      //   );
+      //   await _users.doc(userCredential.user!.uid).set({userModel.toMap()});
+      // }
 
       User? user = userCredential.user;
       if (user != null) {
@@ -62,9 +84,11 @@ class AuthMethods {
   }
 
   // Mentor sign-up
-  Future<UserCredential> mentorSignUp(String email, String password, Map<String, dynamic> mentorDetails) async {
+  Future<UserCredential> mentorSignUp(
+      String email, String password, Map<String, dynamic> mentorDetails) async {
     try {
-      UserCredential userCredential = await _auth.createUserWithEmailAndPassword(email: email, password: password);
+      UserCredential userCredential = await _auth
+          .createUserWithEmailAndPassword(email: email, password: password);
 
       // Save mentor details
       await _firestore.collection('mentors').doc(userCredential.user!.uid).set({
@@ -82,7 +106,8 @@ class AuthMethods {
   // Mentor sign-in
   Future<UserCredential> mentorSignIn(String email, String password) async {
     try {
-      UserCredential userCredential = await _auth.signInWithEmailAndPassword(email: email, password: password);
+      UserCredential userCredential = await _auth.signInWithEmailAndPassword(
+          email: email, password: password);
       return userCredential;
     } on FirebaseAuthException catch (e) {
       throw Exception(e.code);
@@ -90,8 +115,7 @@ class AuthMethods {
   }
 }
 
-  //errors
-
+//errors
 
 //sign in and out functionality
 class AuthService {
@@ -104,7 +128,6 @@ class AuthService {
   User? getCurrentUser() {
     return _auth.currentUser;
   }
-
 
   //sign in
   Future<UserCredential> signInWithEmailPassword(String email, password) async {
@@ -126,7 +149,8 @@ class AuthService {
   }
 
   //sign up
-  Future<UserCredential> signUpWithEmailPassword(String email, password) async {
+  Future<UserCredential> signUpWithEmailPassword(
+      String email, password, userName) async {
     try {
       //create user
       UserCredential userCredential = await _auth
@@ -134,9 +158,10 @@ class AuthService {
 
       //save user info in a separate doc
       _firestore.collection("users").doc(userCredential.user!.uid).set({
-      // _firestore.collection("Users").doc(userCredential.user!.uid).set({
+        // _firestore.collection("Users").doc(userCredential.user!.uid).set({
         "uid": userCredential.user!.uid,
         "email": email,
+        "userName": userName,
       });
 
       return userCredential;
@@ -163,5 +188,3 @@ class AuthService {
   //   return downloadUrl;
   // }
 }
-
-

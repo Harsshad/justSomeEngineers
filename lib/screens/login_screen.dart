@@ -1,7 +1,8 @@
-import 'package:codefusion/components/my_button.dart';
-import 'package:codefusion/components/my_textfield.dart';
+import 'package:codefusion/global_resources/components/my_button.dart';
+import 'package:codefusion/global_resources/components/my_textfield.dart';
 import 'package:codefusion/global_resources/auth/auth_methods.dart';
-import 'package:codefusion/profile%20&%20Q&A/core/common/sign_in_button.dart';
+import 'package:codefusion/global_resources/components/sign_in_button.dart';
+
 import 'package:flutter/material.dart';
 import '../meet & chat/widgets/custom_button.dart';
 import '../global_resources/constants/constants.dart';
@@ -20,6 +21,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final AuthMethods _authMethods = AuthMethods();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  // final TextEditingController _fullNameController = TextEditingController();
 
   // Login method
   void login(BuildContext context) async {
@@ -29,6 +31,7 @@ class _LoginScreenState extends State<LoginScreen> {
       await authService.signInWithEmailPassword(
         _emailController.text,
         _passwordController.text,
+        // _fullNameController.text,
       );
     } catch (e) {
       showDialog(
@@ -85,6 +88,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 25),
+              
               // Email textfield
               MyTextfield(
                 hintText: 'Email',

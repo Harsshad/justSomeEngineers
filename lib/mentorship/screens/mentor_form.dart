@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 
-import '../../components/my_textfield.dart';
+import '../../global_resources/components/my_textfield.dart';
 
 class MentorForms extends StatefulWidget {
   const MentorForms({Key? key}) : super(key: key);

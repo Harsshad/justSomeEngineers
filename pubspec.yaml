@@ -28,6 +28,7 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+  async: ^2.11.0
   cached_network_image: ^3.3.1
   carousel_slider: ^5.0.0
   cloud_firestore: ^5.6.0
@@ -85,8 +86,10 @@ flutter:
     - assets/images/amazon.png
     - assets/images/logo.png
     - assets/images/default_profile.png
+    - assets/images/default_banner.png
     - assets/gifs/laptop_gif.json
     - assets/gifs/profile_gif.json
+    
   #   - images/a_dot_ham.jpeg
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

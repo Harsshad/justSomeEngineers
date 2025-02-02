@@ -66,15 +66,15 @@ class DrawerWidget extends StatelessWidget {
                     ),
                   ListTile(
                     title: const Text('Ques & Ans'),
-                    leading: const Icon(Icons.forum_outlined),
+                    leading: const Icon(Icons.chat_rounded),
                     onTap: () {
                       Navigator.pop(context);
-                      Navigator.pushNamed(context, '/que-answer');
+                      Navigator.pushNamed(context, '/que-ans');
                     },
                   ),
                   if (!kIsWeb && (Platform.isAndroid || Platform.isIOS))
                     ListTile(
-                      title: const Text('Meet & Chat'),
+                      title: const Text('FusionMeet'),
                       leading: const Icon(Icons.group),
                       onTap: () {
                         Navigator.pop(context);
@@ -98,6 +98,14 @@ class DrawerWidget extends StatelessWidget {
                     },
                   ),
                   ListTile(
+                    title: const Text('Dev Talk (still need to work on it a lot)'),
+                    leading: const Icon(Icons.forum_outlined),
+                    onTap: () {
+                      Navigator.pop(context);
+                      Navigator.pushNamed(context, '/dev-talk');
+                    },
+                  ),
+                  ListTile(
                     title: const Text('Resume'),
                     leading: const Icon(Icons.book_outlined),
                     onTap: () {
@@ -106,7 +114,7 @@ class DrawerWidget extends StatelessWidget {
                     },
                   ),
                   ListTile(
-                    title: const Text('Job Recommendations'),
+                    title: const Text('Job Board'),
                     leading: const Icon(Icons.business_center_rounded),
                     onTap: () {
                       Navigator.pop(context);

@@ -15,7 +15,7 @@ class _JobListScreenState extends State<JobListScreen> {
   @override
   void initState() {
     super.initState();
-    jobs = JobService().fetchJobs('Data Engineer', 'India'); // Add your job title and location filter here
+    jobs = JobService().fetchJobs('India'); // I dont want it to be only limited to data engineer I want it to show results for all the fields so what should I pass in 
   }
 
   void _filterJobs(String query) {
@@ -36,7 +36,7 @@ class _JobListScreenState extends State<JobListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Job Recommendations'),
+        title: Text('Job Board'),
         actions: [
           IconButton(
             icon: Icon(Icons.search),

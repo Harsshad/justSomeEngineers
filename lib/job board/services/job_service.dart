@@ -2,12 +2,12 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class JobService {
-  final String apiUrl = 'https://linkedin-jobs-api2.p.rapidapi.com/active-jb-24h';
-  final String apiKey = '4963218ba4msh00c741ebb5d3a2bp1e0993jsna299d674c8ab';
+  final String apiUrl = 'https://linkedin-jobs-api2.p.rapidapi.com/active-jb-7d';
+  final String apiKey = '94a7a5fb73msh35b425b0d5d3836p1f0e2fjsn29d58d7b6912';
 
-  Future<List<Job>> fetchJobs(String title, String location) async {
+  Future<List<Job>> fetchJobs(String location) async {
     final response = await http.get(
-      Uri.parse('$apiUrl?title_filter="$title"&location_filter=$location'),
+      Uri.parse('$apiUrl?location_filter=%22$location%22'),
       headers: {
         'X-RapidAPI-Key': apiKey,
         'X-RapidAPI-Host': 'linkedin-jobs-api2.p.rapidapi.com',
