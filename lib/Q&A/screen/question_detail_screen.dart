@@ -1,113 +1,352 @@
+import 'dart:convert';
+import 'dart:typed_data';
+import 'package:codefusion/global_resources/components/animated_shadow_button.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:codefusion/Q&A/screen/post_answer_screen.dart';
 import 'package:codefusion/Q&A/services/answer_service.dart';
 import 'package:codefusion/Q&A/services/question_service.dart';
+import 'package:flutter_link_previewer/flutter_link_previewer.dart';
+import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
+import 'package:photo_view/photo_view.dart';
+import 'package:photo_view/photo_view_gallery.dart';
 
-class QuestionDetailScreen extends StatelessWidget {
+class QuestionDetailScreen extends StatefulWidget {
   final String questionId;
 
   const QuestionDetailScreen({Key? key, required this.questionId})
       : super(key: key);
 
   @override
+  _QuestionDetailScreenState createState() => _QuestionDetailScreenState();
+}
+
+class _QuestionDetailScreenState extends State<QuestionDetailScreen> {
+  final QuestionService questionService = QuestionService();
+  final AnswerService answerService = AnswerService();
+  final userId = FirebaseAuth.instance.currentUser?.uid;
+
+  Uint8List? _questionImage;
+  String? _questionImageUrl;
+
+  Future<void> _pickQuestionImage() async {
+    try {
+      final pickedFile =
+          await ImagePicker().pickImage(source: ImageSource.gallery);
+      if (pickedFile != null) {
+        Uint8List imageBytes = await pickedFile.readAsBytes();
+        setState(() {
+          _questionImage = imageBytes;
+        });
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('No image selected')),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error picking image: $e')),
+      );
+    }
+  }
+
+  Future<String> _uploadImageToImageKit(Uint8List file) async {
+    const String imagekitUrl = 'https://upload.imagekit.io/api/v1/files/upload';
+    const String publicKey = 'public_LWSZ9j/yFXM2LoFPod9qfzBEFow=';
+    const String privateKey = 'private_rG5Lp3157I1V+9yV+EIkVfHnCoA=';
+
+    try {
+      var request = http.MultipartRequest('POST', Uri.parse(imagekitUrl));
+      request.headers['Authorization'] =
+          'Basic ' + base64Encode(utf8.encode(privateKey + ':'));
+      request.fields['fileName'] =
+          '${FirebaseAuth.instance.currentUser!.uid}.jpg';
+      request.fields['publicKey'] = publicKey;
+      request.files.add(
+          http.MultipartFile.fromBytes('file', file, filename: 'question.jpg'));
+
+      var response = await request.send();
+      if (response.statusCode == 200) {
+        final responseData = await response.stream.bytesToString();
+        final decodedData = jsonDecode(responseData);
+        return decodedData['url'];
+      } else {
+        throw Exception('Failed to upload image');
+      }
+    } catch (e) {
+      throw Exception('Image upload error: $e');
+    }
+  }
+
+  void _showImageDialog(String imageUrl) {
+    showDialog(
+      context: context,
+      builder: (context) => Dialog(
+        child: PhotoView(
+          imageProvider: NetworkImage(imageUrl),
+        ),
+      ),
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final QuestionService questionService = QuestionService();
-    final AnswerService answerService = AnswerService();
-
     return Scaffold(
-      appBar: AppBar(title: const Text('Question Details')),
-      body: StreamBuilder<DocumentSnapshot>(
-        stream: questionService.getQuestionStream(questionId),
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            return const Center(child: CircularProgressIndicator());
-          }
+      appBar: AppBar(
+        title: Text(
+          'Query Details',
+          style: TextStyle(
+              fontFamily: 'SourceCodePro',
+              fontWeight: FontWeight.bold,
+              color: Theme.of(context).colorScheme.primary),
+        ),
+        backgroundColor: Colors.blueGrey[900],
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            StreamBuilder<DocumentSnapshot>(
+              stream: questionService.getQuestionStream(widget.questionId),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return const Center(child: CircularProgressIndicator());
+                }
 
-          final question = snapshot.data!;
-          final answersStream = answerService.getAnswersStream(questionId);
+                final question = snapshot.data!;
+                final answersStream =
+                    answerService.getAnswersStream(widget.questionId);
 
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
+                return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      question['title'],
-                      style: Theme.of(context).textTheme.headlineSmall,
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      question['description'],
-                      style: Theme.of(context).textTheme.bodyLarge,
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      'Tags: ${question['tags'].join(', ')}',
-                      style: const TextStyle(color: Colors.grey),
-                    ),
-                  ],
-                ),
-              ),
-              const Divider(),
-              Expanded(
-                child: StreamBuilder<QuerySnapshot>(
-                  stream: answersStream,
-                  builder: (context, snapshot) {
-                    if (!snapshot.hasData) {
-                      return const Center(child: CircularProgressIndicator());
-                    }
-
-                    final answers = snapshot.data!.docs;
-
-                    return ListView.builder(
-                      itemCount: answers.length,
-                      itemBuilder: (context, index) {
-                        final answer = answers[index];
-                        return ListTile(
-                          title: Text(answer['content']),
-                          subtitle: Text(
-                              'Upvotes: ${answer['upvotes'] ?? 0}, Downvotes: ${answer['downvotes'] ?? 0}'),
-                          trailing: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              IconButton(
-                                icon: const Icon(Icons.thumb_up),
-                                onPressed: () {
-                                  answerService.updateVote(answer.id, 'upvotes');
-                                },
-                              ),
-                              IconButton(
-                                icon: const Icon(Icons.thumb_down),
-                                onPressed: () {
-                                  answerService.updateVote(answer.id, 'downvotes');
-                                },
-                              ),
-                            ],
+                    Container(
+                      padding: const EdgeInsets.all(16.0),
+                      decoration: BoxDecoration(
+                        color: Colors.blueGrey[100],
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.5),
+                            spreadRadius: 5,
+                            blurRadius: 7,
+                            offset: const Offset(0, 3),
                           ),
+                        ],
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            question['title'],
+                            style: TextStyle(
+                              fontFamily: 'SourceCodePro',
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.blueGrey[800],
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            question['description'],
+                            style: TextStyle(
+                              fontFamily: 'SourceCodePro',
+                              fontSize: 16,
+                              color: Colors.blueGrey[600],
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            'Tags: ${question['tags'].join(', ')}',
+                            style: TextStyle(
+                              fontFamily: 'SourceCodePro',
+                              fontSize: 14,
+                              color: Colors.blueGrey[400],
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          if (question.data() != null &&
+                              (question.data() as Map<String, dynamic>)
+                                  .containsKey('imageUrl') &&
+                              question['imageUrl'].isNotEmpty)
+                            GestureDetector(
+                              onTap: () =>
+                                  _showImageDialog(question['imageUrl']),
+                              child: Image.network(question['imageUrl']),
+                            ),
+                          const SizedBox(height: 8),
+                          if (question.data() != null &&
+                              (question.data() as Map<String, dynamic>)
+                                  .containsKey('link') &&
+                              question['link'].isNotEmpty)
+                            LinkPreview(
+                              width: MediaQuery.of(context).size.width,
+                              enableAnimation: true,
+                              onPreviewDataFetched: (data) {},
+                              previewData: null,
+                              text: question['link'],
+                            ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.blueGrey[50],
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      padding: const EdgeInsets.all(16.0),
+                      child: Text(
+                        'Solutions:',
+                        style: TextStyle(
+                          fontFamily: 'SourceCodePro',
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.blueGrey[800],
+                        ),
+                      ),
+                    ),
+                    StreamBuilder<QuerySnapshot>(
+                      stream: answersStream,
+                      builder: (context, snapshot) {
+                        if (!snapshot.hasData) {
+                          return const Center(
+                              child: CircularProgressIndicator());
+                        }
+
+                        final answers = snapshot.data!.docs;
+
+                        return ListView.builder(
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          itemCount: answers.length,
+                          itemBuilder: (context, index) {
+                            final answer = answers[index];
+                            final upvotedBy =
+                                List<String>.from(answer['upvotedBy'] ?? []);
+                            final downvotedBy =
+                                List<String>.from(answer['downvotedBy'] ?? []);
+                            final hasUpvoted = upvotedBy.contains(userId);
+                            final hasDownvoted = downvotedBy.contains(userId);
+
+                            return Card(
+                              elevation: 5,
+                              margin: const EdgeInsets.symmetric(
+                                vertical: 10,
+                                horizontal: 16,
+                              ),
+                              color: Colors.blueGrey[100],
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(16.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    if (answer.data() != null &&
+                                        (answer.data() as Map<String, dynamic>)
+                                            .containsKey('imageUrl') &&
+                                        answer['imageUrl'].isNotEmpty)
+                                      GestureDetector(
+                                        onTap: () => _showImageDialog(
+                                            answer['imageUrl']),
+                                        child:
+                                            Image.network(answer['imageUrl']),
+                                      ),
+                                    const SizedBox(height: 8),
+                                    Text(
+                                      answer['content'],
+                                      style: TextStyle(
+                                        color: Theme.of(context).colorScheme.primary,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 8),
+                                    if ((answer.data() as Map<String, dynamic>)
+                                            .containsKey('link') &&
+                                        answer['link'].isNotEmpty)
+                                      LinkPreview(
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                        enableAnimation: true,
+                                        onPreviewDataFetched: (data) {},
+                                        previewData: null,
+                                        text: answer['link'],
+                                      ),
+                                    const SizedBox(height: 8),
+                                    Row(
+                                      children: [
+                                        IconButton(
+                                          icon: Icon(
+                                            Icons.thumb_up,
+                                            color: hasUpvoted
+                                                ? Colors.green
+                                                : Colors.grey,
+                                          ),
+                                          onPressed: hasUpvoted
+                                              ? null
+                                              : () {
+                                                  answerService.updateVote(
+                                                      answer.id,
+                                                      'upvotes',
+                                                      userId!);
+                                                },
+                                        ),
+                                        IconButton(
+                                          icon: Icon(
+                                            Icons.thumb_down,
+                                            color: hasDownvoted
+                                                ? Colors.red
+                                                : Colors.grey,
+                                          ),
+                                          onPressed: hasDownvoted
+                                              ? null
+                                              : () {
+                                                  answerService.updateVote(
+                                                      answer.id,
+                                                      'downvotes',
+                                                      userId!);
+                                                },
+                                        ),
+                                      ],
+                                    ),
+                                    Text(
+                                      'Upvotes: ${answer['upvotes'] ?? 0}, Downvotes: ${answer['downvotes'] ?? 0}',
+                                      style: TextStyle(
+                                        color: Theme.of(context).colorScheme.primary,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
                         );
                       },
-                    );
-                  },
-                ),
-              ),
-            ],
-          );
-        },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => PostAnswerScreen(questionId: questionId),
+                    ),
+                  ],
+                );
+              },
             ),
-          );
-        },
-        child: const Icon(Icons.add_comment),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: AnimatedShadowButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          PostAnswerScreen(questionId: widget.questionId),
+                    ),
+                  );
+                },
+                text: 'Post Answer',
+                icon: Icon(Icons.send_rounded),
+                
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

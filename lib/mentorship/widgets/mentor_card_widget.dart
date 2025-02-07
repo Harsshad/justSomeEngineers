@@ -1,5 +1,6 @@
 import 'package:codefusion/global_resources/constants/constants.dart';
 import 'package:flutter/material.dart';
+import 'package:codefusion/global_resources/components/animated_shadow_button.dart';
 
 class MentorCardWidget extends StatefulWidget {
   final Map<String, dynamic> mentor;
@@ -29,7 +30,7 @@ class _MentorCardWidgetState extends State<MentorCardWidget> {
         duration: const Duration(milliseconds: 300),
         margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10.0),
         decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.7),
+          color: Colors.blueGrey[100],
           borderRadius: BorderRadius.circular(15.0),
           boxShadow: [
             if (isHovered)
@@ -72,22 +73,28 @@ class _MentorCardWidgetState extends State<MentorCardWidget> {
               ),
             ],
           ),
-          trailing: ElevatedButton(
-            onPressed: widget.onTap,
-            style: ElevatedButton.styleFrom(
-              backgroundColor: isHovered
-                  ? Colors.blue
-                  : Theme.of(context).colorScheme.primary,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8.0),
-              ),
-            ),
-            child: Text(
-              'View Profile',
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.secondary,
-              ),
-            ),
+          trailing: Container(
+            width: 130, // Ensure the button has enough space
+            child: isHovered
+                ? AnimatedShadowButton(
+                    onPressed: widget.onTap,
+                    text: 'View Profile',
+                  )
+                : ElevatedButton(
+                    onPressed: widget.onTap,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Theme.of(context).colorScheme.primary,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                    ),
+                    child: Text(
+                      'View Profile',
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.secondary,
+                      ),
+                    ),
+                  ),
           ),
         ),
       ),

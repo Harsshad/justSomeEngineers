@@ -7,13 +7,15 @@ class QuestionService {
     return _firestore.collection('questions').snapshots();
   }
 
-  Future<void> postQuestion(String title, String description, List<String> tags, String userId) async {
+  Future<void> postQuestion(String title, String description, List<String> tags, String userId, {String? imageUrl, String? link}) async {
     await _firestore.collection('questions').add({
       'title': title,
       'description': description,
       'tags': tags,
       'userId': userId,
       'timestamp': FieldValue.serverTimestamp(),
+      'imageUrl': imageUrl ?? '',
+      'link': link ?? '',
     });
   }
 

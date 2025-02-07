@@ -15,7 +15,7 @@ class _JobListScreenState extends State<JobListScreen> {
   @override
   void initState() {
     super.initState();
-    jobs = JobService().fetchJobs('India'); // I dont want it to be only limited to data engineer I want it to show results for all the fields so what should I pass in 
+    jobs = JobService().fetchJobs('India');
   }
 
   void _filterJobs(String query) {
@@ -36,10 +36,18 @@ class _JobListScreenState extends State<JobListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Job Board'),
+        title: Text(
+          'Job Board',
+          style: TextStyle(
+            fontFamily: 'SourceCodePro',
+            fontWeight: FontWeight.bold,
+            color: Theme.of(context).colorScheme.primary,
+          ),
+        ),
+        backgroundColor: Colors.blueGrey[900],
         actions: [
           IconButton(
-            icon: Icon(Icons.search),
+            icon: Icon(Icons.search,),
             onPressed: () {
               showSearch(
                 context: context,

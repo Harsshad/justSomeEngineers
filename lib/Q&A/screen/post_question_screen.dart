@@ -1,6 +1,12 @@
+import 'package:codefusion/global_resources/components/animated_shadow_button.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:codefusion/Q&A/services/question_service.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:flutter_link_previewer/flutter_link_previewer.dart';
+import 'dart:convert';
+import 'dart:typed_data';
+import 'package:http/http.dart' as http;
 
 class PostQuestionScreen extends StatefulWidget {
   @override
@@ -11,7 +17,54 @@ class _PostQuestionScreenState extends State<PostQuestionScreen> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _tagsController = TextEditingController();
+  final TextEditingController _linkController = TextEditingController();
   bool _isPosting = false;
+  String? _imageUrl;
+  String? _linkPreviewUrl;
+  Uint8List? _imageBytes;
+
+  Future<String> _uploadImageToImageKit(Uint8List file) async {
+    const String imagekitUrl = 'https://upload.imagekit.io/api/v1/files/upload';
+    const String publicKey = 'public_LWSZ9j/yFXM2LoFPod9qfzBEFow=';
+    const String privateKey = 'private_rG5Lp3157I1V+9yV+EIkVfHnCoA=';
+
+    try {
+      var request = http.MultipartRequest('POST', Uri.parse(imagekitUrl));
+      request.headers['Authorization'] =
+          'Basic ' + base64Encode(utf8.encode(privateKey + ':'));
+      request.fields['fileName'] =
+          '${FirebaseAuth.instance.currentUser!.uid}.jpg';
+      request.fields['publicKey'] = publicKey;
+      request.fields['folder'] = '/questions';
+      request.files.add(
+          http.MultipartFile.fromBytes('file', file, filename: 'question.jpg'));
+
+      var response = await request.send();
+      if (response.statusCode == 200) {
+        final responseData = await response.stream.bytesToString();
+        final decodedData = jsonDecode(responseData);
+        return decodedData['url'];
+      } else {
+        throw Exception('Failed to upload image');
+      }
+    } catch (e) {
+      throw Exception('Image upload error: $e');
+    }
+  }
+
+  Future<void> _pickImage() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      final bytes = await pickedFile.readAsBytes();
+      final imageUrl = await _uploadImageToImageKit(bytes);
+      setState(() {
+        _imageUrl = imageUrl;
+        _imageBytes = bytes;
+      });
+    }
+  }
 
   Future<void> _postQuestion() async {
     if (_titleController.text.isEmpty ||
@@ -29,13 +82,16 @@ class _PostQuestionScreenState extends State<PostQuestionScreen> {
 
     try {
       final userId = FirebaseAuth.instance.currentUser?.uid;
-      final tags = _tagsController.text.split(',').map((tag) => tag.trim()).toList();
+      final tags =
+          _tagsController.text.split(',').map((tag) => tag.trim()).toList();
 
       await QuestionService().postQuestion(
         _titleController.text,
         _descriptionController.text,
         tags,
         userId!,
+        imageUrl: _imageUrl,
+        link: _linkController.text,
       );
 
       ScaffoldMessenger.of(context).showSnackBar(
@@ -56,33 +112,164 @@ class _PostQuestionScreenState extends State<PostQuestionScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Post a Question')),
-      body: Padding(
+      appBar: AppBar(
+        title: Text(
+          'Post a Question',
+          style: TextStyle(
+              fontFamily: 'SourceCodePro',
+              fontWeight: FontWeight.bold,
+              color: Theme.of(context).colorScheme.primary),
+        ),
+        backgroundColor: Colors.blueGrey[900],
+      ),
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
             TextField(
               controller: _titleController,
-              decoration: const InputDecoration(labelText: 'Title'),
+              decoration: InputDecoration(
+                labelText: 'Title',
+                labelStyle: TextStyle(
+                  fontFamily: 'SourceCodePro',
+                  color: Colors.blueGrey[700],
+                ),
+                filled: true,
+                fillColor: Colors.blueGrey[50],
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide.none,
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide(
+                    color: Colors.blueGrey[700]!,
+                  ),
+                ),
+              ),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 16),
             TextField(
               controller: _descriptionController,
-              decoration: const InputDecoration(labelText: 'Description'),
+              decoration: InputDecoration(
+                labelText: 'Description',
+                labelStyle: TextStyle(
+                  fontFamily: 'SourceCodePro',
+                  color: Colors.blueGrey[700],
+                ),
+                filled: true,
+                fillColor: Colors.blueGrey[50],
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide.none,
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide(
+                    color: Colors.blueGrey[700]!,
+                  ),
+                ),
+              ),
               maxLines: 4,
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 16),
             TextField(
               controller: _tagsController,
-              decoration: const InputDecoration(
-                  labelText: 'Tags (comma-separated)'),
+              decoration: InputDecoration(
+                labelText: 'Tags (comma-separated)',
+                labelStyle: TextStyle(
+                  fontFamily: 'SourceCodePro',
+                  color: Colors.blueGrey[700],
+                ),
+                filled: true,
+                fillColor: Colors.blueGrey[50],
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide.none,
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide(
+                    color: Colors.blueGrey[700]!,
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+            TextField(
+              controller: _linkController,
+              decoration: InputDecoration(
+                labelText: 'Link (optional)',
+                labelStyle: TextStyle(
+                  fontFamily: 'SourceCodePro',
+                  color: Colors.blueGrey[700],
+                ),
+                filled: true,
+                fillColor: Colors.blueGrey[50],
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide.none,
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide(
+                    color: Colors.blueGrey[700]!,
+                  ),
+                ),
+              ),
+              onChanged: (value) {
+                setState(() {
+                  _linkPreviewUrl = value;
+                });
+              },
+            ),
+            const SizedBox(height: 16),
+            if (_linkPreviewUrl != null && _linkPreviewUrl!.isNotEmpty)
+              LinkPreview(
+                width: MediaQuery.of(context).size.width,
+                enableAnimation: true,
+                onPreviewDataFetched: (data) {},
+                previewData: null,
+                text: _linkPreviewUrl!,
+              ),
+            const SizedBox(height: 16),
+            if (_imageBytes != null)
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.5),
+                      spreadRadius: 5,
+                      blurRadius: 7,
+                      offset: const Offset(0, 3),
+                    ),
+                  ],
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: Image.memory(_imageBytes!),
+                ),
+              ),
+            const SizedBox(height: 16),
+            AnimatedShadowButton(
+              text: 'Pick Image',
+              icon: Icon(
+                Icons.image_rounded,
+                color: Colors.blueGrey[500],
+              ),
+              onPressed: _pickImage,
             ),
             const SizedBox(height: 16),
             _isPosting
                 ? const CircularProgressIndicator()
-                : ElevatedButton(
+                : AnimatedShadowButton(
+                    text: 'Post Question',
                     onPressed: _postQuestion,
-                    child: const Text('Post Question'),
+                    icon: Icon(
+                      Icons.send_rounded,
+                      color: Colors.blueGrey[500],
+                    ),
                   ),
           ],
         ),

@@ -4,7 +4,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../widgets/info_card.dart';
 
-
 class MentorProfilePage extends StatelessWidget {
   const MentorProfilePage({Key? key}) : super(key: key);
 
@@ -14,20 +13,25 @@ class MentorProfilePage extends StatelessWidget {
       throw Exception("User not logged in");
     }
 
-    return FirebaseFirestore.instance.collection('mentors').doc(uid).snapshots();
+    return FirebaseFirestore.instance
+        .collection('mentors')
+        .doc(uid)
+        .snapshots();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor:  Theme.of(context).colorScheme.background,
+      backgroundColor: Theme.of(context).colorScheme.background,
       body: StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
         stream: _getMentorStream(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           }
-          if (snapshot.hasError || !snapshot.hasData || !snapshot.data!.exists) {
+          if (snapshot.hasError ||
+              !snapshot.hasData ||
+              !snapshot.data!.exists) {
             return const Center(
               child: Text('Error loading profile data or data unavailable'),
             );
@@ -49,7 +53,8 @@ class MentorProfilePage extends StatelessWidget {
                         radius: 60,
                         backgroundImage: data['profileImage'] != null
                             ? NetworkImage(data['profileImage'])
-                            : const AssetImage(Constants.default_profile) as ImageProvider,
+                            : const AssetImage(Constants.default_profile)
+                                as ImageProvider,
                         // backgroundColor: Colors.white,
                         // child: data['profileImage'] != null
                         //     ? null
@@ -88,6 +93,7 @@ class MentorProfilePage extends StatelessWidget {
                     content: data['email'] ?? 'N/A',
                     icon: Icons.email,
                   ),
+                  const SizedBox(height: 70),
                 ],
               ),
             ),

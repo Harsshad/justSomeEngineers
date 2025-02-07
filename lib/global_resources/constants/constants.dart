@@ -5,6 +5,7 @@ class Constants {
   static const google = "assets/images/google.png";
   static const amazon = "assets/images/amazon.png";
   static const default_banner = "assets/images/default_banner.png";
+  static const default_coder_banner = "assets/images/default_coder_banner.png";
   static const default_profile = "assets/images/default_profile.png";
   static const laptop_gif = "assets/gifs/laptop_gif.json";
   static const profile_gif = "assets/gifs/profile_gif.json";

@@ -53,18 +53,18 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        actions: [
-          TextButton(
-            onPressed: () {},
-            child: const Text(
-              'Skip',
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-          ),
-        ],
-      ),
+      // appBar: AppBar(
+      //   backgroundColor: Colors.transparent,
+      //   actions: [
+      //     TextButton(
+      //       onPressed: () {},
+      //       child: const Text(
+      //         'Skip',
+      //         style: TextStyle(fontWeight: FontWeight.bold),
+      //       ),
+      //     ),
+      //   ],
+      // ),
       backgroundColor: Theme.of(context).colorScheme.background,
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20.0),

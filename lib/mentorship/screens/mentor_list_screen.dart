@@ -7,6 +7,7 @@ import 'package:codefusion/mentorship/screens/mentor_detail_screen.dart';
 import 'package:codefusion/mentorship/screens/mentor_form.dart';
 import 'package:codefusion/mentorship/screens/mentor_profile_page.dart';
 import 'package:codefusion/mentorship/widgets/mentor_card_widget.dart';
+import 'package:codefusion/global_resources/components/animated_search_bar.dart'; // Import the animated search bar
 
 class MentorListScreens extends StatefulWidget {
   const MentorListScreens({Key? key}) : super(key: key);
@@ -70,27 +71,26 @@ class _MentorListScreensState extends State<MentorListScreens> {
       extendBody: true,
       backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        title: const Text(
+        backgroundColor: Theme.of(context).colorScheme.background,
+        title: Text(
           'Available Mentors',
-          style: TextStyle(fontWeight: FontWeight.bold),
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Theme.of(context).colorScheme.primary,
+          ),
         ),
         bottom: _page == 0
             ? PreferredSize(
                 preferredSize: const Size.fromHeight(56.0),
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: TextField(
+                  child: AnimatedSearchBar(
                     controller: _searchController,
-                    decoration: InputDecoration(
-                      hintText: 'Search mentors...',
-                      prefixIcon: const Icon(Icons.search),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12.0),
-                      ),
-                      filled: true,
-                      fillColor: Theme.of(context).colorScheme.secondary,
-                    ),
+                    onChanged: (value) {
+                      setState(() {
+                        _searchQuery = value.toLowerCase();
+                      });
+                    },
                   ),
                 ),
               )
@@ -98,8 +98,8 @@ class _MentorListScreensState extends State<MentorListScreens> {
       ),
       bottomNavigationBar: _isMentor
           ? CurvedNavigationBar(
-              color:Theme.of(context).colorScheme.background,
-              buttonBackgroundColor: Colors.transparent,  //transparency not working 
+              color: Theme.of(context).colorScheme.background,
+              buttonBackgroundColor: Colors.transparent,
               backgroundColor: Colors.transparent,
               items: <Widget>[
                 Icon(
@@ -122,32 +122,6 @@ class _MentorListScreensState extends State<MentorListScreens> {
               index: _page,
             )
           : null, // No BottomNavigationBar for non-mentor users
-      // Commenting out the existing BottomNavigationBar
-      // bottomNavigationBar: _isMentor
-      //     ? BottomNavigationBar(
-      //         backgroundColor: Theme.of(context).colorScheme.tertiary,
-      //         selectedFontSize: 14,
-      //         unselectedFontSize: 14,
-      //         selectedItemColor: Colors.grey[600],
-      //         unselectedItemColor: Colors.grey[400],
-      //         currentIndex: _page,
-      //         onTap: onPagedChanged,
-      //         items: const [
-      //           BottomNavigationBarItem(
-      //             icon: Icon(Icons.list_alt_rounded),
-      //             label: 'Mentor List',
-      //           ),
-      //           BottomNavigationBarItem(
-      //             icon: Icon(Icons.description_outlined),
-      //             label: 'Mentor Form',
-      //           ),
-      //           BottomNavigationBarItem(
-      //             icon: Icon(Icons.person),
-      //             label: 'Mentor Profile',
-      //           ),
-      //         ],
-      //       )
-      //     : null, // No BottomNavigationBar for non-mentor users
       body: pages(context)[_page],
     );
   }

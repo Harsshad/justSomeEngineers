@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:lottie/lottie.dart';
 
-class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({super.key});
+class TempJobScreen extends StatelessWidget {
+  const TempJobScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'User Profile',
+          'Job Board',
           style: TextStyle(
             fontWeight: FontWeight.bold,
           ),
@@ -41,7 +40,10 @@ class ProfileScreen extends StatelessWidget {
                 borderRadius: BorderRadius.circular(20),
                 boxShadow: [
                   BoxShadow(
-                    color: Theme.of(context).colorScheme.secondary.withOpacity(0.5),
+                    color: Theme.of(context)
+                        .colorScheme
+                        .secondary
+                        .withOpacity(0.5),
                     spreadRadius: 5,
                     blurRadius: 10,
                     offset: const Offset(0, 3),
@@ -49,7 +51,7 @@ class ProfileScreen extends StatelessWidget {
                 ],
               ),
               child: Text(
-                'Welcome to your Profile!',
+                'Limited Job Api Requests available so Sorry, cant show you the actual output but it works perfectly 😁',
                 style: GoogleFonts.lobster(
                   textStyle: TextStyle(
                     fontSize: 24,
@@ -73,10 +75,11 @@ class ProfileScreen extends StatelessWidget {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20),
                 ),
-                padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
               ),
               child: Text(
-                'Edit Profile',
+                'Job Board',
                 style: GoogleFonts.lobster(
                   textStyle: const TextStyle(
                     fontSize: 18,

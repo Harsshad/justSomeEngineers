@@ -52,7 +52,8 @@ class DrawerWidget extends StatelessWidget {
                     leading: const Icon(Icons.person),
                     onTap: () {
                       Navigator.pop(context);
-                      Navigator.pushNamed(context, '/profile');
+                      Navigator.pushNamed(context, '/user-profile');
+                      // Navigator.pushNamed(context, '/profile');
                     },
                   ),
                   if (kIsWeb || Platform.isMacOS || Platform.isWindows || Platform.isLinux)
@@ -65,7 +66,7 @@ class DrawerWidget extends StatelessWidget {
                       },
                     ),
                   ListTile(
-                    title: const Text('Ques & Ans'),
+                    title: const Text('CodeQuery'),
                     leading: const Icon(Icons.chat_rounded),
                     onTap: () {
                       Navigator.pop(context);
@@ -97,14 +98,15 @@ class DrawerWidget extends StatelessWidget {
                       Navigator.pushNamed(context, '/resource_hub');
                     },
                   ),
-                  ListTile(
-                    title: const Text('Dev Talk (still need to work on it a lot)'),
-                    leading: const Icon(Icons.forum_outlined),
-                    onTap: () {
-                      Navigator.pop(context);
-                      Navigator.pushNamed(context, '/dev-talk');
-                    },
-                  ),
+                  // ListTile(
+                  //   title: const Text('Dev Chat'),
+                  //   // title: const Text('Dev Talk (still need to work on it a lot)'),
+                  //   leading: const Icon(Icons.forum_outlined),
+                  //   onTap: () {
+                  //     Navigator.pop(context);
+                  //     Navigator.pushNamed(context, '/dev-talk');
+                  //   },
+                  // ),
                   ListTile(
                     title: const Text('Resume'),
                     leading: const Icon(Icons.book_outlined),
@@ -113,13 +115,16 @@ class DrawerWidget extends StatelessWidget {
                       Navigator.pushNamed(context, '/resume');
                     },
                   ),
-                  ListTile(
-                    title: const Text('Job Board'),
-                    leading: const Icon(Icons.business_center_rounded),
-                    onTap: () {
-                      Navigator.pop(context);
-                      Navigator.pushNamed(context, '/job-recommend');
-                    },
+                  GestureDetector(
+                    onDoubleTap: () => Navigator.pushNamed(context, '/job-recommend'),
+                    child: ListTile(
+                      title: const Text('Job Board'),
+                      leading: const Icon(Icons.business_center_rounded),
+                      onTap: () {
+                        Navigator.pop(context);
+                        Navigator.pushNamed(context, '/temp-job-screen');
+                      },
+                    ),
                   ),
                   ListTile(
                     title: const Text('Settings'),

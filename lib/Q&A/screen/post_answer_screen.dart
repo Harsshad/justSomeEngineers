@@ -1,6 +1,12 @@
+import 'package:codefusion/global_resources/components/animated_shadow_button.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:codefusion/Q&A/services/answer_service.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:flutter_link_previewer/flutter_link_previewer.dart';
+import 'dart:convert';
+import 'dart:typed_data';
+import 'package:http/http.dart' as http;
 
 class PostAnswerScreen extends StatefulWidget {
   final String questionId;
@@ -14,16 +20,59 @@ class PostAnswerScreen extends StatefulWidget {
 
 class _PostAnswerScreenState extends State<PostAnswerScreen> {
   final TextEditingController _answerController = TextEditingController();
+  final TextEditingController _linkController = TextEditingController();
   bool _isPosting = false;
+  String? _imageUrl;
+  String? _linkPreviewUrl;
+  Uint8List? _imageBytes;
+
+  Future<String> _uploadImageToImageKit(Uint8List file) async {
+    const String imagekitUrl = 'https://upload.imagekit.io/api/v1/files/upload';
+    const String publicKey = 'public_LWSZ9j/yFXM2LoFPod9qfzBEFow=';
+    const String privateKey = 'private_rG5Lp3157I1V+9yV+EIkVfHnCoA=';
+
+    try {
+      var request = http.MultipartRequest('POST', Uri.parse(imagekitUrl));
+      request.headers['Authorization'] =
+          'Basic ' + base64Encode(utf8.encode(privateKey + ':'));
+      request.fields['fileName'] =
+          '${FirebaseAuth.instance.currentUser!.uid}.jpg';
+      request.fields['publicKey'] = publicKey;
+      request.fields['folder'] = '/answers'; // Specify the folder
+      request.files.add(
+          http.MultipartFile.fromBytes('file', file, filename: 'answer.jpg'));
+
+      var response = await request.send();
+      if (response.statusCode == 200) {
+        final responseData = await response.stream.bytesToString();
+        final decodedData = jsonDecode(responseData);
+        return decodedData['url'];
+      } else {
+        throw Exception('Failed to upload image');
+      }
+    } catch (e) {
+      throw Exception('Image upload error: $e');
+    }
+  }
+
+  Future<void> _pickImage() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      final bytes = await pickedFile.readAsBytes();
+      final imageUrl = await _uploadImageToImageKit(bytes);
+      setState(() {
+        _imageUrl = imageUrl;
+        _imageBytes = bytes;
+      });
+    }
+  }
 
   Future<void> _postAnswer() async {
     if (_answerController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text(
-            'Answer cannot be empty.',
-          ),
-        ),
+        const SnackBar(content: Text('Answer cannot be empty.')),
       );
       return;
     }
@@ -39,30 +88,22 @@ class _PostAnswerScreenState extends State<PostAnswerScreen> {
         _answerController.text,
         userId!,
         widget.questionId,
+        imageUrl: _imageUrl,
+        link: _linkController.text,
       );
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text(
-            'Answer posted successfully!',
-          ),
-        ),
+        const SnackBar(content: Text('Answer posted successfully!')),
       );
       Navigator.pop(context);
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            'Failed to post answer: $e',
-          ),
-        ),
+        SnackBar(content: Text('Failed to post answer: $e')),
       );
     } finally {
-      setState(
-        () {
-          _isPosting = false;
-        },
-      );
+      setState(() {
+        _isPosting = false;
+      });
     }
   }
 
@@ -70,27 +111,116 @@ class _PostAnswerScreenState extends State<PostAnswerScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
+        title: Text(
           'Post an Answer',
+          style: TextStyle(
+            fontFamily: 'SourceCodePro',
+            fontWeight: FontWeight.bold,
+            color: Theme.of(context).colorScheme.primary,
+          ),
         ),
+        backgroundColor: Colors.blueGrey[900],
       ),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
             TextField(
               controller: _answerController,
-              decoration: const InputDecoration(labelText: 'Your Answer'),
+              decoration: InputDecoration(
+                labelText: 'Your Answer',
+                labelStyle: TextStyle(
+                  fontFamily: 'SourceCodePro',
+                  color: Colors.blueGrey[700],
+                ),
+                filled: true,
+                fillColor: Colors.blueGrey[50],
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide.none,
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide(
+                    color: Colors.blueGrey[700]!,
+                  ),
+                ),
+              ),
               maxLines: 4,
             ),
             const SizedBox(height: 16),
+            TextField(
+              controller: _linkController,
+              decoration: InputDecoration(
+                labelText: 'Link (optional)',
+                labelStyle: TextStyle(
+                  fontFamily: 'SourceCodePro',
+                  color: Colors.blueGrey[700],
+                ),
+                filled: true,
+                fillColor: Colors.blueGrey[50],
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide.none,
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide(
+                    color: Colors.blueGrey[700]!,
+                  ),
+                ),
+              ),
+              onChanged: (value) {
+                setState(() {
+                  _linkPreviewUrl = value;
+                });
+              },
+            ),
+            const SizedBox(height: 16),
+            if (_linkPreviewUrl != null && _linkPreviewUrl!.isNotEmpty)
+              LinkPreview(
+                width: MediaQuery.of(context).size.width,
+                enableAnimation: true,
+                onPreviewDataFetched: (data) {},
+                previewData: null,
+                text: _linkPreviewUrl!,
+              ),
+            const SizedBox(height: 16),
+            if (_imageBytes != null)
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.5),
+                      spreadRadius: 5,
+                      blurRadius: 7,
+                      offset: const Offset(0, 3),
+                    ),
+                  ],
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: Image.memory(_imageBytes!),
+                ),
+              ),
+            const SizedBox(height: 16),
             _isPosting
                 ? const CircularProgressIndicator()
-                : ElevatedButton(
-                    onPressed: _postAnswer,
-                    child: const Text(
-                      'Post Answer',
-                    ),
+                : Column(
+                    children: [
+                      AnimatedShadowButton(
+                        onPressed: _pickImage,
+                        text: 'Pick Image',
+                        icon: Icon(Icons.camera_alt,color: Colors.blueGrey[500],),
+                      ),
+                      const SizedBox(height: 16),
+                      AnimatedShadowButton(
+                        onPressed: _postAnswer,
+                        text: 'Post Answer',
+                        icon: Icon(Icons.send_rounded, color: Colors.blueGrey[500],),
+                      ),
+                    ],
                   ),
           ],
         ),
