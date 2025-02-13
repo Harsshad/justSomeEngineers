@@ -1,7 +1,6 @@
 import 'package:codefusion/global_resources/constants/constants.dart';
 import 'package:flutter/material.dart';
 
-
 class ArticleMentorCard extends StatelessWidget {
   final Map<String, dynamic> mentor;
   final String mentorId;
@@ -30,12 +29,19 @@ class ArticleMentorCard extends StatelessWidget {
                 topLeft: Radius.circular(12),
                 bottomLeft: Radius.circular(12),
               ),
-              child: Image.network(
-                mentor['profileImage'] ?? Constants.default_profile,
-                width: 120,
-                height: double.infinity,
-                fit: BoxFit.cover,
-              ),
+              child: mentor['profileImage'] != null && mentor['profileImage'].isNotEmpty
+                  ? Image.network(
+                      mentor['profileImage'],
+                      width: 120,
+                      height: double.infinity,
+                      fit: BoxFit.cover,
+                    )
+                  : Image.asset(
+                      Constants.default_profile,
+                      width: 120,
+                      height: double.infinity,
+                      fit: BoxFit.cover,
+                    ),
             ),
             const SizedBox(width: 12),
             Expanded(

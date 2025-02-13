@@ -7,18 +7,18 @@ class TempJobScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Job Board',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        centerTitle: true,
-        backgroundColor: Theme.of(context).colorScheme.background,
-        elevation: 10,
-        shadowColor: Theme.of(context).colorScheme.secondary,
-      ),
+      // appBar: AppBar(
+      //   title: const Text(
+      //     'Job Board',
+      //     style: TextStyle(
+      //       fontWeight: FontWeight.bold,
+      //     ),
+      //   ),
+      //   centerTitle: true,
+      //   backgroundColor: Theme.of(context).colorScheme.background,
+      //   elevation: 10,
+      //   shadowColor: Theme.of(context).colorScheme.secondary,
+      // ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -51,7 +51,7 @@ class TempJobScreen extends StatelessWidget {
                 ],
               ),
               child: Text(
-                'Limited Job Api Requests available so Sorry, cant show you the actual output but it works perfectly 😁',
+                'Limited Api Requests available so Sorry, cant show you the actual output but it works perfectly 😁',
                 style: GoogleFonts.lobster(
                   textStyle: TextStyle(
                     fontSize: 24,
@@ -63,31 +63,31 @@ class TempJobScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                // Add your onPressed code here!
-              },
-              style: ElevatedButton.styleFrom(
-                foregroundColor: Theme.of(context).colorScheme.primary,
-                backgroundColor: Theme.of(context).colorScheme.background,
-                shadowColor: Theme.of(context).colorScheme.secondary,
-                elevation: 10,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-              ),
-              child: Text(
-                'Job Board',
-                style: GoogleFonts.lobster(
-                  textStyle: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ),
+            // ElevatedButton(
+            //   onPressed: () {
+            //     // Add your onPressed code here!
+            //   },
+            //   style: ElevatedButton.styleFrom(
+            //     foregroundColor: Theme.of(context).colorScheme.primary,
+            //     backgroundColor: Theme.of(context).colorScheme.background,
+            //     shadowColor: Theme.of(context).colorScheme.secondary,
+            //     elevation: 10,
+            //     shape: RoundedRectangleBorder(
+            //       borderRadius: BorderRadius.circular(20),
+            //     ),
+            //     padding:
+            //         const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+            //   ),
+            //   child: Text(
+            //     'Job Board',
+            //     style: GoogleFonts.lobster(
+            //       textStyle: const TextStyle(
+            //         fontSize: 18,
+            //         fontWeight: FontWeight.bold,
+            //       ),
+            //     ),
+            //   ),
+            // ),
           ],
         ),
       ),

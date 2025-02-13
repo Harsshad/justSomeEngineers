@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class ArticleList extends StatefulWidget {
   const ArticleList({Key? key}) : super(key: key);
@@ -15,13 +16,11 @@ class ArticleList extends StatefulWidget {
 
 class ArticleListState extends State<ArticleList> {
   static List<dynamic> _articles = [];
-  List<Map<String, dynamic>> _mentors = [];
 
   @override
   void initState() {
     super.initState();
     _fetchArticles(" ");
-    _fetchMentors();
   }
 
   static void refreshArticles(BuildContext context) {
@@ -40,19 +39,6 @@ class ArticleListState extends State<ArticleList> {
       });
     } catch (e) {
       print('Error fetching articles: $e');
-    }
-  }
-
-  void _fetchMentors() async {
-    try {
-      final snapshot =
-          await FirebaseFirestore.instance.collection('mentors').get();
-      final mentors = snapshot.docs.map((doc) => doc.data()).toList();
-      setState(() {
-        _mentors = mentors;
-      });
-    } catch (e) {
-      print('Error fetching mentors: $e');
     }
   }
 
@@ -116,7 +102,77 @@ class ArticleListState extends State<ArticleList> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return _articles.isEmpty
-        ? const Center(child: CircularProgressIndicator())
+        ? Skeletonizer(
+            enabled: true,
+            child: ListView.builder(
+              padding: const EdgeInsets.all(16.0),
+              itemCount: 5,
+              itemBuilder: (context, index) {
+                return Column(
+                  children: [
+                    Card(
+                      margin: const EdgeInsets.only(bottom: 22),
+                      elevation: 4,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          ClipRRect(
+                            borderRadius: const BorderRadius.vertical(
+                              top: Radius.circular(12),
+                            ),
+                            child: Container(
+                              height: 180,
+                              width: double.infinity,
+                              color: Colors.grey[300],
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(12.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  height: 20,
+                                  width: 150,
+                                  color: Colors.grey[300],
+                                ),
+                                const SizedBox(height: 8),
+                                Container(
+                                  height: 14,
+                                  width: double.infinity,
+                                  color: Colors.grey[300],
+                                ),
+                                const SizedBox(height: 12),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Container(
+                                      height: 14,
+                                      width: 100,
+                                      color: Colors.grey[300],
+                                    ),
+                                    Container(
+                                      height: 30,
+                                      width: 100,
+                                      color: Colors.grey[300],
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                );
+              },
+            ),
+          )
         : ListView.builder(
             padding: const EdgeInsets.all(16.0),
             itemCount: _articles.length,
@@ -124,61 +180,92 @@ class ArticleListState extends State<ArticleList> {
               final article = _articles[index];
               return Column(
                 children: [
-                  if (index % 7 == 0 && _mentors.isNotEmpty)
-                    Column(
-                      children: [
-                        CarouselSlider(
-                          options: CarouselOptions(height: 200.0),
-                          items: [
-                            ..._mentors.take(7).map((mentor) {
-                              return Builder(
-                                builder: (BuildContext context) {
-                                  return ArticleMentorCard(
-                                    mentor: mentor,
-                                    mentorId: mentor['uid'] ?? '',
-                                    onTap: () {
-                                      // Navigator.push(
-                                      //   context,
-                                      //   MaterialPageRoute(
-                                      //     builder: (context) => MentorDetailsScreen(mentorId: mentor['uid']),
-                                      //   ),
-                                      // );
+                  if (index % 7 == 0)
+                    StreamBuilder<QuerySnapshot>(
+                      stream: FirebaseFirestore.instance
+                          .collection('mentors')
+                          .snapshots(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return Skeletonizer(
+                            enabled: true,
+                            child: Container(
+                              height: 200,
+                              color: Colors.grey[300],
+                            ),
+                          );
+                        }
+                        if (snapshot.hasError) {
+                          return const Center(
+                              child: Text('Error loading mentors'));
+                        }
+                        if (!snapshot.hasData ||
+                            snapshot.data!.docs.isEmpty) {
+                          return const Center(
+                              child: Text('No mentors available'));
+                        }
+
+                        final mentors = snapshot.data!.docs;
+                        return Column(
+                          children: [
+                            CarouselSlider(
+                              options: CarouselOptions(height: 200.0),
+                              items: [
+                                ...mentors.take(7).map((doc) {
+                                  final mentor = doc.data() as Map<String, dynamic>;
+                                  final mentorId = doc.id;
+                                  return Builder(
+                                    builder: (BuildContext context) {
+                                      return ArticleMentorCard(
+                                        mentor: mentor,
+                                        mentorId: mentorId,
+                                        onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  MentorDetailsScreen(
+                                                      mentorId: mentorId),
+                                            ),
+                                          );
+                                        },
+                                      );
                                     },
                                   );
-                                },
-                              );
-                            }).toList(),
-                            Builder(
-                              builder: (BuildContext context) {
-                                return GestureDetector(
-                                  onTap: () {
-                                    Navigator.pushNamed(
-                                        context, '/mentor-list-screen');
-                                  },
-                                  child: Container(
-                                    width: double.infinity,
-                                    color: Colors.transparent,
-                                    child: const Center(
-                                      child: Icon(
-                                        Icons.arrow_forward_rounded,
-                                        size: 50,
-                                        color: Colors.grey,
+                                }).toList(),
+                                Builder(
+                                  builder: (BuildContext context) {
+                                    return GestureDetector(
+                                      onTap: () {
+                                        Navigator.pushNamed(
+                                            context, '/mentor-list-screen');
+                                      },
+                                      child: Container(
+                                        width: double.infinity,
+                                        color: Colors.transparent,
+                                        child: const Center(
+                                          child: Icon(
+                                            Icons.arrow_forward_rounded,
+                                            size: 50,
+                                            color: Colors.grey,
+                                          ),
+                                        ),
                                       ),
-                                    ),
-                                  ),
-                                );
-                              },
+                                    );
+                                  },
+                                ),
+                              ],
                             ),
+                            const SizedBox(height: 16),
                           ],
-                        ),
-                        const SizedBox(height: 16),
-                      ],
+                        );
+                      },
                     ),
                   Card(
                     margin: const EdgeInsets.only(bottom: 22),
                     elevation: 4,
                     shape: RoundedRectangleBorder(
-                      // bordercolor: theme.colorScheme.secondary,
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Column(

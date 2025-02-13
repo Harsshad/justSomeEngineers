@@ -137,11 +137,17 @@ class AuthService {
         email: email,
         password: password,
       );
-      //save user info if it doesn't already exists
-      _firestore.collection("users").doc(userCredential.user!.uid).set({
-        "uid": userCredential.user!.uid,
-        "email": email,
-      });
+
+      // Check if user document already exists
+      DocumentSnapshot userDoc = await _firestore.collection("users").doc(userCredential.user!.uid).get();
+      if (!userDoc.exists) {
+        // Save user info if it doesn't already exist
+        _firestore.collection("users").doc(userCredential.user!.uid).set({
+          "uid": userCredential.user!.uid,
+          "email": email,
+        });
+      }
+
       return userCredential;
     } on FirebaseAuthException catch (e) {
       throw Exception(e.code);
@@ -158,7 +164,6 @@ class AuthService {
 
       //save user info in a separate doc
       _firestore.collection("users").doc(userCredential.user!.uid).set({
-        // _firestore.collection("Users").doc(userCredential.user!.uid).set({
         "uid": userCredential.user!.uid,
         "email": email,
         "userName": userName,
@@ -169,6 +174,7 @@ class AuthService {
       throw Exception(e.code);
     }
   }
+
 
   // //adding image to firebase storage
   //this wont work since firebase storage has made their sevices paid so switched to https://imagekit.io/dashboard/media-library and now its working

@@ -80,7 +80,10 @@ class RoadmapWidget extends StatelessWidget {
     if (lastMatchEnd < content.length) {
       spans.add(TextSpan(
         text: content.substring(lastMatchEnd),
-        style:  TextStyle(fontSize: 16, color: Theme.of(context).colorScheme.inversePrimary,),
+        style: TextStyle(
+          fontSize: 16,
+          color: Theme.of(context).colorScheme.inversePrimary,
+        ),
       ));
     }
 

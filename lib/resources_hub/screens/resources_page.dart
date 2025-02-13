@@ -1,13 +1,18 @@
+import 'package:codefusion/resources_hub/services/devto_service.dart';
+import 'package:codefusion/resources_hub/services/medium_service.dart';
+import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:codefusion/resources_hub/models/article_list.dart';
 import 'package:codefusion/resources_hub/models/devto_article_list.dart';
 import 'package:codefusion/resources_hub/models/video_list.dart';
-import 'package:codefusion/resources_hub/services/devto_service.dart';
 import 'package:codefusion/resources_hub/services/gemini_service.dart';
-import 'package:codefusion/resources_hub/services/medium_service.dart';
 import 'package:codefusion/resources_hub/services/resources_service.dart';
 import 'package:codefusion/resources_hub/widgets/roadmap_widget.dart';
-import 'package:curved_navigation_bar/curved_navigation_bar.dart';
-import 'package:flutter/material.dart';
+import 'package:codefusion/resources_hub/widgets/resources_search.dart';
+import 'package:codefusion/resources_hub/widgets/resources_tabbar.dart';
+import 'package:codefusion/resources_hub/widgets/resources_tabview.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
 class ResourcesPage extends StatefulWidget {
@@ -31,94 +36,108 @@ class _ResourcesPageState extends State<ResourcesPage>
   bool _isLoading = false;
   int _selectedIndex = 0;
   late TabController _tabController;
+  List<Map<String, dynamic>> _savedRoadmaps = [];
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
+    _loadSavedRoadmaps();
   }
 
-  void _searchResources() async {
-    setState(() {
-      _isLoading = true;
-      _articles = [];
-      _videos = [];
-      _devToArticles = [];
-      _roadmap = '';
-    });
-
-    try {
-      final query = _searchController.text.toLowerCase();
-      final results = await _resourcesService.searchResources(query);
+  Future<void> _loadSavedRoadmaps() async {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      QuerySnapshot roadmapDocs = await FirebaseFirestore.instance
+          .collection('roadmaps')
+          .where('uid', isEqualTo: user.uid)
+          .get();
       setState(() {
-        _articles = results['articles'];
-        _videos = results['videos'];
-        _devToArticles = results['devToArticles'];
-      });
-    } catch (e) {
-      print('Error fetching resources: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error fetching resources: $e')),
-      );
-    } finally {
-      setState(() {
-        _isLoading = false;
+        _savedRoadmaps = roadmapDocs.docs.map((doc) => {
+              'id': doc.id,
+              'roadmap': doc['roadmap'],
+            }).toList();
       });
     }
   }
 
-  void _searchVideos() async {
-    setState(() {
-      _isLoading = true;
-      _videos = [];
-    });
-
-    try {
-      final query = _videoSearchController.text.toLowerCase();
-      final results = await _resourcesService.searchVideos(query);
-      setState(() {
-        _videos = results;
+  Future<void> _saveRoadmap(String roadmap) async {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      await FirebaseFirestore.instance.collection('roadmaps').add({
+        'uid': user.uid,
+        'roadmap': roadmap,
       });
-    } catch (e) {
-      print('Error fetching videos: $e');
+      _loadSavedRoadmaps();
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error fetching videos: $e')),
+        SnackBar(content: Text('Roadmap saved successfully!')),
       );
-    } finally {
-      setState(() {
-        _isLoading = false;
-      });
     }
   }
 
-  void _searchRoadmap() async {
+  void _onSearchComplete(List<dynamic> articles, List<dynamic> videos,
+      List<dynamic> devToArticles, String roadmap) {
     setState(() {
-      _isLoading = true;
-      _roadmap = '';
+      _articles = articles.cast<Article>();
+      _videos = videos.cast<Video>();
+      _devToArticles = devToArticles.cast<DevToArticle>();
+      _roadmap = roadmap;
     });
-
-    try {
-      final query = _searchController.text.toLowerCase();
-      final roadmap = await _geminiService.getRoadmap(query);
-      setState(() {
-        _roadmap = roadmap;
-      });
-    } catch (e) {
-      print('Error fetching roadmap: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error fetching roadmap: $e')),
-      );
-    } finally {
-      setState(() {
-        _isLoading = false;
-      });
-    }
   }
 
   void _onTabSelected(int index) {
     setState(() {
       _selectedIndex = index;
     });
+  }
+
+  void _viewSavedRoadmaps() {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return ListView.builder(
+          itemCount: _savedRoadmaps.length,
+          itemBuilder: (context, index) {
+            String roadmapTitle = _savedRoadmaps[index]['roadmap'];
+
+            // Check if the roadmap title starts and ends with '!!!'
+            bool isHeading = roadmapTitle.startsWith('!!!') && roadmapTitle.endsWith('!!!');
+
+            return Column(
+              children: [
+                ListTile(
+                  title: Text(
+                    isHeading ? roadmapTitle.substring(3, roadmapTitle.length - 3) : roadmapTitle,
+                    style: TextStyle(
+                      fontWeight: isHeading ? FontWeight.bold : FontWeight.normal,
+                      color: isHeading ? Colors.blue : Colors.black,
+                      shadows: isHeading
+                          ? [Shadow(blurRadius: 10.0, color: Colors.blueAccent, offset: Offset(2.0, 2.0))]
+                          : null,
+                    ),
+                  ),
+                  onTap: () {
+                    Navigator.pop(context); // Close bottom sheet
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => RoadmapDetailPage(
+                            roadmapId: _savedRoadmaps[index]['id']),
+                      ),
+                    );
+                  },
+                ),
+                if (isHeading)
+                  Divider(
+                    color: Colors.blue,
+                    thickness: 2.0,
+                  ),
+              ],
+            );
+          },
+        );
+      },
+    );
   }
 
   @override
@@ -132,91 +151,66 @@ class _ResourcesPageState extends State<ResourcesPage>
             fontWeight: FontWeight.bold,
           ),
         ),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.menu),
+            onPressed: _viewSavedRoadmaps,
+          ),
+        ],
         bottom: _selectedIndex == 0
-            ? TabBar(
-                controller: _tabController,
-                tabs: const [
-                  Tab(
-                    text: 'Medium Articles ',
-                  ),
-                  Tab(
-                    text: 'Dev.to Articles ',
-                  ),
-                ],
+            ? ResourcesTabBar(
+                tabController: _tabController,
+                selectedIndex: _selectedIndex,
               )
             : null,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            if (_selectedIndex == 0) ...[
-              TextField(
-                controller: _searchController,
-                decoration: InputDecoration(
-                  hintText: 'Search for resources... ',
-                  suffixIcon: IconButton(
-                    icon: const Icon(Icons.search),
-                    onPressed: _searchResources,
-                  ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12.0),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 16),
-              _isLoading
-                  ? const Center(child: CircularProgressIndicator())
-                  : Expanded(
-                      child: TabBarView(
-                        controller: _tabController,
-                        children: [
-                          ArticleList(articles: _articles),
-                          DevToArticleList(devToArticles: _devToArticles),
-                        ],
-                      ),
-                    ),
-            ] else if (_selectedIndex == 1) ...[
-              TextField(
-                controller: _videoSearchController,
-                decoration: InputDecoration(
-                  hintText: 'Search for videos... ',
-                  suffixIcon: IconButton(
-                    icon: const Icon(Icons.search),
-                    onPressed: _searchVideos,
-                  ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12.0),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 16),
-              _isLoading
-                  ? const Center(child: CircularProgressIndicator())
-                  : Expanded(child: VideoList(videos: _videos)),
-            ] else if (_selectedIndex == 2) ...[
-              TextField(
-                controller: _searchController,
-                decoration: InputDecoration(
-                  hintText: 'Search for roadmap... ',
-                  suffixIcon: IconButton(
-                    icon: const Icon(Icons.search),
-                    onPressed: _searchRoadmap,
-                  ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12.0),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 16),
-              _isLoading
-                  ? const Center(child: CircularProgressIndicator())
-                  : Expanded(child: RoadmapWidget(roadmap: _roadmap)),
-              const SizedBox(height: 56),
-            ],
+      body: Column(
+        children: [
+          if (_selectedIndex == 0 || _selectedIndex == 1) ...[
+            ResourcesSearch(
+              onSearchComplete: _onSearchComplete,
+              searchController: _selectedIndex == 0
+                  ? _searchController
+                  : _videoSearchController,
+              videoSearchController: _videoSearchController,
+              resourcesService: _resourcesService,
+              geminiService: _geminiService,
+            ),
+            const SizedBox(height: 16),
+          ] else if (_selectedIndex == 2) ...[
+            ResourcesSearch(
+              onSearchComplete: _onSearchComplete,
+              searchController: _searchController,
+              videoSearchController: _videoSearchController,
+              resourcesService: _resourcesService,
+              geminiService: _geminiService,
+              isRoadmapSearch: true,
+            ),
+            const SizedBox(height: 16),
+            Expanded(
+              child: RoadmapWidget(roadmap: _roadmap),
+            ),
+            const SizedBox(height: 16),
           ],
-        ),
+          if (_selectedIndex != 2)
+            Expanded(
+              child: ResourcesTabView(
+                tabController: _tabController,
+                isLoading: _isLoading,
+                articles: _articles,
+                devToArticles: _devToArticles,
+                videos: _videos,
+                selectedIndex: _selectedIndex,
+              ),
+            ),
+        ],
       ),
+      floatingActionButton: _selectedIndex == 2
+          ? FloatingActionButton(
+              onPressed: () => _saveRoadmap(_roadmap),
+              child: const Icon(Icons.save),
+            )
+          : null,
       bottomNavigationBar: CurvedNavigationBar(
         color: Theme.of(context).colorScheme.background,
         buttonBackgroundColor: Colors.transparent,
@@ -240,6 +234,32 @@ class _ResourcesPageState extends State<ResourcesPage>
         ],
         onTap: _onTabSelected,
         index: _selectedIndex,
+      ),
+    );
+  }
+}
+
+class RoadmapDetailPage extends StatelessWidget {
+  final String roadmapId;
+
+  const RoadmapDetailPage({Key? key, required this.roadmapId}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Roadmap Detail')),
+      body: FutureBuilder<DocumentSnapshot>(
+        future:
+            FirebaseFirestore.instance.collection('roadmaps').doc(roadmapId).get(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData || !snapshot.data!.exists) {
+            return Center(child: Text('Roadmap not found'));
+          }
+          return Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: RoadmapWidget(roadmap: snapshot.data!['roadmap']),
+          );
+        },
       ),
     );
   }

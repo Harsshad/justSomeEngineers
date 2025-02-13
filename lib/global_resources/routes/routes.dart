@@ -1,5 +1,6 @@
 import 'package:codefusion/Q&A/screen/q&a_screen.dart';
-import 'package:codefusion/User%20Profile/user_profile.dart';
+import 'package:codefusion/User%20Profile/screens/user_profile_form.dart';
+import 'package:codefusion/User%20Profile/screens/user_profile.dart';
 import 'package:codefusion/dev_talk/screen/search_screen.dart';
 import 'package:codefusion/screens/developer_screen.dart';
 import 'package:codefusion/screens/temp_job_screen.dart';
@@ -16,7 +17,6 @@ import 'package:codefusion/mentorship/screens/mentor_login_screen.dart';
 import 'package:codefusion/mentorship/screens/mentor_register_screen.dart';
 import 'package:codefusion/resources_hub/screens/resources_page.dart';
 import 'package:codefusion/resume/page/resume_input_page.dart';
-import 'package:codefusion/User%20Profile/profile_screen.dart';
 import 'package:codefusion/screens/resources_screen.dart';
 import 'package:codefusion/screens/settings_screen.dart';
 import 'package:codefusion/screens/main_home_screen.dart';
@@ -45,7 +45,6 @@ Map<String, WidgetBuilder> getAppRoutes() {
     '/mentor_register': (context) => MentorRegisterScreen(onTap: () {}),
     '/que-answer': (context) => const QuesAnsScreen(),
     '/settings': (context) => const SettingsScreen(),
-    '/profile': (context) => const ProfileScreen(),
     '/chat-bot': (context) => const BotHomePage(),
     '/resume': (context) => const ResumeInputPage(),
     '/resource_hub': (context) => const ResourcesPage(),
@@ -54,6 +53,8 @@ Map<String, WidgetBuilder> getAppRoutes() {
     '/que-ans': (context) => QAScreen(),
     '/temp-job-screen': (context) => const TempJobScreen(),
     '/user-profile': (context) => const UserProfile(),
+    '/user-profile-form': (context) => const UserProfileForm(),
+
     
     // '/que-ans': (context) =>   QuestionListScreen(),
   };

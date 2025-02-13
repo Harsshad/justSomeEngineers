@@ -52,6 +52,7 @@ class DrawerWidget extends StatelessWidget {
                     leading: const Icon(Icons.person),
                     onTap: () {
                       Navigator.pop(context);
+                      // Navigator.pushNamed(context, '/user-profile-form');
                       Navigator.pushNamed(context, '/user-profile');
                       // Navigator.pushNamed(context, '/profile');
                     },
@@ -67,7 +68,7 @@ class DrawerWidget extends StatelessWidget {
                     ),
                   ListTile(
                     title: const Text('CodeQuery'),
-                    leading: const Icon(Icons.chat_rounded),
+                    leading:  Image.asset(Constants.codequery, scale: 15,),
                     onTap: () {
                       Navigator.pop(context);
                       Navigator.pushNamed(context, '/que-ans');

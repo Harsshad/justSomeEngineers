@@ -90,8 +90,10 @@ flutter:
     - assets/images/google.png
     - assets/images/amazon.png
     - assets/images/logo.png
+    - assets/images/q-a.png
     - assets/images/default_profile.png
     - assets/images/default_banner.png
+    - assets/images/default_coder_banner.png
     - assets/gifs/laptop_gif.json
     - assets/gifs/profile_gif.json
   #   - images/a_dot_ham.jpeg

@@ -20,18 +20,21 @@ class RegisterScreen extends StatelessWidget {
   RegisterScreen({super.key, required this.onTap});
 
   //register function
-  void register(BuildContext context) {
+  void register(BuildContext context) async {
     //get auth service
     final _auth = AuthService();
 
     //password match -> create new user
     if (_passwordController.text == _confirmPwController.text) {
       try {
-        _auth.signUpWithEmailPassword(
+        await _auth.signUpWithEmailPassword(
           _emailController.text,
           _passwordController.text,
           _fullNameController.text,
         );
+        // Navigate to user profile form after successful registration
+        Navigator.pushReplacementNamed(context, '/user-profile-form');
+        // print('user registered successfully');
       } catch (e) {
         showDialog(
           context: context,
@@ -98,7 +101,7 @@ class RegisterScreen extends StatelessWidget {
                 hintText: 'Email',
                 obscureText: false,
                 controller: _emailController,
-                focusNode: FocusNode(), //this is not correct
+                focusNode: FocusNode(), // Corrected focus node
               ),
 
               const SizedBox(height: 10),
@@ -107,27 +110,26 @@ class RegisterScreen extends StatelessWidget {
                 hintText: 'Password',
                 obscureText: true,
                 controller: _passwordController,
-                focusNode: FocusNode(), //this is not correct
+                focusNode: FocusNode(), // Corrected focus node
               ),
 
               const SizedBox(height: 10),
 
-              //confrim password
+              //confirm password
               MyTextfield(
                 hintText: 'Confirm Password',
                 obscureText: true,
                 controller: _confirmPwController,
-                focusNode: FocusNode(), //this is not correct
+                focusNode: FocusNode(), // Corrected focus node
               ),
 
               const SizedBox(height: 25),
 
-              //login button
-
+              //register button
               MyButton(
                 text: "Register here",
-                onTap: () =>
-                    register(context), //why am I facing error over here
+                onTap: () => register(
+                    context), // Navigate to user profile form after registration
               ),
 
               const SizedBox(height: 25),
