@@ -68,7 +68,7 @@ class DrawerWidget extends StatelessWidget {
                     ),
                   ListTile(
                     title: const Text('CodeQuery'),
-                    leading:  Image.asset(Constants.codequery, scale: 15,),
+                    leading:  Image.asset(Constants.codequery, scale: 17,),
                     onTap: () {
                       Navigator.pop(context);
                       Navigator.pushNamed(context, '/que-ans');
@@ -108,6 +108,24 @@ class DrawerWidget extends StatelessWidget {
                   //     Navigator.pushNamed(context, '/dev-talk');
                   //   },
                   // ),
+                  // ListTile(
+                  //   title: const Text('Chat Requests'),
+                  //   // title: const Text('Dev Talk (still need to work on it a lot)'),
+                  //   leading: const Icon(Icons.forum_outlined),
+                  //   onTap: () {
+                  //     Navigator.pop(context);
+                  //     Navigator.pushNamed(context, '/chat-request');
+                  //   },
+                  // ),
+                  ListTile(
+                    title: const Text('Chattrix'),
+                    // title: const Text('Dev Talk (still need to work on it a lot)'),
+                    leading: const Icon(Icons.forum_outlined),
+                    onTap: () {
+                      Navigator.pop(context);
+                      Navigator.pushNamed(context, '/user-chat-screen');
+                    },
+                  ),
                   ListTile(
                     title: const Text('Resume'),
                     leading: const Icon(Icons.book_outlined),

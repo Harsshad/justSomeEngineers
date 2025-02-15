@@ -1,7 +1,9 @@
 import 'package:codefusion/Q&A/screen/q&a_screen.dart';
 import 'package:codefusion/User%20Profile/screens/user_profile_form.dart';
 import 'package:codefusion/User%20Profile/screens/user_profile.dart';
-import 'package:codefusion/dev_talk/screen/search_screen.dart';
+import 'package:codefusion/chat_bot/pages/chat_page.dart';
+import 'package:codefusion/dev_chat/pages/chat_screen.dart';
+import 'package:codefusion/dev_chat/pages/user_chat_page.dart';
 import 'package:codefusion/screens/developer_screen.dart';
 import 'package:codefusion/screens/temp_job_screen.dart';
 import 'package:flutter/material.dart';
@@ -49,11 +51,13 @@ Map<String, WidgetBuilder> getAppRoutes() {
     '/resume': (context) => const ResumeInputPage(),
     '/resource_hub': (context) => const ResourcesPage(),
     '/developer-screen': (context) => const DeveloperScreen(),
-    '/dev-talk': (context) => const SearchScreen(),
+    // '/dev-talk': (context) => const SearchScreen(),
     '/que-ans': (context) => QAScreen(),
     '/temp-job-screen': (context) => const TempJobScreen(),
     '/user-profile': (context) => const UserProfile(),
     '/user-profile-form': (context) => const UserProfileForm(),
+    '/user-chat-screen': (context) =>  ChatScreen(),
+
 
     
     // '/que-ans': (context) =>   QuestionListScreen(),
