@@ -1,8 +1,9 @@
-import 'package:codefusion/global_resources/constants/constants.dart';
-import 'package:flutter/material.dart';
-import 'package:codefusion/global_resources/auth/auth_methods.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
 import 'dart:io' show Platform;
+
+import 'package:codefusion/global_resources/auth/auth_methods.dart';
+import 'package:codefusion/global_resources/constants/constants.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter/material.dart';
 
 class DrawerWidget extends StatelessWidget {
   const DrawerWidget({Key? key}) : super(key: key);

@@ -24,10 +24,10 @@ class UserTile extends StatelessWidget {
             vertical: 5,
             horizontal: 25,
           ),
-          padding: EdgeInsets.all(18),
+          padding: const EdgeInsets.all(18),
           child: Row(children: [
             //icon
-            Icon(Icons.person),
+            const Icon(Icons.person),
 
             const SizedBox(width: 20,),
 

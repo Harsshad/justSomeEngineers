@@ -8,25 +8,30 @@ class ChatService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   Stream<List<Map<String, dynamic>>> getUsersAndMentorsStream() {
-    return _firestore.collection("users").snapshots().asyncMap(
-      (userSnapshot) async {
-        final users = userSnapshot.docs.map((doc) {
-          final user = doc.data();
-          user["role"] = "User";
-          return user;
-        }).toList();
+  return _firestore.collection("users").snapshots().asyncMap(
+    (userSnapshot) async {
+      final users = userSnapshot.docs.map((doc) {
+        final user = doc.data();
+        user["role"] = "User";
+        user["uid"] = doc.id; // Ensure UID exists
+        return user;
+      }).toList();
 
-        final mentorSnapshot = await _firestore.collection("mentors").get();
-        final mentors = mentorSnapshot.docs.map((doc) {
-          final mentor = doc.data();
-          mentor["role"] = "Mentor";
-          return mentor;
-        }).toList();
+      final mentorSnapshot = await _firestore.collection("mentors").get();
+      final mentors = mentorSnapshot.docs.map((doc) {
+        final mentor = doc.data();
+        mentor["role"] = "Mentor";
+        mentor["uid"] = doc.id; // Assign document ID as UID
+        return mentor;
+      }).toList();
 
-        return [...users, ...mentors];
-      },
-    );
-  }
+      return [...users, ...mentors];
+    },
+  );
+}
+
+//get all users stream except 
+
 
   //send message
   Future<void> sendMessage(String receiverID, message) async {
@@ -70,4 +75,9 @@ class ChatService {
         .orderBy("timestamp", descending: false)
         .snapshots();
   }
+
+  //Report user
+  //Block user
+  //Unblock user
+  //Get Blocked user stream
 }

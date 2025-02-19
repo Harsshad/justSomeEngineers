@@ -59,8 +59,9 @@ class ChatScreen extends StatelessWidget {
             context,
             MaterialPageRoute(
               builder: (context) => UserChatPage(
-                receiverEmail: userData['fullName'] ?? userData["email"] ?? 'No data',
-                receiverID: userData["uid"],
+                receiverName: userData["fullName"] ?? userData["email"] ?? 'No data',
+                // receiverEmail: userData["fullName"] ?? userData["email"] ?? 'No data',
+                receiverID: userData["uid"] ?? '',
               ),
             ),
           );
