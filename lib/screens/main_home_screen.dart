@@ -36,7 +36,7 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
           ),
         ],
       ),
-      drawer: const DrawerWidget(),
+      drawer:  DrawerWidget(),
       body: const ArticleList(),
     );
   }

@@ -213,7 +213,35 @@ Stream<List<Map<String, dynamic>>> getBlockedUserStream(String userId) {
         .cast<Map<String, dynamic>>()
         .toList();
   });
+  
 }
+// Future<Map<String, dynamic>?> getLastMessage(String senderId, String receiverId) async {
+//   try {
+//     // Generate chat room ID
+//     List<String> ids = [senderId, receiverId];
+//     ids.sort();
+//     String chatRoomID = ids.join("_");
+
+//     QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+//         .collection("chat_rooms")
+//         .doc(chatRoomID)
+//         .collection("messages")
+//         .orderBy("timestamp", descending: true)
+//         .limit(1)
+//         .get();
+
+//     if (querySnapshot.docs.isNotEmpty) {
+//       return querySnapshot.docs.first.data() as Map<String, dynamic>;
+//     }
+
+//     return null; // No messages found
+//   } catch (e) {
+//     print("Error fetching last message: $e");
+//     return null;
+//   }
+// }
+
+
 
 
   // Stream<List<Map<String, dynamic>>> getBlockedUserStream(String userId) {

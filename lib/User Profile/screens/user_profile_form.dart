@@ -87,15 +87,15 @@ class _UserProfileFormState extends State<UserProfileForm> {
 
   Future<String> _uploadImageToImageKit(Uint8List file, String fileName) async {
     try {
-      var request = http.MultipartRequest('POST', Uri.parse(Config.imagekitUrl));
+      var request =
+          http.MultipartRequest('POST', Uri.parse(Config.imagekitUrl));
       request.headers['Authorization'] =
           'Basic ' + base64Encode(utf8.encode(Config.privateKey + ':'));
       request.fields['fileName'] = fileName;
       request.fields['publicKey'] = Config.publicKey;
-      request.fields['folder'] = '/user_profile';  
-      request.files
-          
-          .add(http.MultipartFile.fromBytes('file', file, filename: 'user-profile.jpg'));
+      request.fields['folder'] = '/user_profile';
+      request.files.add(http.MultipartFile.fromBytes('file', file,
+          filename: 'user-profile.jpg'));
 
       var response = await request.send();
       if (response.statusCode == 200) {
@@ -177,7 +177,8 @@ class _UserProfileFormState extends State<UserProfileForm> {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('User details saved successfully!')),
           );
-          Navigator.pushNamed(context, '/main-home'); // Navigate to user profile screen
+          Navigator.pushNamed(
+              context, '/main-home'); // Navigate to user profile screen
         } catch (e) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('Error saving details: $e')),
@@ -194,6 +195,26 @@ class _UserProfileFormState extends State<UserProfileForm> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          'User Profile Form',
+          style: TextStyle(
+            fontFamily: 'SourceCodePro',
+            fontWeight: FontWeight.bold,
+            color: Theme.of(context).colorScheme.primary,
+          ),
+        ),
+        backgroundColor: Colors.blueGrey[800],
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+            color: Theme.of(context).colorScheme.primary,
+          ),
+          onPressed: () {
+            Navigator.pushReplacementNamed(context, '/main-home');
+          },
+        ),
+      ),
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(

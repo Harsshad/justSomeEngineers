@@ -4,6 +4,7 @@ import 'package:codefusion/User%20Profile/screens/user_profile.dart';
 import 'package:codefusion/chat_bot/pages/chat_page.dart';
 import 'package:codefusion/dev_chat/pages/chat_screen.dart';
 import 'package:codefusion/dev_chat/pages/user_chat_page.dart';
+import 'package:codefusion/mentorship/screens/mentor_profile_page.dart';
 import 'package:codefusion/screens/developer_screen.dart';
 import 'package:codefusion/screens/temp_job_screen.dart';
 import 'package:flutter/material.dart';
@@ -35,6 +36,7 @@ Map<String, WidgetBuilder> getAppRoutes() {
     '/job-recommend': (context) => JobListScreen(),
     '/resources': (context) => const ResourcesScreen(),
     '/mentor-form-widget': (context) => MentorForms(),
+    '/mentor-profile': (context) => const MentorProfilePage(),
     '/mentor-list-screen': (context) => const MentorListScreens(),
     '/mentor_details': (context) {
       final mentorId = ModalRoute.of(context)?.settings.arguments as String?;

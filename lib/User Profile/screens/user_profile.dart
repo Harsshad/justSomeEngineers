@@ -60,6 +60,26 @@ class _UserProfileState extends State<UserProfile> {
     final top = coverHeight - profileHeight / 2;
 
     return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          'User Profile',
+          style: TextStyle(
+            fontFamily: 'SourceCodePro',
+            fontWeight: FontWeight.bold,
+            color: Theme.of(context).colorScheme.primary,
+          ),
+        ),
+        backgroundColor: Colors.blueGrey[800],
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+            color: Theme.of(context).colorScheme.primary,
+          ),
+          onPressed: () {
+            Navigator.pushReplacementNamed(context, '/main-home');
+          },
+        ),
+      ),
       body: ListView(
         padding: EdgeInsets.zero,
         children: <Widget>[
@@ -73,7 +93,7 @@ class _UserProfileState extends State<UserProfile> {
   Widget buildCoverImage() => Container(
         color: Theme.of(context).colorScheme.primary,
         child: bgBannerImageUrl != null && bgBannerImageUrl!.isNotEmpty
-        // child: bgBannerImageUrl != null 
+            // child: bgBannerImageUrl != null
             ? Image.network(
                 bgBannerImageUrl!,
                 fit: BoxFit.cover,

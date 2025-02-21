@@ -85,10 +85,27 @@ class _UserChatPageState extends State<UserChatPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        // title: Text(receiverEmail),
-        title: Text(widget.receiverName),
+            appBar: AppBar(
+        title: Text(
+          widget.receiverName,
+          style: TextStyle(
+            fontFamily: 'SourceCodePro',
+            fontWeight: FontWeight.bold,
+            color: Theme.of(context).colorScheme.primary,
+          ),
+        ),
+        backgroundColor: Colors.blueGrey[800],
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+            color: Theme.of(context).colorScheme.primary,
+          ),
+          onPressed: () {
+            Navigator.pushReplacementNamed(context, '/user-chat-screen');
+          },
+        ),
       ),
+      
       body: Column(
         children: [
           //display all the messages

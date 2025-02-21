@@ -1,5 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:codefusion/dev_chat/chat/chat_service.dart';
-import 'package:codefusion/dev_chat/components/user_tile.dart';
+
 import 'package:codefusion/dev_chat/pages/user_chat_page.dart';
 import 'package:codefusion/global_resources/auth/auth_methods.dart';
 import 'package:codefusion/global_resources/components/animated_search_bar.dart';
@@ -7,7 +8,6 @@ import 'package:codefusion/global_resources/constants/constants.dart'
     show Constants;
 import 'package:codefusion/global_resources/widgets/drawer_widget.dart';
 import 'package:flutter/material.dart';
-import 'dart:math';
 
 class ChatScreen extends StatefulWidget {
   ChatScreen({super.key});
@@ -53,7 +53,7 @@ class _ChatScreenState extends State<ChatScreen> {
       drawer: const DrawerWidget(),
       body: Column(
         children: [
-          _buildContactList(),
+          // _buildContactList(),
           Expanded(child: _buildUserList()),
         ],
       ),
@@ -135,8 +135,8 @@ class _ChatScreenState extends State<ChatScreen> {
       },
     );
   }
-
-  Widget _buildUserListItem(
+  
+Widget _buildUserListItem(
       Map<String, dynamic> userData, BuildContext context) {
     return ListTile(
       contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
@@ -151,8 +151,8 @@ class _ChatScreenState extends State<ChatScreen> {
         userData["fullName"] ?? userData["email"] ?? 'No data',
         style: const TextStyle(fontWeight: FontWeight.bold),
       ),
-      subtitle: const Text("Tap to chat"),
-      trailing: const Icon(Icons.check_circle, color: Colors.green),
+      // subtitle: const Text("Tap to chat"),
+      // trailing: const Icon(Icons.check_circle, color: Colors.green),
       onTap: () {
         Navigator.push(
           context,
@@ -167,4 +167,54 @@ class _ChatScreenState extends State<ChatScreen> {
       },
     );
   }
+
+// Widget _buildUserListItem(Map<String, dynamic> userData, BuildContext context) {
+//   return FutureBuilder<Map<String, dynamic>?>(
+//     future: _chatService.getLastMessage(
+//         _authService.getCurrentUser()?.uid ?? '', userData["uid"]),
+//     builder: (context, snapshot) {
+//       String subtitleText = ""; // Default to empty text
+
+//       if (snapshot.connectionState == ConnectionState.waiting) {
+//         subtitleText = "Loading...";
+//       } else if (snapshot.hasError) {
+//         subtitleText = "Error fetching message";
+//       } else if (snapshot.hasData && snapshot.data != null) {
+//         var lastMessageData = snapshot.data!;
+//         subtitleText = lastMessageData["message"]?.toString() ?? ""; // Ensure it's a String
+//       }
+
+//       return ListTile(
+//         contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+//         leading: CircleAvatar(
+//           radius: 25,
+//           backgroundImage: userData["profileImage"] != null &&
+//                   userData["profileImage"].isNotEmpty
+//               ? NetworkImage(userData["profileImage"])
+//               : const AssetImage(Constants.default_profile) as ImageProvider,
+//         ),
+//         title: Text(
+//           userData["fullName"] ?? userData["email"] ?? 'No data',
+//           style: const TextStyle(fontWeight: FontWeight.bold),
+//         ),
+//         subtitle: subtitleText.isNotEmpty ? Text(subtitleText) : null, // Hide if empty
+//         trailing: const Icon(Icons.check_circle, color: Colors.green),
+//         onTap: () {
+//           Navigator.push(
+//             context,
+//             MaterialPageRoute(
+//               builder: (context) => UserChatPage(
+//                 receiverName: userData["fullName"] ?? userData["email"] ?? 'No data',
+//                 receiverID: userData["uid"] ?? '',
+//               ),
+//             ),
+//           );
+//         },
+//       );
+//     },
+//   );
+// }
+
+
+
 }
