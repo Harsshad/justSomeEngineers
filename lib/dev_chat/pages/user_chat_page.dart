@@ -147,6 +147,8 @@ class _UserChatPageState extends State<UserChatPage> {
           ChatBubble(
             message: data["message"],
             isCurrentUser: isCurrentUser,
+            messageId: doc.id,
+            userId: data['senderID'],
           ),
         ],
       ),

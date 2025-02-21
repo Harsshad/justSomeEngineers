@@ -119,8 +119,8 @@ class DrawerWidget extends StatelessWidget {
                   //   },
                   // ),
                   ListTile(
-                    title: const Text('Chattrix'),
-                    // title: const Text('Dev Talk (still need to work on it a lot)'),
+                    // title: const Text('Chattrix'),
+                    title: const Text('Dev Chat'),
                     leading: const Icon(Icons.forum_outlined),
                     onTap: () {
                       Navigator.pop(context);

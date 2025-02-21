@@ -1,13 +1,16 @@
+import 'package:codefusion/global_resources/constants/constants.dart';
 import 'package:flutter/material.dart';
 
 class UserTile extends StatelessWidget {
   final String text;
+  final String profileImage;
   final void Function()? onTap;
 
   const UserTile({
     super.key,
     required this.text,
     required this.onTap,
+    required this.profileImage,
   });
 
   @override
@@ -25,15 +28,25 @@ class UserTile extends StatelessWidget {
             horizontal: 25,
           ),
           padding: const EdgeInsets.all(18),
-          child: Row(children: [
-            //icon
-            const Icon(Icons.person),
+          child: Row(
+          children: [
+            // Profile Image
+            CircleAvatar(
+              radius: 20, // Adjust the size as needed
+              backgroundColor: Colors.grey.shade800,
+              backgroundImage: profileImage.isNotEmpty
+                  ? NetworkImage(profileImage)
+                  : const AssetImage(Constants.default_profile)
+                      as ImageProvider,
+            ),
 
-            const SizedBox(width: 20,),
+            const SizedBox(width: 20),
 
-            //username
+            // Username
             Text(text),
-          ])),
+          ],
+        ),
+      ),
     );
   }
 }
