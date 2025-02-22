@@ -72,32 +72,36 @@ class ChatService extends ChangeNotifier {
   }
 
   //send message
-  Future<void> sendMessage(String receiverID, message) async {
-    //get current user info
-    final String currentUserID = _auth.currentUser!.uid;
-    final String currentUserEmail = _auth.currentUser!.email!;
-    final Timestamp timestamp = Timestamp.now();
-
-    //create a new message
-    Message newMessage = Message(
-        senderID: currentUserID,
-        senderEmail: currentUserEmail,
-        receiverID: receiverID,
-        message: message,
-        timestamp: timestamp);
-
-    //construct chat room ID for the users (sorted to ensure uniqueness)
-    List<String> ids = [currentUserID, receiverID];
-    ids.sort(); //sort the ids(this ensure the chatroomID is the same for any 2 people)
-    String chatRoomID = ids.join("_");
-
-    //add new message
-    await _firestore
-        .collection("chat_rooms")
-        .doc(chatRoomID)
-        .collection("messages")
-        .add(newMessage.toMap());
+  Future<void> sendMessage(String receiverID, String message) async {
+  if (message.isEmpty || receiverID.isEmpty) {
+    // print("❌ Error: Message or receiverID is empty!");
+    return;
   }
+
+  final String currentUserID = _auth.currentUser!.uid;
+  final String senderEmail = _auth.currentUser!.email!;
+  final Timestamp timestamp = Timestamp.now();
+
+  Message newMessage = Message(
+    senderID: currentUserID,
+    senderEmail: senderEmail,
+    receiverID: receiverID, // 
+    message: message,
+    timestamp: timestamp,
+  );
+
+  List<String> ids = [currentUserID, receiverID];
+  ids.sort();
+  String chatRoomID = ids.join("_");
+
+  await _firestore
+      .collection("chat_rooms")
+      .doc(chatRoomID)
+      .collection("messages")
+      .add(newMessage.toMap());
+
+  // print("✅ Message sent successfully to $receiverID");
+}
 
   //get message
   Stream<QuerySnapshot> getMessages(String userID, otherUserID) {

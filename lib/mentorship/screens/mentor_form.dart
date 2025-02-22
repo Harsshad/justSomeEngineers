@@ -120,6 +120,7 @@ class _MentorFormsState extends State<MentorForms> {
       User? user = _auth.currentUser;
       if (user != null) {
         Map<String, dynamic> mentorData = {
+          'uid': user.uid,
           'role': role,
           'experience': experience,
           'expertise': expertise,

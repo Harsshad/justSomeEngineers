@@ -73,7 +73,7 @@ class ArticleListState extends State<ArticleList> {
               const SizedBox(height: 12),
               ElevatedButton.icon(
                 icon: const Icon(Icons.link),
-                label: const Text("Read Full Article"),
+                label: const Text("Read Full Article"), //when clicked on this button it doesnt take to the designated website 
                 onPressed: () {
                   if (article['url'] != null) {
                     _launchURL(article['url']);
@@ -90,13 +90,18 @@ class ArticleListState extends State<ArticleList> {
     );
   }
 
-  void _launchURL(String url) async {
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw 'Could not launch $url';
-    }
+void _launchURL(String url) async {
+  final Uri uri = Uri.parse(url);
+
+  if (await canLaunchUrl(uri)) {
+    await launchUrl(uri, mode: LaunchMode.externalApplication);
+  } else {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Could not launch the article URL')),
+    );
   }
+}
+
 
   @override
   Widget build(BuildContext context) {

@@ -2,7 +2,7 @@ import 'package:codefusion/Q&A/screen/q&a_screen.dart';
 import 'package:codefusion/User%20Profile/screens/user_profile_form.dart';
 import 'package:codefusion/User%20Profile/screens/user_profile.dart';
 import 'package:codefusion/chat_bot/pages/chat_page.dart';
-import 'package:codefusion/dev_chat/pages/chat_screen.dart';
+import 'package:codefusion/dev_chat/pages/chat_list_screen.dart';
 import 'package:codefusion/dev_chat/pages/user_chat_page.dart';
 import 'package:codefusion/mentorship/screens/mentor_profile_page.dart';
 import 'package:codefusion/screens/developer_screen.dart';

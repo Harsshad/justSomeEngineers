@@ -54,11 +54,15 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                     decoration: const BoxDecoration(),
                     child: Column(
                       children: [
-                        Image.asset(Constants.logoPath, height: 80),
-                        const Text(
+                        Image.asset(
+                          Constants.logoPath,
+                          height: 100,
+                          color: Theme.of(context).colorScheme.inversePrimary,
+                        ),
+                        Text(
                           'CodeFusion',
                           style: TextStyle(
-                            color: Colors.white,
+                            color: Theme.of(context).colorScheme.inversePrimary,
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
                           ),
@@ -84,7 +88,8 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                     onTap: () {
                       Navigator.pop(context);
                       if (isMentor) {
-                        Navigator.pushNamed(context, '/mentor-profile');  // add a back button that takes back to the home page in the once entered the mentor profile or user profile
+                        Navigator.pushNamed(context,
+                            '/mentor-profile'); // add a back button that takes back to the home page in the once entered the mentor profile or user profile
                       } else {
                         Navigator.pushNamed(context, '/user-profile');
                       }
@@ -105,6 +110,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                   ListTile(
                     title: const Text('CodeQuery'),
                     leading: Image.asset(
+                      color: Theme.of(context).colorScheme.inversePrimary,
                       Constants.codequery,
                       scale: 17,
                     ),
@@ -147,7 +153,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                     },
                   ),
                   ListTile(
-                    title: const Text('Resume'),
+                    title: const Text('Resume Gen'),
                     leading: const Icon(Icons.book_outlined),
                     onTap: () {
                       Navigator.pop(context);
