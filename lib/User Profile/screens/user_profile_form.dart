@@ -375,6 +375,12 @@ class _UserProfileFormState extends State<UserProfileForm> {
         obscureText: false,
         controller: fullNameController,
         focusNode: fullNameFocus,
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return 'Full Name is required';
+          }
+          return null;
+        },
       ),
       const SizedBox(height: 15),
       MyTextfield(
@@ -382,6 +388,12 @@ class _UserProfileFormState extends State<UserProfileForm> {
         obscureText: false,
         controller: roleController,
         focusNode: roleFocus,
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return 'Role is required';
+          }
+          return null;
+        },
       ),
       const SizedBox(height: 15),
       MyTextfield(
@@ -403,6 +415,12 @@ class _UserProfileFormState extends State<UserProfileForm> {
         obscureText: false,
         controller: emailController,
         focusNode: emailFocus,
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return 'Email is required';
+          }
+          return null;
+        },
       ),
       const SizedBox(height: 15),
       MyTextfield(
@@ -417,6 +435,12 @@ class _UserProfileFormState extends State<UserProfileForm> {
         obscureText: false,
         controller: aboutController,
         focusNode: aboutFocus,
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return 'About is required';
+          }
+          return null;
+        },
       ),
     ];
   }

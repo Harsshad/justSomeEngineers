@@ -71,7 +71,7 @@ class _MentorListScreensState extends State<MentorListScreens> {
       extendBody: true,
       backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.background,
+        backgroundColor: Colors.blueGrey[800],
         title: Text(
           'Available Mentors',
           style: TextStyle(

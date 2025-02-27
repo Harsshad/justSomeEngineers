@@ -144,13 +144,27 @@ class _ResourcesPageState extends State<ResourcesPage>
   Widget build(BuildContext context) {
     return Scaffold(
       extendBody: true,
+      // appBar: AppBar(
+      //   title: Text(
+      //     'Resume Generator',
+      //     style: TextStyle(
+      //       fontFamily: 'SourceCodePro',
+      //       fontWeight: FontWeight.bold,
+      //       color: Theme.of(context).colorScheme.primary,
+      //     ),
+      //   ),
+      //   backgroundColor: Colors.blueGrey[800],
+      // ),
       appBar: AppBar(
-        title: const Text(
+        title:  Text(
           'Resources Hub',
           style: TextStyle(
+            fontFamily: 'SourceCodePro',
             fontWeight: FontWeight.bold,
+            color: Theme.of(context).colorScheme.primary,
           ),
         ),
+        backgroundColor: Colors.blueGrey[800],
         actions: [
           IconButton(
             icon: Icon(Icons.menu),

@@ -164,7 +164,7 @@ class _ResumeInputPageState extends State<ResumeInputPage> {
             color: Theme.of(context).colorScheme.primary,
           ),
         ),
-        backgroundColor: Colors.blueGrey[900],
+        backgroundColor: Colors.blueGrey[800],
       ),
       body: ListView(
         padding: const EdgeInsets.all(16.0),

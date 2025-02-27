@@ -8,7 +8,7 @@
 
     <application
         tools:replace="android:label"
-        android:label="codefusion"
+        android:label="Codefusion"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

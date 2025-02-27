@@ -2,6 +2,7 @@ import 'dart:io' show Platform;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:codefusion/global_resources/auth/auth_methods.dart';
 import 'package:codefusion/global_resources/constants/constants.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
@@ -15,6 +16,7 @@ class DrawerWidget extends StatefulWidget {
 
 class _DrawerWidgetState extends State<DrawerWidget> {
   bool isMentor = false;
+  String? selectedMentorshipOption;
 
   @override
   void initState() {
@@ -129,12 +131,93 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                       },
                     ),
                   ListTile(
-                    title: const Text('Mentorship'),
+                    title: const Text('Dev Guru'),
                     leading: const Icon(Icons.school_rounded),
-                    onTap: () {
-                      Navigator.pop(context);
-                      Navigator.pushNamed(context, '/mentor-list-screen');
-                    },
+                    trailing: DropdownButtonHideUnderline(
+                      child: DropdownButton2<String>(
+                        customButton: const Icon(Icons.arrow_drop_down),
+                        items: (isMentor
+                                ? [
+                                    'Mentors List',
+                                    'Mentee Requests',
+                                    'My Mentees',
+                                    'Applied Mentors'
+                                  ]
+                                : ['Mentors List', 'Applied Mentors'])
+                            .map((String item) => DropdownMenuItem<String>(
+                                  value: item,
+                                  child: Text(
+                                    item,
+                                    style:  TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.bold,
+                                      color: Theme.of(context).colorScheme.inversePrimary,
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ))
+                            .toList(),
+                        onChanged: (String? value) {
+                          setState(() {
+                            selectedMentorshipOption = value;
+                          });
+                          Navigator.pop(context);
+                          switch (value) {
+                            case 'Mentors List':
+                              Navigator.pushNamed(context, '/mentor-list-screen');
+                              break;
+                            case 'Mentee Requests':
+                              Navigator.pushNamed(context, '/mentee-requests');
+                              break;
+                            case 'My Mentees':
+                              Navigator.pushNamed(context, '/mentees-list');
+                              break;
+                            case 'Applied Mentors':
+                              Navigator.pushNamed(context, '/applied-mentors');
+                              break;
+                          }
+                        },
+                        buttonStyleData: ButtonStyleData(
+                          height: 50,
+                          width: 50,
+                          padding: const EdgeInsets.only(left: 14, right: 14),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(14),
+                            border: Border.all(
+                              color: Colors.black26,
+                            ),
+                            color: theme.colorScheme.background,
+                          ),
+                          elevation: 2,
+                        ),
+                        iconStyleData: const IconStyleData(
+                          icon: Icon(
+                            Icons.arrow_drop_down,
+                          ),
+                          iconSize: 24,
+                          iconEnabledColor: Colors.black,
+                          iconDisabledColor: Colors.grey,
+                        ),
+                        dropdownStyleData: DropdownStyleData(
+                          maxHeight: 200,
+                          width: 200,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(14),
+                            color: theme.colorScheme.background,
+                          ),
+                          offset: const Offset(-20, 0),
+                          scrollbarTheme: ScrollbarThemeData(
+                            radius: const Radius.circular(40),
+                            thickness: WidgetStateProperty.all<double>(6),
+                            thumbVisibility: WidgetStateProperty.all<bool>(true),
+                          ),
+                        ),
+                        menuItemStyleData: const MenuItemStyleData(
+                          height: 40,
+                          padding: EdgeInsets.only(left: 14, right: 14),
+                        ),
+                      ),
+                    ),
                   ),
                   ListTile(
                     title: const Text('Resources'),

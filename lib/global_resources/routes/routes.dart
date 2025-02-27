@@ -4,6 +4,9 @@ import 'package:codefusion/User%20Profile/screens/user_profile.dart';
 import 'package:codefusion/chat_bot/pages/chat_page.dart';
 import 'package:codefusion/dev_chat/pages/chat_list_screen.dart';
 import 'package:codefusion/dev_chat/pages/user_chat_page.dart';
+import 'package:codefusion/mentorship/screens/applied_mentors_screen.dart';
+import 'package:codefusion/mentorship/screens/mentee_requests_screen.dart';
+import 'package:codefusion/mentorship/screens/mentees_list_screen.dart';
 import 'package:codefusion/mentorship/screens/mentor_profile_page.dart';
 import 'package:codefusion/screens/developer_screen.dart';
 import 'package:codefusion/screens/temp_job_screen.dart';
@@ -47,6 +50,10 @@ Map<String, WidgetBuilder> getAppRoutes() {
     },
     '/mentor_login': (context) => MentorLoginScreen(onTap: () {}),
     '/mentor_register': (context) => MentorRegisterScreen(onTap: () {}),
+    '/applied-mentors': (context) => const AppliedMentorsScreen(),
+    '/mentee-requests': (context) => const MenteeRequestsScreen(),
+    '/mentees-list': (context) => const MenteesListScreen(),
+    // other routes...
     '/que-answer': (context) => const QuesAnsScreen(),
     '/settings': (context) => const SettingsScreen(),
     '/chat-bot': (context) => const BotHomePage(),

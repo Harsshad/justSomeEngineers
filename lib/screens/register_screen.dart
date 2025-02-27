@@ -85,45 +85,53 @@ class RegisterScreen extends StatelessWidget {
                   fontSize: 16,
                 ),
               ),
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                ),
+                child: Column(
+                  children: [
+                    const SizedBox(height: 25),
 
-              const SizedBox(height: 25),
+                    MyTextfield(
+                      hintText: 'Full Name',
+                      obscureText: false,
+                      controller: _fullNameController,
+                      focusNode: FocusNode(),
+                    ),
+                    const SizedBox(height: 10),
 
-              MyTextfield(
-                hintText: 'Full Name',
-                obscureText: false,
-                controller: _fullNameController,
-                focusNode: FocusNode(),
+                    //pw textfield
+                    MyTextfield(
+                      hintText: 'Email',
+                      obscureText: false,
+                      controller: _emailController,
+                      focusNode: FocusNode(), // Corrected focus node
+                    ),
+
+                    const SizedBox(height: 10),
+
+                    MyTextfield(
+                      hintText: 'Password',
+                      obscureText: true,
+                      controller: _passwordController,
+                      focusNode: FocusNode(), // Corrected focus node
+                    ),
+
+                    const SizedBox(height: 10),
+
+                    //confirm password
+                    MyTextfield(
+                      hintText: 'Confirm Password',
+                      obscureText: true,
+                      controller: _confirmPwController,
+                      focusNode: FocusNode(), // Corrected focus node
+                    ),
+
+                    const SizedBox(height: 25),
+                  ],
+                ),
               ),
-              const SizedBox(height: 10),
-
-              //pw textfield
-              MyTextfield(
-                hintText: 'Email',
-                obscureText: false,
-                controller: _emailController,
-                focusNode: FocusNode(), // Corrected focus node
-              ),
-
-              const SizedBox(height: 10),
-
-              MyTextfield(
-                hintText: 'Password',
-                obscureText: true,
-                controller: _passwordController,
-                focusNode: FocusNode(), // Corrected focus node
-              ),
-
-              const SizedBox(height: 10),
-
-              //confirm password
-              MyTextfield(
-                hintText: 'Confirm Password',
-                obscureText: true,
-                controller: _confirmPwController,
-                focusNode: FocusNode(), // Corrected focus node
-              ),
-
-              const SizedBox(height: 25),
 
               //register button
               MyButton(

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:codefusion/config.dart';
 import 'package:codefusion/global_resources/constants/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -68,9 +69,9 @@ class _MentorFormsState extends State<MentorForms> {
 
   // Updated function to upload profile image to ImageKit
   Future<String> _uploadImageToImageKit(Uint8List file) async {
-    const String imagekitUrl = 'https://upload.imagekit.io/api/v1/files/upload';
-    const String publicKey = 'public_LWSZ9j/yFXM2LoFPod9qfzBEFow='; // Updated
-    const String privateKey = 'private_rG5Lp3157I1V+9yV+EIkVfHnCoA='; // Updated
+    const String imagekitUrl = Config.imagekitUrl;
+    const String publicKey = Config.publicKey; // Updated to use config
+    const String privateKey = Config.privateKey; // Updated to use config
 
     try {
       var request = http.MultipartRequest('POST', Uri.parse(imagekitUrl));
@@ -287,6 +288,12 @@ class _MentorFormsState extends State<MentorForms> {
         obscureText: false,
         controller: roleController,
         focusNode: roleFocus,
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return 'Role is required';
+          }
+          return null;
+        },
       ),
       const SizedBox(height: 15),
       MyTextfield(
@@ -301,6 +308,12 @@ class _MentorFormsState extends State<MentorForms> {
         obscureText: false,
         controller: expertiseController,
         focusNode: expertiseFocus,
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return 'Expertise is required';
+          }
+          return null;
+        },
       ),
       const SizedBox(height: 15),
       MyTextfield(
@@ -329,6 +342,12 @@ class _MentorFormsState extends State<MentorForms> {
         obscureText: false,
         controller: bioController,
         focusNode: bioFocus,
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return 'Bio is required';
+          }
+          return null;
+        },
       ),
     ];
   }
