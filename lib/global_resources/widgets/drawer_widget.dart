@@ -97,10 +97,10 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                       }
                     },
                   ),
-                  if (kIsWeb ||
-                      Platform.isMacOS ||
-                      Platform.isWindows ||
-                      Platform.isLinux)
+                  // if (kIsWeb ||
+                  //     Platform.isMacOS ||
+                  //     Platform.isWindows ||
+                  //     Platform.isLinux)
                     ListTile(
                       title: const Text('CodeMate'),
                       leading: const Icon(Icons.smart_toy_outlined),

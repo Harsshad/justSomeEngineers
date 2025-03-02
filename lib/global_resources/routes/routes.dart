@@ -1,7 +1,8 @@
 import 'package:codefusion/Q&A/screen/q&a_screen.dart';
 import 'package:codefusion/User%20Profile/screens/user_profile_form.dart';
 import 'package:codefusion/User%20Profile/screens/user_profile.dart';
-import 'package:codefusion/chat_bot/pages/chat_page.dart';
+import 'package:codefusion/code_mate/pages/chat_page.dart';
+// import 'package:codefusion/chat_bot/pages/chat_page.dart';
 import 'package:codefusion/dev_chat/pages/chat_list_screen.dart';
 import 'package:codefusion/dev_chat/pages/user_chat_page.dart';
 import 'package:codefusion/mentorship/screens/applied_mentors_screen.dart';
@@ -11,7 +12,7 @@ import 'package:codefusion/mentorship/screens/mentor_profile_page.dart';
 import 'package:codefusion/screens/developer_screen.dart';
 import 'package:codefusion/screens/temp_job_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:codefusion/chat_bot/pages/home_page.dart';
+// import 'package:codefusion/chat_bot/pages/home_page.dart';
 import 'package:codefusion/global_resources/auth/auth_gate.dart';
 import 'package:codefusion/job%20board/screens/job_list_screen.dart';
 import 'package:codefusion/job%20board/screens/job_preference_form.dart';
@@ -56,7 +57,9 @@ Map<String, WidgetBuilder> getAppRoutes() {
     // other routes...
     '/que-answer': (context) => const QuesAnsScreen(),
     '/settings': (context) => const SettingsScreen(),
-    '/chat-bot': (context) => const BotHomePage(),
+    // '/chat-bot': (context) => const BotHomePage(),
+    // '/chat-bot': (context) => const ChatPage(),
+    '/chat-bot': (context) =>  BotChatScreen(),
     '/resume': (context) => const ResumeInputPage(),
     '/resource_hub': (context) => const ResourcesPage(),
     '/developer-screen': (context) => const DeveloperScreen(),
