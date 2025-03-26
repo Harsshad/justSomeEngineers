@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'CodeFusion',
       theme: Provider.of<ThemeProvider>(context).themeData,
-      routes: getAppRoutes(), // Use the routes from the routes file
+      routes: getAppRoutes(),
       home: StreamBuilder(
         stream: AuthMethods().authChanges,
         builder: (context, snapshot) {

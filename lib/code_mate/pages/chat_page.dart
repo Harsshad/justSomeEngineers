@@ -1,5 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:codefusion/code_mate/services/gemini_service.dart';
+import 'package:codefusion/config.dart';
 import 'package:codefusion/global_resources/constants/constants.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -9,12 +12,16 @@ class BotChatScreen extends StatefulWidget {
 }
 
 class _BotChatScreenState extends State<BotChatScreen> with SingleTickerProviderStateMixin {
-  final BotGeminiService geminiService = BotGeminiService('AIzaSyDzNOkzb-qUdtXEAWXIYKRtVWi438Lwh54');
+  final BotGeminiService geminiService = BotGeminiService(Config.geminiApi);
   final TextEditingController _controller = TextEditingController();
   final List<Map<String, dynamic>> _messages = [];
   bool _isLoading = false;
   late AnimationController _sendButtonController;
   late Animation<double> _sendButtonScale;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final ScrollController _scrollController = ScrollController();
+  bool _showScrollToBottomButton = false;
 
   @override
   void initState() {
@@ -23,13 +30,89 @@ class _BotChatScreenState extends State<BotChatScreen> with SingleTickerProvider
     _sendButtonScale = Tween<double>(begin: 1.0, end: 1.2).animate(
       CurvedAnimation(parent: _sendButtonController, curve: Curves.easeInOut),
     );
+    _loadMessages();
+    _scrollController.addListener(_scrollListener);
   }
 
   @override
   void dispose() {
     _sendButtonController.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
+
+  void _scrollListener() {
+    if (_scrollController.position.atEdge) {
+      if (_scrollController.position.pixels == 0) {
+        setState(() {
+          _showScrollToBottomButton = true;
+        });
+      } else {
+        setState(() {
+          _showScrollToBottomButton = false;
+        });
+      }
+    } else {
+      setState(() {
+        _showScrollToBottomButton = true;
+      });
+    }
+  }
+
+Future<void> _loadMessages() async {
+  final user = _auth.currentUser;
+  if (user == null) return;
+
+  // Check if user is a mentor by looking in the mentors collection
+  final mentorDoc = await _firestore.collection('mentors').doc(user.uid).get();
+  final isMentor = mentorDoc.exists; // If document exists in mentors, user is a mentor
+
+  // Choose the correct collection path
+  final collectionPath = isMentor ? 'mentors' : 'users';
+
+  final messagesSnapshot = await _firestore
+      .collection(collectionPath)
+      .doc(user.uid)
+      .collection('bot_chat_messages')
+      .orderBy('timestamp', descending: false)
+      .get();
+
+  setState(() {
+    _messages.addAll(messagesSnapshot.docs.map((doc) => doc.data()));
+  });
+
+  WidgetsBinding.instance.addPostFrameCallback((_) {
+    _scrollToBottom();
+  });
+}
+
+
+
+Future<void> _saveMessage(String text, bool isUser) async {
+  final user = _auth.currentUser;
+  if (user == null) return;
+
+  // Check if user is a mentor by looking in the mentors collection
+  final mentorDoc = await _firestore.collection('mentors').doc(user.uid).get();
+  final isMentor = mentorDoc.exists; // If document exists in mentors, user is a mentor
+
+  // Choose the correct Firestore path
+  final collectionPath = isMentor ? 'mentors' : 'users';
+
+  final message = {
+    'text': text,
+    'isUser': isUser,
+    'timestamp': FieldValue.serverTimestamp(),
+  };
+
+  await _firestore
+      .collection(collectionPath)
+      .doc(user.uid)
+      .collection('bot_chat_messages')
+      .add(message);
+}
+
+
 
   void _sendMessage() async {
     final message = _controller.text.trim();
@@ -43,20 +126,33 @@ class _BotChatScreenState extends State<BotChatScreen> with SingleTickerProvider
     _controller.clear();
     _sendButtonController.forward().then((_) => _sendButtonController.reverse());
 
+    await _saveMessage(message, true);
+
     try {
       final response = await geminiService.getResponse(message);
       setState(() {
         _messages.add({'text': response, 'isUser': false});
       });
+      await _saveMessage(response, false);
     } catch (e) {
       setState(() {
         _messages.add({'text': 'Error: Failed to get response', 'isUser': false});
       });
+      await _saveMessage('Error: Failed to get response', false);
     } finally {
       setState(() {
         _isLoading = false;
       });
+      _scrollToBottom();
     }
+  }
+
+  void _scrollToBottom() {
+    _scrollController.animateTo(
+      _scrollController.position.maxScrollExtent,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeOut,
+    );
   }
 
   Widget _buildChatBubble(String text, bool isUser) {
@@ -127,15 +223,15 @@ class _BotChatScreenState extends State<BotChatScreen> with SingleTickerProvider
 
   Widget _buildChatList() {
     return ListView.builder(
-      reverse: true,
+      controller: _scrollController,
       padding: const EdgeInsets.only(bottom: 80),
       itemCount: _messages.length + (_isLoading ? 1 : 0),
       itemBuilder: (context, index) {
-        if (_isLoading && index == 0) {
+        if (_isLoading && index == _messages.length) {
           return _buildTypingIndicator();
         }
 
-        final message = _messages[_messages.length - 1 - (_isLoading ? index - 1 : index)];
+        final message = _messages[index];
         return _buildChatBubble(message['text'], message['isUser']);
       },
     );
@@ -153,6 +249,14 @@ class _BotChatScreenState extends State<BotChatScreen> with SingleTickerProvider
         backgroundColor: Colors.transparent,
         elevation: 5,
         shadowColor: Colors.blueAccent.withOpacity(0.5),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.search),
+            onPressed: () {
+              showSearch(context: context, delegate: ChatSearchDelegate(_messages));
+            },
+          ),
+        ],
       ),
       body: Stack(
         children: [
@@ -168,6 +272,16 @@ class _BotChatScreenState extends State<BotChatScreen> with SingleTickerProvider
               _buildChatInput(),
             ],
           ),
+          if (_showScrollToBottomButton)
+            Positioned(
+              bottom: 70,
+              right: 220,
+              child: FloatingActionButton(
+                backgroundColor: Colors.blueGrey,
+                onPressed: _scrollToBottom,
+                child: const Icon(Icons.arrow_downward),
+              ),
+            ),
         ],
       ),
     );
@@ -230,5 +344,94 @@ class _BotChatScreenState extends State<BotChatScreen> with SingleTickerProvider
         ],
       ),
     );
+  }
+}
+
+class ChatSearchDelegate extends SearchDelegate {
+  final List<Map<String, dynamic>> messages;
+
+  ChatSearchDelegate(this.messages);
+
+  @override
+  List<Widget> buildActions(BuildContext context) {
+    return [
+      IconButton(
+        icon: const Icon(Icons.clear),
+        onPressed: () {
+          query = '';
+        },
+      ),
+    ];
+  }
+
+  @override
+  Widget buildLeading(BuildContext context) {
+    return IconButton(
+      icon: const Icon(Icons.arrow_back),
+      onPressed: () {
+        close(context, null);
+      },
+    );
+  }
+
+  @override
+  Widget buildResults(BuildContext context) {
+    final results = messages.where((message) => message['text'].toLowerCase().contains(query.toLowerCase())).toList();
+
+    return ListView.builder(
+      itemCount: results.length,
+      itemBuilder: (context, index) {
+        final message = results[index];
+        return ListTile(
+          title: _highlightText(message['text'], query),
+        );
+      },
+    );
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    final suggestions = messages.where((message) => message['text'].toLowerCase().contains(query.toLowerCase())).toList();
+
+    return ListView.builder(
+      itemCount: suggestions.length,
+      itemBuilder: (context, index) {
+        final message = suggestions[index];
+        return ListTile(
+          title: _highlightText(message['text'], query),
+        );
+      },
+    );
+  }
+
+  Widget _highlightText(String text, String query) {
+    if (query.isEmpty) {
+      return Text(text);
+    }
+
+    final matches = text.toLowerCase().allMatches(query.toLowerCase());
+    if (matches.isEmpty) {
+      return Text(text);
+    }
+
+    final List<TextSpan> spans = [];
+    int start = 0;
+
+    for (final match in matches) {
+      if (match.start > start) {
+        spans.add(TextSpan(text: text.substring(start, match.start)));
+      }
+      spans.add(TextSpan(
+        text: text.substring(match.start, match.end),
+        style: const TextStyle(backgroundColor: Colors.yellow),
+      ));
+      start = match.end;
+    }
+
+    if (start < text.length) {
+      spans.add(TextSpan(text: text.substring(start)));
+    }
+
+    return RichText(text: TextSpan(style: const TextStyle(color: Colors.black), children: spans));
   }
 }

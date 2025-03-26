@@ -379,6 +379,10 @@ class _UserProfileFormState extends State<UserProfileForm> {
           if (value == null || value.isEmpty) {
             return 'Full Name is required';
           }
+          // Only allow alphabets and spaces
+        if (!RegExp(r'^[a-zA-Z\s]+$').hasMatch(value)) {
+          return 'Enter a valid name (letters only)';
+        }
           return null;
         },
       ),
@@ -401,14 +405,32 @@ class _UserProfileFormState extends State<UserProfileForm> {
         obscureText: false,
         controller: githubController,
         focusNode: githubFocus,
-      ),
+      validator: (value) {
+        if (value != null && value.isNotEmpty) {
+          final uri = Uri.tryParse(value);
+          if (uri == null || !uri.hasAbsolutePath) {
+            return 'Enter a valid GitHub URL';
+          }
+        }
+        return null;
+      },
+    ),
       const SizedBox(height: 15),
       MyTextfield(
         hintText: 'LinkedIn',
         obscureText: false,
         controller: linkedinController,
         focusNode: linkedinFocus,
-      ),
+      validator: (value) {
+        if (value != null && value.isNotEmpty) {
+          final uri = Uri.tryParse(value);
+          if (uri == null || !uri.hasAbsolutePath) {
+            return 'Enter a valid LinkedIn URL';
+          }
+        }
+        return null;
+      },
+    ),
       const SizedBox(height: 15),
       MyTextfield(
         hintText: 'Email',
@@ -416,19 +438,33 @@ class _UserProfileFormState extends State<UserProfileForm> {
         controller: emailController,
         focusNode: emailFocus,
         validator: (value) {
-          if (value == null || value.isEmpty) {
-            return 'Email is required';
-          }
-          return null;
-        },
-      ),
+        if (value == null || value.isEmpty) {
+          return 'Email is required';
+        }
+        if (!RegExp(
+                r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$')
+            .hasMatch(value)) {
+          return 'Enter a valid email';
+        }
+        return null;
+      },
+    ),
       const SizedBox(height: 15),
       MyTextfield(
         hintText: 'Other URL',
         obscureText: false,
         controller: otherUrlController,
         focusNode: otherUrlFocus,
-      ),
+      validator: (value) {
+        if (value != null && value.isNotEmpty) {
+          final uri = Uri.tryParse(value);
+          if (uri == null || !uri.hasAbsolutePath) {
+            return 'Enter a valid URL';
+          }
+        }
+        return null;
+      },
+    ),
       const SizedBox(height: 15),
       MyTextfield(
         hintText: 'About',

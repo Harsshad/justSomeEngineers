@@ -11,7 +11,7 @@ class ResumeDisplayPage extends StatelessWidget {
   final List<String> languages;
   final List<String> hobbies;
   final String email;
-  final String profileImageUrl;
+  final String profileImage;
 
   const ResumeDisplayPage({
     Key? key,
@@ -24,7 +24,7 @@ class ResumeDisplayPage extends StatelessWidget {
     required this.languages,
     required this.hobbies,
     required this.email,
-    required this.profileImageUrl,
+    required this.profileImage,
   }) : super(key: key);
 
   Future<void> downloadResume(
@@ -71,8 +71,7 @@ class ResumeDisplayPage extends StatelessWidget {
       languages: languages.map((e) => Language(e, 3)).toList(),
       hobbies: hobbies,
       email: email,
-      image: profileImageUrl, // Ensure profileImageUrl is passed correctly
-      // image: 'https://www.dreamstime.com/illustration/default-user.html', // like this image uri
+      image: profileImage, // Ensure profileImageUrl is passed correctly
     );
 
     final GlobalKey<State<StatefulWidget>> globalKey = GlobalKey();

@@ -1,3 +1,4 @@
+import 'package:codefusion/config.dart';
 import 'package:codefusion/resources_hub/services/devto_service.dart';
 import 'package:codefusion/resources_hub/services/medium_service.dart';
 import 'package:flutter/material.dart';
@@ -28,7 +29,7 @@ class _ResourcesPageState extends State<ResourcesPage>
   final TextEditingController _videoSearchController = TextEditingController();
   final ResourcesService _resourcesService = ResourcesService();
   final GeminiService _geminiService =
-      GeminiService('AIzaSyDzNOkzb-qUdtXEAWXIYKRtVWi438Lwh54');
+      GeminiService(Config.geminiApi);
   List<Article> _articles = [];
   List<Video> _videos = [];
   List<DevToArticle> _devToArticles = [];

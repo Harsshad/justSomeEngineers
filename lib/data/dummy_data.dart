@@ -18,7 +18,7 @@ final dummyUserData = UserData(
   profileImage: 'assets/images/profile_placeholder.png',
 );
 
-// // Usage in the LoginScreen or ProfileScreen
+// Usage in the LoginScreen or ProfileScreen
 // Text('Welcome, ${dummyUserData.fullName}!'),
 // Image.asset(dummyUserData.profileImage),
 // Text('Email: ${dummyUserData.email}'),

@@ -1,8 +1,9 @@
 import 'dart:convert';
+import 'package:codefusion/config.dart';
 import 'package:http/http.dart' as http;
 
 Future<List<dynamic>> fetchArticles(String tag) async {
-  String apiKey = 'iZL3dE1c6w58BimpGP86fP84';
+  String devToapiKey = Config.devToapiKey;
   final url = Uri.parse('https://dev.to/api/articles?tag=$tag&per_page=70');
   
   try {

@@ -2,7 +2,6 @@ import 'package:codefusion/global_resources/widgets/drawer_widget.dart';
 import 'package:codefusion/news/screens/article_list.dart';
 import 'package:flutter/material.dart';
 
-
 class MainHomeScreen extends StatefulWidget {
   const MainHomeScreen({Key? key}) : super(key: key);
 
@@ -11,6 +10,8 @@ class MainHomeScreen extends StatefulWidget {
 }
 
 class _MainHomeScreenState extends State<MainHomeScreen> {
+  final GlobalKey<ArticleListState> _articleListKey = GlobalKey<ArticleListState>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,12 +33,14 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),
-            onPressed: () => ArticleListState.refreshArticles(context),
+            onPressed: () {
+              _articleListKey.currentState?.refreshArticles();
+            },
           ),
         ],
       ),
-      drawer:  DrawerWidget(),
-      body: const ArticleList(),
+      drawer: DrawerWidget(),
+      body: ArticleList(key: _articleListKey),
     );
   }
 }

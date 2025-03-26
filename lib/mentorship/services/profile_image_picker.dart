@@ -2,6 +2,7 @@
 
 import 'dart:convert';
 import 'dart:typed_data';
+import 'package:codefusion/config.dart';
 import 'package:codefusion/global_resources/constants/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -40,9 +41,9 @@ class _ProfileImagePickerState extends State<ProfileImagePicker> {
   }
 
   Future<String> _uploadImageToImageKit(Uint8List file) async {
-    const String imagekitUrl = 'https://upload.imagekit.io/api/v1/files/upload';
-    const String publicKey = 'public_LWSZ9j/yFXM2LoFPod9qfzBEFow=';
-    const String privateKey = 'private_rG5Lp3157I1V+9yV+EIkVfHnCoA=';
+    const String imagekitUrl = Config.imagekitUrl;
+    const String publicKey = Config.publicKey;
+    const String privateKey = Config.privateKey;
 
     try {
       var request = http.MultipartRequest('POST', Uri.parse(imagekitUrl));

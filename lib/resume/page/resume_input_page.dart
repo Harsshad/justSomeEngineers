@@ -5,6 +5,7 @@ import 'package:codefusion/global_resources/constants/constants.dart';
 import 'package:codefusion/resume/page/resume_display_page.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import '../../global_resources/auth/auth_methods.dart';
 
 class ResumeInputPage extends StatefulWidget {
@@ -146,7 +147,7 @@ class _ResumeInputPageState extends State<ResumeInputPage> {
           educationDetails: educationDetails,
           languages: languages,
           hobbies: hobbiesList,
-          profileImageUrl: profileImage ?? '',
+          profileImage: profileImage ?? '',
         ),
       ),
     );
@@ -173,7 +174,7 @@ class _ResumeInputPageState extends State<ResumeInputPage> {
           CircleAvatar(
             radius: 50,
             backgroundImage: profileImage != null && profileImage!.isNotEmpty
-                ? (profileImage!.startsWith('http')
+                ? (kIsWeb
                     ? NetworkImage(profileImage!)
                     : FileImage(File(profileImage!))) as ImageProvider
                 : const AssetImage(Constants.default_profile),

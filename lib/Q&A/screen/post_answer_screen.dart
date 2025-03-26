@@ -1,3 +1,4 @@
+import 'package:codefusion/config.dart';
 import 'package:codefusion/global_resources/components/animated_shadow_button.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -27,9 +28,9 @@ class _PostAnswerScreenState extends State<PostAnswerScreen> {
   Uint8List? _imageBytes;
 
   Future<String> _uploadImageToImageKit(Uint8List file) async {
-    const String imagekitUrl = 'https://upload.imagekit.io/api/v1/files/upload';
-    const String publicKey = 'public_LWSZ9j/yFXM2LoFPod9qfzBEFow=';
-    const String privateKey = 'private_rG5Lp3157I1V+9yV+EIkVfHnCoA=';
+const String imagekitUrl = Config.imagekitUrl;
+    const String publicKey = Config.publicKey;
+    const String privateKey = Config.privateKey;
 
     try {
       var request = http.MultipartRequest('POST', Uri.parse(imagekitUrl));

@@ -18,6 +18,8 @@ class _DrawerWidgetState extends State<DrawerWidget> {
   bool isMentor = false;
   String? selectedMentorshipOption;
 
+  String _currentPage = '/main-home';
+
   @override
   void initState() {
     super.initState();
@@ -37,6 +39,14 @@ class _DrawerWidgetState extends State<DrawerWidget> {
         });
       }
     }
+  }
+
+  void navigateToPage(String routeName) {
+    setState(() {
+      _currentPage = routeName;
+    });
+    Navigator.pop(context);
+    Navigator.pushNamed(context, routeName);
   }
 
   @override
@@ -78,37 +88,42 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                     child: ListTile(
                       title: const Text('Home'),
                       leading: const Icon(Icons.home),
+                      tileColor: _currentPage == '/main-home'
+                          ? theme.colorScheme.primary.withOpacity(0.1)
+                          : null,
                       onTap: () {
-                        Navigator.pop(context);
-                        Navigator.pushNamed(context, '/main-home');
+                        navigateToPage('/main-home');
                       },
                     ),
                   ),
                   ListTile(
                     title: const Text('Profile'),
                     leading: const Icon(Icons.person),
+                    tileColor: _currentPage == '/mentor-profile' || _currentPage == '/user-profile'
+                        ? theme.colorScheme.primary.withOpacity(0.1)
+                        : null,
                     onTap: () {
-                      Navigator.pop(context);
                       if (isMentor) {
-                        Navigator.pushNamed(context,
-                            '/mentor-profile'); // add a back button that takes back to the home page in the once entered the mentor profile or user profile
+                        navigateToPage('/mentor-profile');
                       } else {
-                        Navigator.pushNamed(context, '/user-profile');
+                        navigateToPage('/user-profile');
                       }
                     },
                   ),
-                  // if (kIsWeb ||
-                  //     Platform.isMacOS ||
-                  //     Platform.isWindows ||
-                  //     Platform.isLinux)
-                    ListTile(
+                  GestureDetector(
+                    onDoubleTap: () =>
+                        Navigator.pushNamed(context, '/chat-bot'),
+                    child: ListTile(
                       title: const Text('CodeMate'),
                       leading: const Icon(Icons.smart_toy_outlined),
+                      tileColor: _currentPage == '/temp-job-screen'
+                          ? theme.colorScheme.primary.withOpacity(0.1)
+                          : null,
                       onTap: () {
-                        Navigator.pop(context);
-                        Navigator.pushNamed(context, '/chat-bot');
+                        navigateToPage('/temp-job-screen');
                       },
                     ),
+                  ),
                   ListTile(
                     title: const Text('CodeQuery'),
                     leading: Image.asset(
@@ -116,18 +131,22 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                       Constants.codequery,
                       scale: 17,
                     ),
+                    tileColor: _currentPage == '/que-ans'
+                        ? theme.colorScheme.primary.withOpacity(0.1)
+                        : null,
                     onTap: () {
-                      Navigator.pop(context);
-                      Navigator.pushNamed(context, '/que-ans');
+                      navigateToPage('/que-ans');
                     },
                   ),
                   if (!kIsWeb && (Platform.isAndroid || Platform.isIOS))
                     ListTile(
                       title: const Text('FusionMeet'),
                       leading: const Icon(Icons.group),
+                      tileColor: _currentPage == '/meet-home'
+                          ? theme.colorScheme.primary.withOpacity(0.1)
+                          : null,
                       onTap: () {
-                        Navigator.pop(context);
-                        Navigator.pushNamed(context, '/meet-home');
+                        navigateToPage('/meet-home');
                       },
                     ),
                   ListTile(
@@ -148,10 +167,12 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                                   value: item,
                                   child: Text(
                                     item,
-                                    style:  TextStyle(
+                                    style: TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.bold,
-                                      color: Theme.of(context).colorScheme.inversePrimary,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .inversePrimary,
                                     ),
                                     overflow: TextOverflow.ellipsis,
                                   ),
@@ -164,16 +185,16 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                           Navigator.pop(context);
                           switch (value) {
                             case 'Mentors List':
-                              Navigator.pushNamed(context, '/mentor-list-screen');
+                              navigateToPage('/mentor-list-screen');
                               break;
                             case 'Mentee Requests':
-                              Navigator.pushNamed(context, '/mentee-requests');
+                              navigateToPage('/mentee-requests');
                               break;
                             case 'My Mentees':
-                              Navigator.pushNamed(context, '/mentees-list');
+                              navigateToPage('/mentees-list');
                               break;
                             case 'Applied Mentors':
-                              Navigator.pushNamed(context, '/applied-mentors');
+                              navigateToPage('/applied-mentors');
                               break;
                           }
                         },
@@ -209,7 +230,8 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                           scrollbarTheme: ScrollbarThemeData(
                             radius: const Radius.circular(40),
                             thickness: WidgetStateProperty.all<double>(6),
-                            thumbVisibility: WidgetStateProperty.all<bool>(true),
+                            thumbVisibility:
+                                WidgetStateProperty.all<bool>(true),
                           ),
                         ),
                         menuItemStyleData: const MenuItemStyleData(
@@ -222,25 +244,31 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                   ListTile(
                     title: const Text('Resources'),
                     leading: const Icon(Icons.menu_book_rounded),
+                    tileColor: _currentPage == '/resource_hub'
+                        ? theme.colorScheme.primary.withValues()
+                        : null,
                     onTap: () {
-                      Navigator.pop(context);
-                      Navigator.pushNamed(context, '/resource_hub');
+                      navigateToPage('/resource_hub');
                     },
                   ),
                   ListTile(
                     title: const Text('Dev Chat'),
                     leading: const Icon(Icons.forum_outlined),
+                    tileColor: _currentPage == '/user-chat-screen'
+                        ? theme.colorScheme.primary.withOpacity(0.1)
+                        : null,
                     onTap: () {
-                      Navigator.pop(context);
-                      Navigator.pushNamed(context, '/user-chat-screen');
+                      navigateToPage('/user-chat-screen');
                     },
                   ),
                   ListTile(
                     title: const Text('Resume Gen'),
                     leading: const Icon(Icons.book_outlined),
+                    tileColor: _currentPage == '/resume'
+                        ? theme.colorScheme.primary.withOpacity(0.1)
+                        : null,
                     onTap: () {
-                      Navigator.pop(context);
-                      Navigator.pushNamed(context, '/resume');
+                      navigateToPage('/resume');
                     },
                   ),
                   GestureDetector(
@@ -249,18 +277,22 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                     child: ListTile(
                       title: const Text('Job Board'),
                       leading: const Icon(Icons.business_center_rounded),
+                      tileColor: _currentPage == '/temp-job-screen'
+                          ? theme.colorScheme.primary.withOpacity(0.1)
+                          : null,
                       onTap: () {
-                        Navigator.pop(context);
-                        Navigator.pushNamed(context, '/temp-job-screen');
+                        navigateToPage('/temp-job-screen');
                       },
                     ),
                   ),
                   ListTile(
                     title: const Text('Settings'),
                     leading: const Icon(Icons.settings),
+                    tileColor: _currentPage == '/settings'
+                        ? theme.colorScheme.primary.withOpacity(0.1)
+                        : null,
                     onTap: () {
-                      Navigator.pop(context);
-                      Navigator.pushNamed(context, '/settings');
+                      navigateToPage('/settings');
                     },
                   ),
                 ],

@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:codefusion/dev_chat/chat/chat_service.dart';
-
 import 'package:codefusion/dev_chat/pages/user_chat_page.dart';
 import 'package:codefusion/global_resources/auth/auth_methods.dart';
 import 'package:codefusion/global_resources/components/animated_search_bar.dart';
@@ -10,7 +9,7 @@ import 'package:codefusion/global_resources/widgets/drawer_widget.dart';
 import 'package:flutter/material.dart';
 
 class ChatScreen extends StatefulWidget {
-  ChatScreen({super.key});
+  const ChatScreen({super.key});
 
   @override
   _ChatScreenState createState() => _ChatScreenState();
@@ -41,60 +40,60 @@ class _ChatScreenState extends State<ChatScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
-      appBar: AppBar(
-        backgroundColor: Colors.blueGrey[800],
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              'Dev Chat',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Theme.of(context).colorScheme.primary,
-              ),
-            ),
-            const SizedBox(width: 20),
-            Expanded(
-              child: AnimatedSearchBar(
-                controller: _searchController,
-                onChanged: (value) {
-                  setState(() {
-                    _searchQuery = value;
-                  });
-                },
-              ),
-            ),
-          ],
-        ),
-        bottom: TabBar(
-          unselectedLabelColor: Theme.of(context).colorScheme.primary,
-          controller: _tabController,
-          labelStyle: const TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-          ), // Increased font size
-          unselectedLabelStyle: const TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-          ), // Adjust unselected tab font size
-          tabs: const [
-            Tab(text: "Users"),
-            Tab(text: "Mentors"),
-          ],
-        ),
-      ),
-      drawer: const DrawerWidget(),
+      // drawer: const DrawerWidget(),
+      appBar: _buildAppBar(context),
       body: TabBarView(
         controller: _tabController,
         children: [
-          _buildUserList(showMentors: false), // Users Tab
-          _buildUserList(showMentors: true), // Mentors Tab
+          _buildUserList(showMentors: false), // Users
+          _buildUserList(showMentors: true), // Mentors
         ],
       ),
     );
   }
 
-  // Build User List (Can filter between users & mentors)
+  // App Bar with Search Bar
+  AppBar _buildAppBar(BuildContext context) {
+    return AppBar(
+      backgroundColor: Colors.blueGrey[900],
+      elevation: 10,
+      shadowColor: Colors.black.withOpacity(0.3),
+      title: Row(
+        children: [
+          Text(
+            'Dev Chat',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 22,
+              color: Theme.of(context).colorScheme.primary,
+            ),
+          ),
+          const SizedBox(width: 20),
+          Expanded(
+            child: AnimatedSearchBar(
+              controller: _searchController,
+              onChanged: (value) {
+                setState(() => _searchQuery = value);
+              },
+            ),
+          ),
+        ],
+      ),
+      bottom: TabBar(
+        controller: _tabController,
+        labelStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        unselectedLabelStyle: const TextStyle(fontSize: 16),
+        indicatorColor: Colors.tealAccent,
+        indicatorWeight: 4,
+        tabs: const [
+          Tab(text: "Users"),
+          Tab(text: "Mentors"),
+        ],
+      ),
+    );
+  }
+
+  // Build User List
   Widget _buildUserList({required bool showMentors}) {
     return StreamBuilder(
       stream: _chatService.getUserStreamExcludingBlocked(),
@@ -107,43 +106,38 @@ class _ChatScreenState extends State<ChatScreen>
         }
 
         var users = snapshot.data!
-            .where((userData) =>
+            .where((user) =>
                 (showMentors
-                    ? userData["role"] == "Mentor"
-                    : userData["role"] == "User") &&
-                userData["email"] != _authService.getCurrentUser()?.email &&
-                (userData["fullName"]
+                    ? user["role"] == "Mentor"
+                    : user["role"] == "User") &&
+                user["email"] != _authService.getCurrentUser()?.email &&
+                (user["fullName"]
                         ?.toLowerCase()
                         .contains(_searchQuery.toLowerCase()) ??
                     false))
             .toList();
 
-        return ListView.builder(
-          padding: const EdgeInsets.symmetric(vertical: 10),
-          itemCount: users.length,
-          itemBuilder: (context, index) {
-            return _buildUserListItem(users[index], context);
-          },
-        );
+        return users.isEmpty
+            ? const Center(
+                child: Text(
+                  "No users found",
+                  style: TextStyle(fontSize: 16, color: Colors.grey),
+                ),
+              )
+            : ListView.builder(
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                itemCount: users.length,
+                itemBuilder: (context, index) {
+                  return _buildUserListItem(users[index]);
+                },
+              );
       },
     );
   }
 
-  Widget _buildUserListItem(
-      Map<String, dynamic> userData, BuildContext context) {
-    return ListTile(
-      contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-      leading: CircleAvatar(
-        radius: 25,
-        backgroundImage: userData["profileImage"] != null &&
-                userData["profileImage"].isNotEmpty
-            ? NetworkImage(userData["profileImage"])
-            : const AssetImage(Constants.default_profile) as ImageProvider,
-      ),
-      title: Text(
-        userData["fullName"] ?? userData["email"] ?? 'No data',
-        style: const TextStyle(fontWeight: FontWeight.bold),
-      ),
+  // User List Tile
+  Widget _buildUserListItem(Map<String, dynamic> userData) {
+    return InkWell(
       onTap: () {
         Navigator.push(
           context,
@@ -151,12 +145,53 @@ class _ChatScreenState extends State<ChatScreen>
             builder: (context) => UserChatPage(
               receiverName:
                   userData["fullName"] ?? userData["email"] ?? 'No data',
-              receiverID: userData["uid"] ??
-                  "This mentor has no mentor ID, thats what is causing this issue, try to create a new mentor and then you can chat using that new mentor",
+              receiverID: userData["uid"] ?? "Invalid Mentor ID",
             ),
           ),
         );
       },
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.secondary,
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.15),
+              blurRadius: 6,
+              spreadRadius: 2,
+              offset: const Offset(2, 3),
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            CircleAvatar(
+              radius: 28,
+              backgroundColor: Colors.grey[300],
+              backgroundImage: userData["profileImage"] != null &&
+                      userData["profileImage"].isNotEmpty
+                  ? NetworkImage(userData["profileImage"])
+                  : const AssetImage(Constants.default_profile)
+                      as ImageProvider,
+            ),
+            const SizedBox(width: 15),
+            Expanded(
+              child: Text(
+                userData["fullName"] ?? userData["email"] ?? 'No data',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).colorScheme.inversePrimary,
+                ),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+            const Icon(Icons.arrow_forward_ios, size: 18, color: Colors.grey),
+          ],
+        ),
+      ),
     );
   }
 }

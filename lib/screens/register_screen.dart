@@ -106,7 +106,18 @@ class RegisterScreen extends StatelessWidget {
                       hintText: 'Email',
                       obscureText: false,
                       controller: _emailController,
-                      focusNode: FocusNode(), // Corrected focus node
+                      focusNode: FocusNode(),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Email is required';
+                        }
+                        if (!RegExp(
+                                r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$')
+                            .hasMatch(value)) {
+                          return 'Enter a valid email';
+                        }
+                        return null;
+                      },
                     ),
 
                     const SizedBox(height: 10),
@@ -115,7 +126,7 @@ class RegisterScreen extends StatelessWidget {
                       hintText: 'Password',
                       obscureText: true,
                       controller: _passwordController,
-                      focusNode: FocusNode(), // Corrected focus node
+                      focusNode: FocusNode(),
                     ),
 
                     const SizedBox(height: 10),
@@ -125,7 +136,7 @@ class RegisterScreen extends StatelessWidget {
                       hintText: 'Confirm Password',
                       obscureText: true,
                       controller: _confirmPwController,
-                      focusNode: FocusNode(), // Corrected focus node
+                      focusNode: FocusNode(),
                     ),
 
                     const SizedBox(height: 25),

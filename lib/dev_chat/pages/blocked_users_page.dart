@@ -9,84 +9,95 @@ class BlockedUsersPage extends StatelessWidget {
   final ChatService chatService = ChatService();
   final AuthService authService = AuthService();
 
-  //show, confirm unblock box
-  void _showUnblockedBox(BuildContext context, String userId) {
-    showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-              title: const Text("Unblock Users"),
-              content:
-                  const Text("Are you sure you want to unblock this user? "),
-              actions: [
-                //cancel button
-                TextButton(
-                  onPressed: () => Navigator.pop(context),
-                  child: const Text("Cancel"),
-                ),
+  // Show unblock confirmation dialog
+  void _showUnblockDialog(BuildContext context, String userId) {
+    final theme = Theme.of(context).colorScheme;
 
-                //unblock button
-                TextButton(
-                  onPressed: () {
-                    chatService.unblockUser(userId);
-                    Navigator.pop(context);
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text("User Unblocked"),
-                      ),
-                    );
-                  },
-                  child: const Text("Unblock"),
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: theme.secondary,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        title: Text(
+          "Unblock User",
+          style: TextStyle(color: theme.inversePrimary, fontWeight: FontWeight.bold),
+        ),
+        content: Text(
+          "Are you sure you want to unblock this user?",
+          style: TextStyle(color: theme.inversePrimary.withOpacity(0.7)),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text("Cancel", style: TextStyle(color: Colors.redAccent)),
+          ),
+          TextButton(
+            onPressed: () {
+              chatService.unblockUser(userId);
+              Navigator.pop(context);
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: const Text("User Unblocked"),
+                  backgroundColor: theme.primary,
                 ),
-              ],
-            ));
+              );
+            },
+            child: Text("Unblock", style: TextStyle(color: Colors.greenAccent)),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     String userId = authService.getCurrentUser()!.uid;
+    final theme = Theme.of(context).colorScheme;
+
     return Scaffold(
+      backgroundColor: theme.background,
       appBar: AppBar(
         title: const Text("Blocked Users"),
+        backgroundColor: theme.background,
+        foregroundColor: theme.inversePrimary,
+        elevation: 4,
+        shadowColor: theme.primary.withOpacity(0.2),
       ),
       body: StreamBuilder<List<Map<String, dynamic>>>(
         stream: chatService.getBlockedUserStream(userId),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
-            return const Center(
-              child: Text("Error Loading..."),
+            return Center(
+              child: Text("Error loading...", style: TextStyle(color: theme.inversePrimary)),
             );
           }
-          //loading ...
+
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
+            return Center(child: CircularProgressIndicator(color: theme.primary));
           }
 
           final blockedUsers = snapshot.data ?? [];
 
-          //no users
           if (blockedUsers.isEmpty) {
-            return const Center(
+            return Center(
               child: Text(
-                "No blocked Users",
-                style: TextStyle(
-                  fontSize: 16,
-                ),
+                "No blocked users",
+                style: TextStyle(fontSize: 16, color: theme.inversePrimary),
               ),
             );
           }
 
-          //show data
-          return ListView.builder(
+          return ListView.separated(
+            padding: const EdgeInsets.all(10),
             itemCount: blockedUsers.length,
+            separatorBuilder: (context, index) => Divider(color: theme.tertiary.withOpacity(0.5)),
             itemBuilder: (context, index) {
               final user = blockedUsers[index];
+
               return UserTile(
                 text: user["email"],
-                profileImage: user["profileImage"] ?? '', // Default empty if not available
-                // text: user["fullName"] ?? user["email"],
-                onTap: () => _showUnblockedBox(context, user['uid']),
+                profileImage: user["profileImage"] ?? '',
+                onTap: () => _showUnblockDialog(context, user['uid']),
               );
             },
           );

@@ -15,7 +15,8 @@ class ArticleList extends StatefulWidget {
 }
 
 class ArticleListState extends State<ArticleList> {
-  static List<dynamic> _articles = [];
+  List<dynamic> _articles = [];
+  bool _isLoading = false; // Added to manage loading state
 
   @override
   void initState() {
@@ -23,22 +24,23 @@ class ArticleListState extends State<ArticleList> {
     _fetchArticles(" ");
   }
 
-  static void refreshArticles(BuildContext context) {
-    final state = context.findAncestorStateOfType<ArticleListState>();
-    state?._fetchArticles(" ");
+  // Refresh function
+  void refreshArticles() {
+    _fetchArticles(" ");
   }
 
+  // Fetch articles with loading indicator
   void _fetchArticles(String tag) async {
+    setState(() => _isLoading = true); // Display loader during refresh
     try {
-      setState(() {
-        _articles = [];
-      });
       final articles = await fetchArticles(tag);
       setState(() {
         _articles = articles;
+        _isLoading = false; // Hide loader after fetching
       });
     } catch (e) {
       print('Error fetching articles: $e');
+      setState(() => _isLoading = false); // Ensure loader is removed
     }
   }
 
@@ -62,7 +64,6 @@ class ArticleListState extends State<ArticleList> {
                 article['description'] ?? 'No description available',
                 style: TextStyle(
                     fontSize: 14, color: Theme.of(context).colorScheme.primary),
-                // maxLines: 7,
               ),
               const SizedBox(height: 12),
               Text(
@@ -73,7 +74,7 @@ class ArticleListState extends State<ArticleList> {
               const SizedBox(height: 12),
               ElevatedButton.icon(
                 icon: const Icon(Icons.link),
-                label: const Text("Read Full Article"), //when clicked on this button it doesnt take to the designated website 
+                label: const Text("Read Full Article"),
                 onPressed: () {
                   if (article['url'] != null) {
                     _launchURL(article['url']);
@@ -90,94 +91,30 @@ class ArticleListState extends State<ArticleList> {
     );
   }
 
-void _launchURL(String url) async {
-  final Uri uri = Uri.parse(url);
+  void _launchURL(String url) async {
+    final Uri uri = Uri.parse(url);
 
-  if (await canLaunchUrl(uri)) {
-    await launchUrl(uri, mode: LaunchMode.externalApplication);
-  } else {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Could not launch the article URL')),
-    );
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'Could not launch the article URL',
+          ),
+        ),
+      );
+    }
   }
-}
-
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return _articles.isEmpty
-        ? Skeletonizer(
-            enabled: true,
-            child: ListView.builder(
-              padding: const EdgeInsets.all(16.0),
-              itemCount: 5,
-              itemBuilder: (context, index) {
-                return Column(
-                  children: [
-                    Card(
-                      margin: const EdgeInsets.only(bottom: 22),
-                      elevation: 4,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          ClipRRect(
-                            borderRadius: const BorderRadius.vertical(
-                              top: Radius.circular(12),
-                            ),
-                            child: Container(
-                              height: 180,
-                              width: double.infinity,
-                              color: Colors.grey[300],
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(12.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Container(
-                                  height: 20,
-                                  width: 150,
-                                  color: Colors.grey[300],
-                                ),
-                                const SizedBox(height: 8),
-                                Container(
-                                  height: 14,
-                                  width: double.infinity,
-                                  color: Colors.grey[300],
-                                ),
-                                const SizedBox(height: 12),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Container(
-                                      height: 14,
-                                      width: 100,
-                                      color: Colors.grey[300],
-                                    ),
-                                    Container(
-                                      height: 30,
-                                      width: 100,
-                                      color: Colors.grey[300],
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                );
-              },
-            ),
-          )
+
+    return _isLoading
+        ? const Center(
+            child: CircularProgressIndicator(),
+          ) // Loader during refresh
         : ListView.builder(
             padding: const EdgeInsets.all(16.0),
             itemCount: _articles.length,
@@ -205,8 +142,7 @@ void _launchURL(String url) async {
                           return const Center(
                               child: Text('Error loading mentors'));
                         }
-                        if (!snapshot.hasData ||
-                            snapshot.data!.docs.isEmpty) {
+                        if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
                           return const Center(
                               child: Text('No mentors available'));
                         }
@@ -218,7 +154,8 @@ void _launchURL(String url) async {
                               options: CarouselOptions(height: 200.0),
                               items: [
                                 ...mentors.take(7).map((doc) {
-                                  final mentor = doc.data() as Map<String, dynamic>;
+                                  final mentor =
+                                      doc.data() as Map<String, dynamic>;
                                   final mentorId = doc.id;
                                   return Builder(
                                     builder: (BuildContext context) {
@@ -279,9 +216,7 @@ void _launchURL(String url) async {
                         if (article['cover_image'] != null)
                           ClipRRect(
                             borderRadius: const BorderRadius.vertical(
-                              top: Radius.circular(
-                                12,
-                              ),
+                              top: Radius.circular(12),
                             ),
                             child: Image.network(
                               article['cover_image'],
@@ -305,14 +240,13 @@ void _launchURL(String url) async {
                               ),
                               const SizedBox(height: 8),
                               Text(
+                                maxLines: 2,
                                 article['description'] ??
                                     'No description available',
                                 style: TextStyle(
                                   fontSize: 14,
                                   color: theme.colorScheme.primary,
                                 ),
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
                               ),
                               const SizedBox(height: 12),
                               Row(
@@ -326,18 +260,9 @@ void _launchURL(String url) async {
                                         fontWeight: FontWeight.w500),
                                   ),
                                   ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor:
-                                          theme.colorScheme.secondary,
-                                    ),
                                     onPressed: () =>
                                         _showArticleDetails(context, article),
-                                    child: Text(
-                                      'Read More 📖',
-                                      style: TextStyle(
-                                          color:
-                                              theme.colorScheme.inversePrimary),
-                                    ),
+                                    child: const Text('Read More 📖'),
                                   ),
                                 ],
                               ),
