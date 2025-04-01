@@ -7,18 +7,31 @@ class TempJobScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   title: const Text(
-      //     'Job Board',
-      //     style: TextStyle(
-      //       fontWeight: FontWeight.bold,
-      //     ),
-      //   ),
+      appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pushNamedAndRemoveUntil(
+              context,
+              '/main-home',
+              (route) => false,
+            );
+
+            // Go back to the previous page
+          },
+        ),
+        // title: const Text(
+        //   'Job Board',
+        //   style: TextStyle(
+        //     fontWeight: FontWeight.bold,
+        //   ),
+        // ),
+
       //   centerTitle: true,
       //   backgroundColor: Theme.of(context).colorScheme.background,
       //   elevation: 10,
       //   shadowColor: Theme.of(context).colorScheme.secondary,
-      // ),
+      ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

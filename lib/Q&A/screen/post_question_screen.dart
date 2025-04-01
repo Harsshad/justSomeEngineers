@@ -113,6 +113,18 @@ class _PostQuestionScreenState extends State<PostQuestionScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+         leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pushNamedAndRemoveUntil(
+              context,
+              '/main-home',
+              (route) => false,
+            );
+
+            // Go back to the previous page
+          },
+        ),
         title: Text(
           'Post a Question',
           style: TextStyle(

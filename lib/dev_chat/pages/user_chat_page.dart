@@ -86,6 +86,7 @@ class _UserChatPageState extends State<UserChatPage> {
   Widget build(BuildContext context) {
     return Scaffold(
             appBar: AppBar(
+              
         title: Text(
           widget.receiverName,
           style: TextStyle(

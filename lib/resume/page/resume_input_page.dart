@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:codefusion/global_resources/components/my_textfield.dart';
 import 'package:codefusion/global_resources/constants/constants.dart';
+import 'package:codefusion/global_resources/widgets/responsive_layout.dart';
 import 'package:codefusion/resume/page/resume_display_page.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -43,7 +44,6 @@ class _ResumeInputPageState extends State<ResumeInputPage> {
   @override
   void initState() {
     super.initState();
-    // Initialize text controllers with default values or empty strings
     fullNameController =
         TextEditingController(text: _authMethods.user.displayName ?? '');
     emailController =
@@ -71,7 +71,6 @@ class _ResumeInputPageState extends State<ResumeInputPage> {
 
   @override
   void dispose() {
-    // Dispose of all controllers and focus nodes
     fullNameController.dispose();
     emailController.dispose();
     currentPositionController.dispose();
@@ -155,112 +154,163 @@ class _ResumeInputPageState extends State<ResumeInputPage> {
 
   @override
   Widget build(BuildContext context) {
+    return ResponsiveLayout(
+      mobileLayout: _buildMobileLayout(),
+      tabletLayout: _buildTabletLayout(),
+      webLayout: _buildWebLayout(),
+    );
+  }
+
+  Widget _buildMobileLayout() {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Resume Generator',
-          style: TextStyle(
-            fontFamily: 'SourceCodePro',
-            fontWeight: FontWeight.bold,
-            color: Theme.of(context).colorScheme.primary,
+      appBar: _buildAppBar(),
+      body: _buildForm(padding: const EdgeInsets.all(16.0)),
+    );
+  }
+
+  Widget _buildTabletLayout() {
+    return Scaffold(
+      appBar: _buildAppBar(),
+      body: Center(
+        child: Container(
+          width: 600, // Fixed width for tablet
+          child: _buildForm(padding: const EdgeInsets.all(24.0)),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildWebLayout() {
+    return Scaffold(
+      appBar: _buildAppBar(),
+      body: Center(
+        child: Container(
+          width: 800, // Wider form for web
+          child: _buildForm(padding: const EdgeInsets.all(32.0)),
+        ),
+      ),
+    );
+  }
+
+  AppBar _buildAppBar() {
+    return AppBar(
+       leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pushNamedAndRemoveUntil(
+              context,
+              '/main-home',
+              (route) => false,
+            );
+
+            // Go back to the previous page
+          },
+        ),
+      title: Text(
+        'Resume Generator',
+        style: TextStyle(
+          fontFamily: 'SourceCodePro',
+          fontWeight: FontWeight.bold,
+          color: Theme.of(context).colorScheme.primary,
+        ),
+      ),
+      backgroundColor: Colors.blueGrey[800],
+    );
+  }
+
+  Widget _buildForm({required EdgeInsets padding}) {
+    return ListView(
+      padding: padding,
+      children: [
+        CircleAvatar(
+          radius: 50,
+          backgroundImage: profileImage != null && profileImage!.isNotEmpty
+              ? (kIsWeb
+                  ? NetworkImage(profileImage!)
+                  : FileImage(File(profileImage!))) as ImageProvider
+              : const AssetImage(Constants.default_profile),
+          backgroundColor: Colors.grey[200],
+        ),
+        const SizedBox(height: 10),
+        ElevatedButton(
+          onPressed: _pickImage,
+          child: const Text('Change Profile Image'),
+        ),
+        const SizedBox(height: 20),
+        MyTextfield(
+          hintText: 'Full Name',
+          obscureText: false,
+          controller: fullNameController,
+          focusNode: fullNameFocusNode,
+        ),
+        const SizedBox(height: 16),
+        MyTextfield(
+          hintText: 'Email',
+          obscureText: false,
+          controller: emailController,
+          focusNode: emailFocusNode,
+        ),
+        const SizedBox(height: 16),
+        MyTextfield(
+          hintText: 'Address',
+          obscureText: false,
+          controller: addressController,
+          focusNode: addressFocusNode,
+        ),
+        const SizedBox(height: 16),
+        MyTextfield(
+          hintText: 'Current Position',
+          obscureText: false,
+          controller: currentPositionController,
+          focusNode: currentPositionFocusNode,
+        ),
+        const SizedBox(height: 16),
+        MyTextfield(
+          hintText: 'Bio',
+          obscureText: false,
+          controller: bioController,
+          focusNode: bioFocusNode,
+        ),
+        const SizedBox(height: 16),
+        MyTextfield(
+          hintText: 'Experience (Enter each role on a new line)',
+          obscureText: false,
+          controller: experienceController,
+          focusNode: experienceFocusNode,
+        ),
+        const SizedBox(height: 16),
+        MyTextfield(
+          hintText: 'Education (Max 2 entries, each on a new line)',
+          obscureText: false,
+          controller: educationController,
+          focusNode: educationFocusNode,
+        ),
+        const SizedBox(height: 16),
+        MyTextfield(
+          hintText: 'Languages (Max 5 entries, each on a new line)',
+          obscureText: false,
+          controller: languagesController,
+          focusNode: languagesFocusNode,
+        ),
+        const SizedBox(height: 16),
+        MyTextfield(
+          hintText: 'Hobbies (Max 5 entries, each on a new line)',
+          obscureText: false,
+          controller: hobbiesController,
+          focusNode: hobbiesFocusNode,
+        ),
+        const SizedBox(height: 20),
+        ElevatedButton(
+          onPressed: submitData,
+          child: const Text(
+            'Generate Resume',
+            style: TextStyle(color: Colors.white),
+          ),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Theme.of(context).colorScheme.primary,
           ),
         ),
-        backgroundColor: Colors.blueGrey[800],
-      ),
-      body: ListView(
-        padding: const EdgeInsets.all(16.0),
-        children: [
-          // Profile image display
-          CircleAvatar(
-            radius: 50,
-            backgroundImage: profileImage != null && profileImage!.isNotEmpty
-                ? (kIsWeb
-                    ? NetworkImage(profileImage!)
-                    : FileImage(File(profileImage!))) as ImageProvider
-                : const AssetImage(Constants.default_profile),
-            backgroundColor: Colors.grey[200],
-          ),
-          const SizedBox(height: 10),
-          ElevatedButton(
-            onPressed: _pickImage,
-            child: const Text('Change Profile Image'),
-          ),
-          const SizedBox(height: 20),
-          MyTextfield(
-            hintText: 'Full Name',
-            obscureText: false,
-            controller: fullNameController,
-            focusNode: fullNameFocusNode,
-          ),
-          const SizedBox(height: 16),
-          MyTextfield(
-            hintText: 'Email',
-            obscureText: false,
-            controller: emailController,
-            focusNode: emailFocusNode,
-          ),
-          const SizedBox(height: 16),
-          MyTextfield(
-            hintText: 'Address',
-            obscureText: false,
-            controller: addressController,
-            focusNode: addressFocusNode,
-          ),
-          const SizedBox(height: 16),
-          MyTextfield(
-            hintText: 'Current Position',
-            obscureText: false,
-            controller: currentPositionController,
-            focusNode: currentPositionFocusNode,
-          ),
-          const SizedBox(height: 16),
-          MyTextfield(
-            hintText: 'Bio',
-            obscureText: false,
-            controller: bioController,
-            focusNode: bioFocusNode,
-          ),
-          const SizedBox(height: 16),
-          MyTextfield(
-            hintText: 'Experience (Enter each role on a new line)',
-            obscureText: false,
-            controller: experienceController,
-            focusNode: experienceFocusNode,
-          ),
-          const SizedBox(height: 16),
-          MyTextfield(
-            hintText: 'Education (Max 2 entries, each on a new line)',
-            obscureText: false,
-            controller: educationController,
-            focusNode: educationFocusNode,
-          ),
-          const SizedBox(height: 16),
-          MyTextfield(
-            hintText: 'Languages (Max 5 entries, each on a new line)',
-            obscureText: false,
-            controller: languagesController,
-            focusNode: languagesFocusNode,
-          ),
-          const SizedBox(height: 16),
-          MyTextfield(
-            hintText: 'Hobbies (Max 5 entries, each on a new line)',
-            obscureText: false,
-            controller: hobbiesController,
-            focusNode: hobbiesFocusNode,
-          ),
-          const SizedBox(height: 20),
-          ElevatedButton(
-            onPressed: submitData,
-            child: const Text(
-              'Generate Resume',
-              style: TextStyle(color: Colors.white),
-            ),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Theme.of(context).colorScheme.primary,
-            ),
-          ),
-        ],
-      ),
+      ],
     );
   }
 }

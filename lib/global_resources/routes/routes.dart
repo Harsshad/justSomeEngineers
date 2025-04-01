@@ -24,7 +24,6 @@ import 'package:codefusion/mentorship/screens/mentor_login_screen.dart';
 import 'package:codefusion/mentorship/screens/mentor_register_screen.dart';
 import 'package:codefusion/resources_hub/screens/resources_page.dart';
 import 'package:codefusion/resume/page/resume_input_page.dart';
-import 'package:codefusion/screens/resources_screen.dart';
 import 'package:codefusion/screens/settings_screen.dart';
 import 'package:codefusion/screens/main_home_screen.dart';
 import 'package:codefusion/screens/ques_ans_screen.dart';
@@ -38,7 +37,6 @@ Map<String, WidgetBuilder> getAppRoutes() {
     '/main-home': (context) => const MainHomeScreen(),
     '/job-form': (context) => JobPreferenceForm(),
     '/job-recommend': (context) => JobListScreen(),
-    '/resources': (context) => const ResourcesScreen(),
     '/mentor-form-widget': (context) => MentorForms(),
     '/mentor-profile': (context) => const MentorProfilePage(),
     '/mentor-list-screen': (context) => const MentorListScreens(),

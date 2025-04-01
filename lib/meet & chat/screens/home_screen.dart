@@ -34,6 +34,18 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pushNamedAndRemoveUntil(
+              context,
+              '/main-home',
+              (route) => false,
+            );
+
+            // Go back to the previous page
+          },
+        ),
         elevation: 0,
         backgroundColor: Theme.of(context).colorScheme.background,
         title: const Text('Meet & Chat'),

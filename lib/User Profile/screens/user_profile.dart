@@ -1,20 +1,21 @@
+import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:codefusion/global_resources/constants/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
+import '../../global_resources/themes/theme_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class UserProfile extends StatefulWidget {
-  const UserProfile({super.key});
+  const UserProfile({Key? key}) : super(key: key);
 
   @override
   State<UserProfile> createState() => _UserProfileState();
 }
 
 class _UserProfileState extends State<UserProfile> {
-  final double coverHeight = 280;
-  final double profileHeight = 144;
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
@@ -56,180 +57,289 @@ class _UserProfileState extends State<UserProfile> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    final top = coverHeight - profileHeight / 2;
+  @override
+Widget build(BuildContext context) {
+  final themeProvider = Provider.of<ThemeProvider>(context);
+  final isDarkMode = themeProvider.isDarkMode;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'User Profile',
-          style: TextStyle(
-            fontFamily: 'SourceCodePro',
-            fontWeight: FontWeight.bold,
-            color: Theme.of(context).colorScheme.primary,
-          ),
+  return Scaffold(
+    appBar: AppBar(
+      backgroundColor: Colors.transparent,
+      elevation: 0,
+      leading: IconButton(
+        icon: Icon(
+          Icons.arrow_back,
+          color: isDarkMode ? Colors.white : const Color(0xFF2A2824),
         ),
-        backgroundColor: Colors.blueGrey[800],
-        leading: IconButton(
+        onPressed: () {
+          Navigator.pushNamedAndRemoveUntil(
+            context,
+            '/main-home',
+            (route) => false,
+          );
+        },
+      ),
+      title: Text(
+        'User Profile',
+        style: TextStyle(
+          fontSize: 22,
+          fontWeight: FontWeight.bold,
+          letterSpacing: 1.2,
+          color: isDarkMode ? Colors.white : const Color(0xFF2A2824),
+        ),
+      ),
+      actions: [
+        IconButton(
           icon: Icon(
-            Icons.arrow_back,
-            color: Theme.of(context).colorScheme.primary,
+            themeProvider.isDarkMode ? Icons.light_mode : Icons.dark_mode,
+            color: Colors.white,
           ),
-          onPressed: () {
-            Navigator.pushReplacementNamed(context, '/main-home');
-          },
-        ),
-      ),
-      body: ListView(
-        padding: EdgeInsets.zero,
-        children: <Widget>[
-          buildTop(),
-          buildContent(),
-        ],
-      ),
-    );
-  }
-
-  Widget buildCoverImage() => Container(
-        color: Theme.of(context).colorScheme.primary,
-        child: bgBannerImageUrl != null && bgBannerImageUrl!.isNotEmpty
-            // child: bgBannerImageUrl != null
-            ? Image.network(
-                bgBannerImageUrl!,
-                fit: BoxFit.cover,
-                width: double.infinity,
-                height: coverHeight,
-              )
-            : Image.asset(
-                Constants.default_coder_banner,
-                fit: BoxFit.cover,
-                width: double.infinity,
-                height: coverHeight,
-              ),
-      );
-
-  Widget buildProfileImage() => CircleAvatar(
-        radius: profileHeight / 2,
-        backgroundColor: Colors.grey.shade800,
-        backgroundImage: profileImageUrl != null && profileImageUrl!.isNotEmpty
-            ? NetworkImage(profileImageUrl!)
-            : const AssetImage(Constants.default_profile) as ImageProvider,
-      );
-
-  Widget buildTop() {
-    final bottom = profileHeight / 2;
-    final top = coverHeight - profileHeight / 2;
-    return Stack(
-      clipBehavior: Clip.none,
-      alignment: Alignment.center,
-      children: [
-        Container(
-          margin: EdgeInsets.only(bottom: bottom),
-          child: buildCoverImage(),
-        ),
-        Positioned(
-          top: top,
-          child: buildProfileImage(),
+          onPressed: themeProvider.toggleTheme,
         ),
       ],
+      flexibleSpace: ClipRRect(
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
+          child: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: isDarkMode
+                    ? [Colors.black87, Colors.blueGrey.shade900]
+                    : [
+                        const Color(0xFFDFD7C2),
+                        const Color(0xFFF7DB4C)
+                      ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.5),
+                  blurRadius: 10,
+                  spreadRadius: 1,
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    ),
+    body: Stack(
+      children: [
+        _buildBackground(isDarkMode),
+        _buildProfileContent(context),
+      ],
+    ),
+  );
+}
+/// ✅ Background Widget
+Widget _buildBackground(bool isDarkMode) {
+  return Positioned.fill(
+    child: Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: isDarkMode
+              ? [Colors.black87, Colors.blueGrey.shade900]
+              : [const Color(0xFFDFD7C2), const Color(0xFFF7DB4C)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        image: DecorationImage(
+          image: NetworkImage(bgBannerImageUrl ?? Constants.default_banner),
+          fit: BoxFit.cover,
+          opacity: 0.3, // Adjust opacity to make background image subtle
+        ),
+      ),
+    ),
+  );
+}
+
+
+/// ✅ Profile Content with Centered Padding
+Widget _buildProfileContent(BuildContext context) {
+  final themeProvider = Provider.of<ThemeProvider>(context);
+  final isDarkMode = themeProvider.isDarkMode;
+
+  return SingleChildScrollView(
+    padding: const EdgeInsets.symmetric(vertical: 40), // Vertical padding
+    child: Center(  // Centering the content
+      child: Container(
+        constraints: BoxConstraints(maxWidth: 800), // Limiting width for large screens
+        padding: const EdgeInsets.symmetric(horizontal: 24), // Horizontal padding
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            _buildProfileImage(),
+            const SizedBox(height: 16),
+            _buildUserInfoCard(context),
+            const SizedBox(height: 24),
+            _buildSocialLinks(),
+            const SizedBox(height: 32),
+            _buildAboutSection(context),
+            const SizedBox(height: 40),
+            _buildEditButton(context),
+          ],
+        ),
+      ),
+    ),
+  );
+}
+
+  /// ✅ About Section
+Widget _buildAboutSection(BuildContext context) {
+  final themeProvider = Provider.of<ThemeProvider>(context);
+  final isDarkMode = themeProvider.isDarkMode;
+
+  return Container(
+    width: double.infinity,
+    padding: const EdgeInsets.all(24),
+    decoration: BoxDecoration(
+      color: isDarkMode
+          ? Colors.blueGrey.shade900
+          : const Color(0xFFDFD7C2),  // Light mode color
+      borderRadius: BorderRadius.circular(20),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black.withOpacity(0.2),
+          blurRadius: 8,
+          offset: const Offset(0, 4),
+        ),
+      ],
+    ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'About Me',
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: isDarkMode
+                ? Colors.white
+                : const Color(0xFF2A2824),  // Light mode text color
+          ),
+        ),
+        const SizedBox(height: 12),
+        Text(
+          about ?? 'No about info available.',
+          style: TextStyle(
+            fontSize: 16,
+            height: 1.5,
+            color: isDarkMode
+                ? Colors.white70
+                : const Color(0xFF615D52),  // Light mode text color
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+
+  /// ✅ Profile Image
+  Widget _buildProfileImage() {
+    return Center(
+      child: CircleAvatar(
+        radius: 75,
+        backgroundColor: Colors.white.withOpacity(0.1),
+        child: ClipOval(
+          child: Image.network(
+            profileImageUrl ?? Constants.default_profile,
+            fit: BoxFit.cover,
+            width: 140,
+            height: 140,
+          ),
+        ),
+      ),
     );
   }
 
-  Widget buildContent() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 48),
+  /// ✅ User Info Card
+  Widget _buildUserInfoCard(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
+        color: const Color(0xFF615D52).withOpacity(0.8),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.25),
+            blurRadius: 10,
+            offset: const Offset(0, 5),
+          ),
+        ],
+      ),
       child: Column(
         children: [
-          const SizedBox(height: 16),
           Text(
             fullName ?? 'Full Name',
             style: const TextStyle(
               fontSize: 28,
               fontWeight: FontWeight.bold,
+              color: Color(0xFFF7DB4C),
             ),
           ),
+          const SizedBox(height: 8),
           Text(
             role ?? 'Role',
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              color: Theme.of(context).colorScheme.primary,
-            ),
-          ),
-          const SizedBox(height: 16),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              if (github != null) ...[
-                buildSocialIcon(FontAwesomeIcons.github, github!),
-                const SizedBox(width: 8),
-              ],
-              if (linkedin != null) ...[
-                buildSocialIcon(FontAwesomeIcons.linkedinIn, linkedin!),
-                const SizedBox(width: 8),
-              ],
-              if (email != null) ...[
-                buildSocialIcon(Icons.email_rounded, 'mailto:$email'),
-                const SizedBox(width: 8),
-              ],
-              if (otherUrl != null) buildSocialIcon(Icons.link, otherUrl!),
-            ],
-          ),
-          const SizedBox(height: 16),
-          const Align(
-            alignment: Alignment.centerLeft,
-            child: Text(
-              'About',
-              style: TextStyle(
-                fontSize: 28,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-          const SizedBox(height: 16),
-          Text(
-            about ?? 'About information not provided.',
             style: const TextStyle(
               fontSize: 18,
-              height: 1.4,
+              fontWeight: FontWeight.w400,
+              color: Color(0xFF2A2824),
             ),
           ),
-          const SizedBox(height: 18),
-          Center(
-            child: ElevatedButton(
-              onPressed: () {
-                Navigator.pushNamed(context, '/user-profile-form');
-              },
-              child: const Text(
-                'Edit Profile',
-                style: TextStyle(fontSize: 18),
-              ),
-            ),
-          ),
-          const SizedBox(height: 28),
         ],
       ),
     );
   }
 
-  Widget buildSocialIcon(IconData icon, String url) => GestureDetector(
-        onTap: () => _launchURL(url),
-        child: CircleAvatar(
-          radius: 20,
-          backgroundColor: Theme.of(context).colorScheme.primary,
-          child: Icon(
-            icon,
-            color: Colors.white,
-            size: 28,
-          ),
+  /// ✅ Social Links
+  Widget _buildSocialLinks() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        if (github != null) _buildSocialIcon(FontAwesomeIcons.github, github!),
+        if (linkedin != null)
+          _buildSocialIcon(FontAwesomeIcons.linkedinIn, linkedin!),
+        if (otherUrl != null) _buildSocialIcon(Icons.link, otherUrl!),
+      ],
+    );
+  }
+
+  Widget _buildSocialIcon(IconData icon, String url) {
+    return GestureDetector(
+      onTap: () => _launchURL(url),
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 12),
+        decoration: BoxDecoration(
+          color: const Color(0xFFF7DB4C),
+          borderRadius: BorderRadius.circular(50),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.5),
+              blurRadius: 8,
+              offset: const Offset(0, 4),
+            ),
+          ],
         ),
-      );
+        child: Icon(icon, size: 32, color: const Color(0xFF2A2824)),
+      ),
+    );
+  }
+
+  /// ✅ Edit Button
+  Widget _buildEditButton(BuildContext context) {
+    return ElevatedButton.icon(
+      onPressed: () => Navigator.pushNamed(context, '/user-profile-form'),
+      icon: const Icon(Icons.edit),
+      label: const Text('Edit Profile'),
+    );
+  }
 
   Future<void> _launchURL(String url) async {
     if (await canLaunch(url)) {
       await launch(url);
-    } else {
-      throw 'Could not launch $url';
     }
   }
 }

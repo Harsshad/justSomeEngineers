@@ -157,6 +157,18 @@ class _ResourcesPageState extends State<ResourcesPage>
       //   backgroundColor: Colors.blueGrey[800],
       // ),
       appBar: AppBar(
+         leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pushNamedAndRemoveUntil(
+              context,
+              '/main-home',
+              (route) => false,
+            );
+
+            // Go back to the previous page
+          },
+        ),
         title:  Text(
           'Resources Hub',
           style: TextStyle(
@@ -168,7 +180,7 @@ class _ResourcesPageState extends State<ResourcesPage>
         backgroundColor: Colors.blueGrey[800],
         actions: [
           IconButton(
-            icon: Icon(Icons.menu),
+            icon: const Icon(Icons.menu),
             onPressed: _viewSavedRoadmaps,
           ),
         ],

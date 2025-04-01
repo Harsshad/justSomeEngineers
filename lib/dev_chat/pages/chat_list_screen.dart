@@ -3,9 +3,9 @@ import 'package:codefusion/dev_chat/chat/chat_service.dart';
 import 'package:codefusion/dev_chat/pages/user_chat_page.dart';
 import 'package:codefusion/global_resources/auth/auth_methods.dart';
 import 'package:codefusion/global_resources/components/animated_search_bar.dart';
-import 'package:codefusion/global_resources/constants/constants.dart'
-    show Constants;
+import 'package:codefusion/global_resources/constants/constants.dart' show Constants;
 import 'package:codefusion/global_resources/widgets/drawer_widget.dart';
+import 'package:codefusion/global_resources/widgets/responsive_layout.dart';
 import 'package:flutter/material.dart';
 
 class ChatScreen extends StatefulWidget {
@@ -15,8 +15,7 @@ class ChatScreen extends StatefulWidget {
   _ChatScreenState createState() => _ChatScreenState();
 }
 
-class _ChatScreenState extends State<ChatScreen>
-    with SingleTickerProviderStateMixin {
+class _ChatScreenState extends State<ChatScreen> with SingleTickerProviderStateMixin {
   final ChatService _chatService = ChatService();
   final AuthService _authService = AuthService();
   String _searchQuery = "";
@@ -38,10 +37,19 @@ class _ChatScreenState extends State<ChatScreen>
 
   @override
   Widget build(BuildContext context) {
+    return ResponsiveLayout(
+      
+      mobileLayout: _buildMobileLayout(context),
+      tabletLayout: _buildTabletLayout(context),
+      webLayout: _buildWebLayout(context),
+    );
+  }
+
+  // Mobile Layout
+  Widget _buildMobileLayout(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
-      // drawer: const DrawerWidget(),
       appBar: _buildAppBar(context),
+      drawer: const DrawerWidget(),
       body: TabBarView(
         controller: _tabController,
         children: [
@@ -52,9 +60,70 @@ class _ChatScreenState extends State<ChatScreen>
     );
   }
 
+  // Tablet Layout
+  Widget _buildTabletLayout(BuildContext context) {
+    return Scaffold(
+      appBar: _buildAppBar(context),
+      drawer: const DrawerWidget(),
+      body: Row(
+        children: [
+          const SizedBox(
+            width: 250, // Fixed width for the drawer
+            child: DrawerWidget(),
+          ),
+          Expanded(
+            child: TabBarView(
+              controller: _tabController,
+              children: [
+                _buildUserList(showMentors: false), // Users
+                _buildUserList(showMentors: true), // Mentors
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Web Layout
+  Widget _buildWebLayout(BuildContext context) {
+    return Scaffold(
+      appBar: _buildAppBar(context),
+      body: Row(
+        children: [
+          const SizedBox(
+            width: 300, // Wider drawer for web
+            child: DrawerWidget(),
+          ),
+          Expanded(
+            child: TabBarView(
+              controller: _tabController,
+              children: [
+                _buildUserList(showMentors: false), // Users
+                _buildUserList(showMentors: true), // Mentors
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   // App Bar with Search Bar
   AppBar _buildAppBar(BuildContext context) {
     return AppBar(
+      leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pushNamedAndRemoveUntil(
+              context,
+              '/main-home',
+              (route) => false,
+            );
+
+            // Go back to the previous page
+          },
+        ),
       backgroundColor: Colors.blueGrey[900],
       elevation: 10,
       shadowColor: Colors.black.withOpacity(0.3),

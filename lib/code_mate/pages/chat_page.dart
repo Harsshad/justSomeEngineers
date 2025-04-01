@@ -242,6 +242,18 @@ Future<void> _saveMessage(String text, bool isUser) async {
     return Scaffold(
       backgroundColor: Colors.black87,
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pushNamedAndRemoveUntil(
+              context,
+              '/main-home',
+              (route) => false,
+            );
+
+            // Go back to the previous page
+          },
+        ),
         title: Text(
           'CodeMate Chat',
           style: GoogleFonts.sourceCodePro(fontSize: 20, fontWeight: FontWeight.bold),

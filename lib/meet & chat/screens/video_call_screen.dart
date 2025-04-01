@@ -5,11 +5,6 @@ import 'package:codefusion/meet%20&%20chat/widgets/meeting_option.dart';
 import 'package:flutter/material.dart';
 import 'package:jitsi_meet_wrapper/jitsi_meet_wrapper.dart';
 
-
-
-
-
-
 class VideoCallScreen extends StatefulWidget {
   const VideoCallScreen({Key? key}) : super(key: key);
 
@@ -41,9 +36,7 @@ class _VideoCallScreenState extends State<VideoCallScreen> {
   }
 
   _joinMeeting() {
-  //how can I call here join meeting method from jitsi_meet_wrapper_method.dart
-  
-  
+    //how can I call here join meeting method from jitsi_meet_wrapper_method.dart
 
     JitsiMeetMethod().createMeeting(
       roomName: meetingIdController.text,
@@ -57,6 +50,7 @@ class _VideoCallScreenState extends State<VideoCallScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        
         elevation: 0,
         backgroundColor: Theme.of(context).colorScheme.primary,
         title: const Text(
@@ -90,7 +84,7 @@ class _VideoCallScreenState extends State<VideoCallScreen> {
               maxLines: 1,
               textAlign: TextAlign.center,
               keyboardType: TextInputType.text,
-              decoration:  InputDecoration(
+              decoration: InputDecoration(
                 fillColor: Theme.of(context).colorScheme.secondary,
                 filled: true,
                 border: InputBorder.none,
@@ -103,12 +97,12 @@ class _VideoCallScreenState extends State<VideoCallScreen> {
             height: 20,
           ),
           InkWell(
-            splashColor:  Theme.of(context).colorScheme.primary,
+            splashColor: Theme.of(context).colorScheme.primary,
             onTap: _joinMeeting,
             child: const Padding(
               padding: EdgeInsets.all(10),
               //adding color to inkwell
-              
+
               child: Text(
                 'Join',
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),

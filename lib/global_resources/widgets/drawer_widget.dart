@@ -99,7 +99,8 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                   ListTile(
                     title: const Text('Profile'),
                     leading: const Icon(Icons.person),
-                    tileColor: _currentPage == '/mentor-profile' || _currentPage == '/user-profile'
+                    tileColor: _currentPage == '/mentor-profile' ||
+                            _currentPage == '/user-profile'
                         ? theme.colorScheme.primary.withOpacity(0.1)
                         : null,
                     onTap: () {
@@ -179,23 +180,37 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                                 ))
                             .toList(),
                         onChanged: (String? value) {
-                          setState(() {
-                            selectedMentorshipOption = value;
-                          });
-                          Navigator.pop(context);
-                          switch (value) {
-                            case 'Mentors List':
-                              navigateToPage('/mentor-list-screen');
-                              break;
-                            case 'Mentee Requests':
-                              navigateToPage('/mentee-requests');
-                              break;
-                            case 'My Mentees':
-                              navigateToPage('/mentees-list');
-                              break;
-                            case 'Applied Mentors':
-                              navigateToPage('/applied-mentors');
-                              break;
+                          if (value != null) {
+                            setState(() {
+                              selectedMentorshipOption = value;
+                            });
+
+                            // ✅ Close the drawer before navigating
+                            // Navigator.pop(context);
+
+                            // ✅ Add a delay to prevent navigator lock issue
+                            Future.delayed(Duration(milliseconds: 300), () {
+                              if (mounted) {
+                                switch (value) {
+                                  case 'Mentors List':
+                                    Navigator.pushNamed(
+                                        context, '/mentor-list-screen');
+                                    break;
+                                  case 'Mentee Requests':
+                                    Navigator.pushNamed(
+                                        context, '/mentee-requests');
+                                    break;
+                                  case 'My Mentees':
+                                    Navigator.pushNamed(
+                                        context, '/mentees-list');
+                                    break;
+                                  case 'Applied Mentors':
+                                    Navigator.pushNamed(
+                                        context, '/applied-mentors');
+                                    break;
+                                }
+                              }
+                            });
                           }
                         },
                         buttonStyleData: ButtonStyleData(
@@ -207,7 +222,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                             border: Border.all(
                               color: Colors.black26,
                             ),
-                            color: theme.colorScheme.background,
+                            color: Theme.of(context).colorScheme.background,
                           ),
                           elevation: 2,
                         ),
@@ -224,7 +239,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                           width: 200,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(14),
-                            color: theme.colorScheme.background,
+                            color: Theme.of(context).colorScheme.background,
                           ),
                           offset: const Offset(-20, 0),
                           scrollbarTheme: ScrollbarThemeData(

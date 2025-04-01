@@ -1,9 +1,10 @@
 import 'dart:convert';
+import 'package:codefusion/config.dart';
 import 'package:http/http.dart' as http;
 
 class JobService {
-  final String apiUrl = 'https://linkedin-jobs-api2.p.rapidapi.com/active-jb-7d';
-  final String apiKey = '94a7a5fb73msh35b425b0d5d3836p1f0e2fjsn29d58d7b6912';
+  final String apiUrl = Config.linkedInApiUrl;
+  final String apiKey = Config.linkedInApiKey;
 
   Future<List<Job>> fetchJobs(String location) async {
     final response = await http.get(

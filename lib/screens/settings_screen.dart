@@ -1,4 +1,3 @@
-
 import 'package:codefusion/global_resources/themes/theme_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +13,18 @@ class SettingsScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pushNamedAndRemoveUntil(
+              context,
+              '/main-home',
+              (route) => false,
+            );
+
+            // Go back to the previous page
+          },
+        ),
         title: const Text("Settings"),
         backgroundColor: Colors.transparent,
         foregroundColor: Colors.grey,
@@ -63,7 +74,7 @@ class SettingsScreen extends StatelessWidget {
                 const Text("Blocked User"),
 
                 //button to blocked users page
-                //I'm facing error as soon as I try to enter the blockeduserspage 
+                //I'm facing error as soon as I try to enter the blockeduserspage
                 IconButton(
                   onPressed: () => Navigator.push(
                     context,

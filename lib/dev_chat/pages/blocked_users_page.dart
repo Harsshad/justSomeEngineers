@@ -57,6 +57,18 @@ class BlockedUsersPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: theme.background,
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pushNamedAndRemoveUntil(
+              context,
+              '/main-home',
+              (route) => false,
+            );
+
+            // Go back to the previous page
+          },
+        ),
         title: const Text("Blocked Users"),
         backgroundColor: theme.background,
         foregroundColor: theme.inversePrimary,

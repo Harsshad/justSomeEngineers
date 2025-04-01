@@ -35,7 +35,6 @@ class _MentorListScreensState extends State<MentorListScreens> {
     _checkIfUserIsMentor();
   }
 
-  // Check if the current user is a mentor
   Future<void> _checkIfUserIsMentor() async {
     final currentUser = FirebaseAuth.instance.currentUser;
     if (currentUser != null) {
@@ -51,7 +50,7 @@ class _MentorListScreensState extends State<MentorListScreens> {
     }
   }
 
-  onPagedChanged(int page) {
+  void onPagedChanged(int page) {
     setState(() {
       _page = page;
     });
@@ -70,17 +69,29 @@ class _MentorListScreensState extends State<MentorListScreens> {
     return Scaffold(
       extendBody: true,
       backgroundColor: Theme.of(context).colorScheme.background,
-      appBar: AppBar(
-        backgroundColor: Colors.blueGrey[800],
-        title: Text(
-          'Available Mentors',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            color: Theme.of(context).colorScheme.primary,
-          ),
-        ),
-        bottom: _page == 0
-            ? PreferredSize(
+
+      // ✅ Hide AppBar on pages 2 and 3
+      appBar: (_page == 0)
+          ? AppBar(
+              leading: IconButton(
+                icon: const Icon(Icons.arrow_back),
+                onPressed: () {
+                  Navigator.pushNamedAndRemoveUntil(
+                    context,
+                    '/main-home',
+                    (route) => false,
+                  );
+                },
+              ),
+              backgroundColor: Colors.blueGrey[800],
+              title: Text(
+                'Available Mentors',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
+              ),
+              bottom: PreferredSize(
                 preferredSize: const Size.fromHeight(56.0),
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -93,9 +104,10 @@ class _MentorListScreensState extends State<MentorListScreens> {
                     },
                   ),
                 ),
-              )
-            : null,
-      ),
+              ),
+            )
+          : null,  // ✅ No AppBar for 2nd and 3rd pages
+
       bottomNavigationBar: _isMentor
           ? CurvedNavigationBar(
               color: Theme.of(context).colorScheme.background,
@@ -122,6 +134,7 @@ class _MentorListScreensState extends State<MentorListScreens> {
               index: _page,
             )
           : null, // No BottomNavigationBar for non-mentor users
+
       body: pages(context)[_page],
     );
   }

@@ -45,6 +45,18 @@ class MentorDetailsScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pushNamedAndRemoveUntil(
+              context,
+              '/main-home',
+              (route) => false,
+            );
+
+            // Go back to the previous page
+          },
+        ),
         title: const Text('Mentor Details'),
         backgroundColor: Theme.of(context).colorScheme.background,
         elevation: 4.0,

@@ -22,6 +22,21 @@ class MentorProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pushNamedAndRemoveUntil(
+              context,
+              '/main-home',
+              (route) => false,
+            );
+
+            // Go back to the previous page
+          },
+        ),
+      ),
       backgroundColor: Theme.of(context).colorScheme.background,
       body: StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
         stream: _getMentorStream(),

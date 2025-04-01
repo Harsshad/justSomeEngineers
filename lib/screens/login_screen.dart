@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:codefusion/global_resources/components/my_button.dart';
 import 'package:codefusion/global_resources/components/my_textfield.dart';
 import 'package:codefusion/global_resources/auth/auth_methods.dart';
 import 'package:codefusion/global_resources/components/sign_in_button.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 import 'package:flutter/material.dart';
 import '../meet & chat/widgets/custom_button.dart';
@@ -114,8 +117,11 @@ class _LoginScreenState extends State<LoginScreen> {
               // const SizedBox(height: 15),
 
               // Google Sign-In button
+              if (!kIsWeb && (Platform.isAndroid || Platform.isIOS))
               const SignInButton(),
-              // CustomButton( 
+
+              
+              // CustomButton(
               //   text: 'Google Sign In',
               //   onPressed: () async {
               //     bool res = await _authMethods.signInWithGoogle(context);
