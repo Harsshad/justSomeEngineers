@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 
 Future<List<dynamic>> fetchArticles(String tag) async {
   String devToapiKey = Config.devToapiKey;
-  final url = Uri.parse('https://dev.to/api/articles?tag=$tag&per_page=70');
+  final url = Uri.parse('https://dev.to/api/articles?tag=$tag&per_page=150');
   
   try {
     final response = await http.get(url);
