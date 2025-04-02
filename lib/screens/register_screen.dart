@@ -61,138 +61,149 @@ class RegisterScreen extends StatelessWidget {
       backgroundColor: Theme.of(context).colorScheme.background,
       body: Center(
         child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              //logo
-              Image.asset(
-                Constants.logoPath,
-                height: 150,
-              ),
-              // Icon(
-              //   Icons.message,
-              //   size: 60,
-              //   color: Theme.of(context).colorScheme.primary,
-              //),
-
-              const SizedBox(height: 50),
-              //welcome back msg
-
-              Text(
-                "Let's create an account for you!! ",
-                style: TextStyle(
-                  color: Theme.of(context).colorScheme.primary,
-                  fontSize: 16,
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(
+              maxWidth: 900,
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                //logo
+                Image.asset(
+                  Constants.logoPath,
+                  height: 150,
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 20,
+                // Icon(
+                //   Icons.message,
+                //   size: 60,
+                //   color: Theme.of(context).colorScheme.primary,
+                //),
+
+                const SizedBox(height: 30),
+                //welcome back msg
+
+                Text(
+                  "Let's create an account for you!! ",
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.secondary,
+                    fontSize: 16,
+                  ),
                 ),
-                child: Column(
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                  ),
+                  child: Column(
+                    children: [
+                      const SizedBox(height: 25),
+
+                      MyTextfield(
+                        hintText: 'Full Name',
+                        obscureText: false,
+                        controller: _fullNameController,
+                        focusNode: FocusNode(),
+                      ),
+                      const SizedBox(height: 10),
+
+                      //pw textfield
+                      MyTextfield(
+                        hintText: 'Email',
+                        obscureText: false,
+                        controller: _emailController,
+                        focusNode: FocusNode(),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Email is required';
+                          }
+                          if (!RegExp(
+                                  r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$')
+                              .hasMatch(value)) {
+                            return 'Enter a valid email';
+                          }
+                          return null;
+                        },
+                      ),
+
+                      const SizedBox(height: 10),
+
+                      MyTextfield(
+                        hintText: 'Password',
+                        obscureText: true,
+                        controller: _passwordController,
+                        focusNode: FocusNode(),
+                      ),
+
+                      const SizedBox(height: 10),
+
+                      //confirm password
+                      MyTextfield(
+                        hintText: 'Confirm Password',
+                        obscureText: true,
+                        controller: _confirmPwController,
+                        focusNode: FocusNode(),
+                      ),
+
+                      const SizedBox(height: 25),
+                    ],
+                  ),
+                ),
+
+                //register button
+                MyButton(
+                  text: "Register here",
+                  onTap: () => register(
+                      context), // Navigate to user profile form after registration
+                ),
+
+                const SizedBox(height: 25),
+
+                //register now
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const SizedBox(height: 25),
-
-                    MyTextfield(
-                      hintText: 'Full Name',
-                      obscureText: false,
-                      controller: _fullNameController,
-                      focusNode: FocusNode(),
+                    Text(
+                      "Already have an account? ",
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.secondary,
+                      ),
                     ),
-                    const SizedBox(height: 10),
-
-                    //pw textfield
-                    MyTextfield(
-                      hintText: 'Email',
-                      obscureText: false,
-                      controller: _emailController,
-                      focusNode: FocusNode(),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Email is required';
-                        }
-                        if (!RegExp(
-                                r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$')
-                            .hasMatch(value)) {
-                          return 'Enter a valid email';
-                        }
-                        return null;
-                      },
+                    GestureDetector(
+                      onTap: onTap,
+                      child: Text(
+                        "Login now.. ",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).colorScheme.secondary,
+                        ),
+                      ),
                     ),
-
-                    const SizedBox(height: 10),
-
-                    MyTextfield(
-                      hintText: 'Password',
-                      obscureText: true,
-                      controller: _passwordController,
-                      focusNode: FocusNode(),
-                    ),
-
-                    const SizedBox(height: 10),
-
-                    //confirm password
-                    MyTextfield(
-                      hintText: 'Confirm Password',
-                      obscureText: true,
-                      controller: _confirmPwController,
-                      focusNode: FocusNode(),
-                    ),
-
-                    const SizedBox(height: 25),
                   ],
                 ),
-              ),
-
-              //register button
-              MyButton(
-                text: "Register here",
-                onTap: () => register(
-                    context), // Navigate to user profile form after registration
-              ),
-
-              const SizedBox(height: 25),
-
-              //register now
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    "Already have an account? ",
-                    style:
-                        TextStyle(color: Theme.of(context).colorScheme.primary),
-                  ),
-                  GestureDetector(
-                    onTap: onTap,
-                    child: Text(
-                      "Login now.. ",
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const SizedBox(height: 50),
+                    Text(
+                      "Already have an account as a Mentor? ",
                       style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Theme.of(context).colorScheme.primary),
+                        color: Theme.of(context).colorScheme.secondary,
+                      ),
                     ),
-                  ),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    "Already have an account as a Mentor? ",
-                    style:
-                        TextStyle(color: Theme.of(context).colorScheme.primary),
-                  ),
-                  GestureDetector(
-                    onTap: () => Navigator.pushNamed(context, '/mentor_login'),
-                    child: Text(
-                      "Login now.. ",
-                      style: TextStyle(
+                    GestureDetector(
+                      onTap: () =>
+                          Navigator.pushNamed(context, '/mentor_login'),
+                      child: Text(
+                        "Login now.. ",
+                        style: TextStyle(
                           fontWeight: FontWeight.bold,
-                          color: Theme.of(context).colorScheme.primary),
+                          color: Theme.of(context).colorScheme.secondary,
+                        ),
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            ],
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),

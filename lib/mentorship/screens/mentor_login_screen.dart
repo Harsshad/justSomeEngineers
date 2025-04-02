@@ -19,23 +19,38 @@ class _MentorLoginScreenState extends State<MentorLoginScreen> {
   final TextEditingController _passwordController = TextEditingController();
 
   // Login function
- void login() async {
-  try {
-    UserCredential userCredential = await _authMethods.mentorSignIn(
-      _emailController.text,
-      _passwordController.text,
-    );
-    if (userCredential.user != null) {
-      // Navigate to mentor's home screen or desired page
-      // Navigator.pushNamed(context, '/mentor-form-widget');  //instead redirect to home
-      Navigator.pushNamed(context, '/main-home');  //instead redirect to home
-      // Navigator.pushNamed(context, '/mentorship');
-    } else {
+  void login() async {
+    try {
+      UserCredential userCredential = await _authMethods.mentorSignIn(
+        _emailController.text,
+        _passwordController.text,
+      );
+      if (userCredential.user != null) {
+        // Navigate to mentor's home screen or desired page
+        // Navigator.pushNamed(context, '/mentor-form-widget');  //instead redirect to home
+        Navigator.pushNamed(context, '/main-home'); //instead redirect to home
+        // Navigator.pushNamed(context, '/mentorship');
+      } else {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text('Login Failed'),
+            content: Text('Invalid email or password.'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        );
+      }
+    } catch (e) {
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: Text('Login Failed'),
-          content: Text('Invalid email or password.'),
+          title: Text('Error'),
+          content: Text(e.toString()),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
@@ -45,66 +60,62 @@ class _MentorLoginScreenState extends State<MentorLoginScreen> {
         ),
       );
     }
-  } catch (e) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text('Error'),
-        content: Text(e.toString()),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('OK'),
-          ),
-        ],
-      ),
-    );
   }
-}
-
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
-      body: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            MyTextfield(
-                hintText: 'Email',
-                obscureText: false,
-                controller: _emailController,
-                focusNode: FocusNode(),
-              ),
-              const SizedBox(height: 10),
-              // Password textfield
-              MyTextfield(
-                hintText: 'Password',
-                obscureText: true,
-                controller: _passwordController,
-                focusNode: FocusNode(),
-              ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Theme.of(context).colorScheme.secondary,
-              ),
-              onPressed: login,
-              child: const Text('Login as Mentor'),
+      body: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(
+            maxWidth: 900,
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                MyTextfield(
+                  hintText: 'Email',
+                  obscureText: false,
+                  controller: _emailController,
+                  focusNode: FocusNode(),
+                ),
+                const SizedBox(height: 10),
+                // Password textfield
+                MyTextfield(
+                  hintText: 'Password',
+                  obscureText: true,
+                  controller: _passwordController,
+                  focusNode: FocusNode(),
+                ),
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Theme.of(context).colorScheme.secondary,
+                  ),
+                  onPressed: login,
+                  child: const Text('Login as Mentor'),
+                ),
+                const SizedBox(
+                  height: 15,
+                ),
+                TextButton(
+                  onPressed: () => Navigator.pushNamed(
+                    context,
+                    '/mentor_register',
+                  ),
+                  child: Text(
+                    'Don’t have an account? Sign up',
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.secondary,
+                    ),
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(height: 15,),
-            TextButton(
-              onPressed: () => Navigator.pushNamed(
-                context,
-                '/mentor_register',
-              ),
-              child: const Text(
-                'Don’t have an account? Sign up',
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );

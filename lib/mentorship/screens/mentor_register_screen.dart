@@ -53,7 +53,6 @@ class _MentorRegisterScreenState extends State<MentorRegisterScreen> {
           'createdAt': FieldValue.serverTimestamp(),
         });
 
-
         // Show success message and navigate to the mentor details page
         showSnackBar(context, 'Mentor registered successfully!');
 
@@ -74,61 +73,72 @@ class _MentorRegisterScreenState extends State<MentorRegisterScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
-      body: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            MyTextfield(
-              hintText: 'Full Name',
-              obscureText: false,
-              controller: _nameController,
-              focusNode: FocusNode(),
+      body: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(
+            maxWidth: 900,
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                MyTextfield(
+                  hintText: 'Full Name',
+                  obscureText: false,
+                  controller: _nameController,
+                  focusNode: FocusNode(),
+                ),
+                const SizedBox(height: 10),
+        
+                MyTextfield(
+                  hintText: 'Profession',
+                  obscureText: false,
+                  controller: _professionController,
+                  focusNode: FocusNode(),
+                ),
+                const SizedBox(height: 10),
+                MyTextfield(
+                  hintText: 'Email',
+                  obscureText: false,
+                  controller: _emailController,
+                  focusNode: FocusNode(),
+                ),
+                const SizedBox(height: 10),
+                // Password textfield
+                MyTextfield(
+                  hintText: 'Password',
+                  obscureText: true,
+                  controller: _passwordController,
+                  focusNode: FocusNode(),
+                ),
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Theme.of(context).colorScheme.secondary,
+                  ),
+                  onPressed: register,
+                  child: const Text('Register as Mentor'),
+                ),
+                const SizedBox(
+                  height: 15,
+                ),
+                TextButton(
+                  onPressed: () => Navigator.pushNamed(
+                    context,
+                    '/mentor_login',
+                  ),
+                  child: Text(
+                    'Already have an account? Login',
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.secondary,
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(height: 10),
-
-            MyTextfield(
-              hintText: 'Profession',
-              obscureText: false,
-              controller: _professionController,
-              focusNode: FocusNode(),
-            ),
-            const SizedBox(height: 10),
-            MyTextfield(
-              hintText: 'Email',
-              obscureText: false,
-              controller: _emailController,
-              focusNode: FocusNode(),
-            ),
-            const SizedBox(height: 10),
-            // Password textfield
-            MyTextfield(
-              hintText: 'Password',
-              obscureText: true,
-              controller: _passwordController,
-              focusNode: FocusNode(),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Theme.of(context).colorScheme.secondary,
-              ),
-              onPressed: register,
-              child: const Text('Register as Mentor'),
-            ),
-            const SizedBox(
-              height: 15,
-            ),
-            TextButton(
-              onPressed: () => Navigator.pushNamed(
-                context,
-                '/mentor_login',
-              ),
-              child: const Text(
-                'Already have an account? Login',
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );

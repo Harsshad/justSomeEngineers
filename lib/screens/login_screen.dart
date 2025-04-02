@@ -7,7 +7,6 @@ import 'package:codefusion/global_resources/components/sign_in_button.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 
 import 'package:flutter/material.dart';
-import '../meet & chat/widgets/custom_button.dart';
 import '../global_resources/constants/constants.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -36,7 +35,6 @@ class _LoginScreenState extends State<LoginScreen> {
         _passwordController.text,
         // _fullNameController.text,
       );
-      
     } catch (e) {
       showDialog(
         context: context,
@@ -70,113 +68,121 @@ class _LoginScreenState extends State<LoginScreen> {
       //   ],
       // ),
       backgroundColor: Theme.of(context).colorScheme.background,
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20.0),
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const SizedBox(height: 15),
-              //logo here
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 20.0),
-                child: Image.asset(
-                  Constants.logoPath,
-                  height: 200, // Adjust height as needed
-                  fit: BoxFit.contain,
-                ),
-              ),
-              const Text(
-                'Start your Journey where Innovators Connect and Opportunities Ignite! 🚀 \nCodeFusion',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 25),
-              
-              // Email textfield
-              MyTextfield(
-                hintText: 'Email',
-                obscureText: false,
-                controller: _emailController,
-                focusNode: FocusNode(),
-              ),
-              const SizedBox(height: 10),
-              // Password textfield
-              MyTextfield(
-                hintText: 'Password',
-                obscureText: true,
-                controller: _passwordController,
-                focusNode: FocusNode(),
-              ),
-              const SizedBox(height: 15),
-              // Login button
-              MyButton(
-                text: "Login Here",
-                onTap: () => login(context),
-              ),
-              // const SizedBox(height: 15),
-
-              // Google Sign-In button
-              if (!kIsWeb && (Platform.isAndroid || Platform.isIOS))
-              const SignInButton(),
-
-              
-              // CustomButton(
-              //   text: 'Google Sign In',
-              //   onPressed: () async {
-              //     bool res = await _authMethods.signInWithGoogle(context);
-              //     if (res) {
-              //       Navigator.pushNamed(context, '/home');
-              //     }
-              //   },
-              // ),
-              const SizedBox(height: 15),
-              // Register now
-              Row(
+      body: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(
+            maxWidth: 900,
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+            child: SingleChildScrollView(
+              child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
-                    "Not a member? ",
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.primary,
+                  const SizedBox(height: 15),
+                  //logo here
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 20.0),
+                    child: Image.asset(
+                      Constants.logoPath,
+                      height: 200, // Adjust height as needed
+                      fit: BoxFit.contain,
                     ),
                   ),
-                  GestureDetector(
-                    onTap: widget.onTap,
-                    child: Text(
-                      "Register now.. ",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Theme.of(context).colorScheme.primary,
+                  const Text(
+                    'Start your Journey where Innovators Connect and Opportunities Ignite! 🚀 \nCodeFusion',
+                    style:
+                        TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 25),
+        
+                  // Email textfield
+                  MyTextfield(
+                    hintText: 'Email',
+                    obscureText: false,
+                    controller: _emailController,
+                    focusNode: FocusNode(),
+                  ),
+                  const SizedBox(height: 10),
+                  // Password textfield
+                  MyTextfield(
+                    hintText: 'Password',
+                    obscureText: true,
+                    controller: _passwordController,
+                    focusNode: FocusNode(),
+                  ),
+                  const SizedBox(height: 15),
+                  // Login button
+                  MyButton(
+                    text: "Login Here",
+                    onTap: () => login(context),
+                  ),
+                  // const SizedBox(height: 15),
+        
+                  // Google Sign-In button
+                  if (!kIsWeb && (Platform.isAndroid || Platform.isIOS))
+                    const SignInButton(),
+        
+                  // CustomButton(
+                  //   text: 'Google Sign In',
+                  //   onPressed: () async {
+                  //     bool res = await _authMethods.signInWithGoogle(context);
+                  //     if (res) {
+                  //       Navigator.pushNamed(context, '/home');
+                  //     }
+                  //   },
+                  // ),
+                  const SizedBox(height: 15),
+                  // Register now
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "Not a member? ",
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.secondary,
+                        ),
                       ),
-                    ),
+                      GestureDetector(
+                        onTap: widget.onTap,
+                        child: Text(
+                          "Register now.. ",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Theme.of(context).colorScheme.secondary,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 5),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "Want to become a Mentor? ",
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.secondary,
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () =>
+                            Navigator.pushNamed(context, '/mentor_register'),
+                        child: Text(
+                          "Register now.. ",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Theme.of(context).colorScheme.secondary,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 75),
+                    ],
                   ),
                 ],
               ),
-              const SizedBox(height: 5),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    "Want to become a Mentor? ",
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () => Navigator.pushNamed(context, '/mentor_register'),
-                    child: Text(
-                      "Register now.. ",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 75),
-                ],
-              ),
-            ],
+            ),
           ),
         ),
       ),

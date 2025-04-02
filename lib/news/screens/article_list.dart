@@ -84,7 +84,8 @@ class ArticleListState extends State<ArticleList> {
               // Article Title
               Text(
                 article['title'] ?? 'No title available',
-                style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                style:
+                    const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
               ),
 
               const SizedBox(height: 12),
@@ -103,7 +104,8 @@ class ArticleListState extends State<ArticleList> {
                 children: [
                   Text(
                     '❤️ ${article['positive_reactions_count'] ?? 0} Likes',
-                    style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+                    style: const TextStyle(
+                        fontSize: 14, fontWeight: FontWeight.w500),
                   ),
                   Text(
                     '📅 ${article['published_at'] ?? 'Unknown date'}',
@@ -121,7 +123,8 @@ class ArticleListState extends State<ArticleList> {
                 label: const Text('Read on Dev.to'),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Theme.of(context).colorScheme.secondary,
-                  padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
                 ),
               ),
 
@@ -136,24 +139,29 @@ class ArticleListState extends State<ArticleList> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final screenWidth = MediaQuery.of(context).size.width;
 
     return _isLoading
         ? const Center(child: CircularProgressIndicator())
-        : kIsWeb
-            ? _buildWebLayout(theme)
-            : _buildMobileLayout(theme);
+        : screenWidth > 600 // Check if the screen width is greater than 600px
+            ? _buildWebLayout(theme) // Use web layout for larger screens
+            : _buildMobileLayout(
+                theme); // Use mobile layout for smaller screens
   }
 
   /// ✅ Mobile Layout
   Widget _buildMobileLayout(ThemeData theme) {
     return ListView.builder(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.symmetric(
+          horizontal: 16.0, vertical: 8.0), // Adjusted padding
       itemCount: _articles.length,
       itemBuilder: (context, index) {
         final article = _articles[index];
         return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             if (index % 7 == 0) _buildMentorCarousel(isWeb: false),
+            const SizedBox(height: 16), // Added spacing between cards
             _buildArticleCard(article, theme),
           ],
         );
@@ -163,6 +171,11 @@ class ArticleListState extends State<ArticleList> {
 
   /// ✅ Web Layout (Staggered Masonry Grid)
   Widget _buildWebLayout(ThemeData theme) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final crossAxisCount = screenWidth > 1200
+        ? 4 // 4 columns for very large screens
+        : 3; // 3 columns for medium-sized screens
+
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16.0),
       child: Column(
@@ -172,8 +185,8 @@ class ArticleListState extends State<ArticleList> {
           MasonryGridView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            gridDelegate: const SliverSimpleGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 3,  // 3 columns on web
+            gridDelegate: SliverSimpleGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: crossAxisCount, // Dynamic column count
             ),
             itemCount: _articles.length,
             itemBuilder: (context, index) {
@@ -186,87 +199,85 @@ class ArticleListState extends State<ArticleList> {
     );
   }
 
- Widget _buildMentorCarousel({required bool isWeb}) {
-  return StreamBuilder<QuerySnapshot>(
-    stream: FirebaseFirestore.instance.collection('mentors').limit(7).snapshots(),
-    builder: (context, snapshot) {
-      if (snapshot.connectionState == ConnectionState.waiting) {
-        return Skeletonizer(
-          enabled: true,
-          child: Container(
-            height: 200,
-            color: Colors.grey[300],
-          ),
-        );
-      }
-      if (snapshot.hasError) {
-        return const Center(child: Text('Error loading mentors'));
-      }
-      if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-        return const Center(child: Text('No mentors available'));
-      }
-
-      final mentors = snapshot.data!.docs.toList();
-
-      // ✅ Separate the arrow item and add it at the end
-      final List<Widget> carouselItems = [
-        ...mentors.map((doc) {
-          final mentor = doc.data() as Map<String, dynamic>;
-          final mentorId = doc.id;
-          return ArticleMentorCard(
-            mentor: mentor,
-            mentorId: mentorId,
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => MentorDetailsScreen(mentorId: mentorId),
-                ),
-              );
-            },
+  Widget _buildMentorCarousel({required bool isWeb}) {
+    return StreamBuilder<QuerySnapshot>(
+      stream:
+          FirebaseFirestore.instance.collection('mentors').limit(7).snapshots(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Skeletonizer(
+            enabled: true,
+            child: Container(
+              height: 200,
+              color: Colors.grey[300],
+            ),
           );
-        }).toList(),
+        }
+        if (snapshot.hasError) {
+          return const Center(child: Text('Error loading mentors'));
+        }
+        if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+          return const Center(child: Text('No mentors available'));
+        }
 
-        // ✅ Arrow Button placed at the END
-        GestureDetector(
-          onTap: () {
-            Navigator.pushNamed(context, '/mentor-list-screen');
-          },
-          child: Container(
-            width: double.infinity,
-            color: Colors.transparent,
-            child: const Center(
-              child: Icon(
-                Icons.arrow_forward_rounded,
-                size: 50,
-                color: Colors.grey,
+        final mentors = snapshot.data!.docs.toList();
+
+        final List<Widget> carouselItems = [
+          ...mentors.map((doc) {
+            final mentor = doc.data() as Map<String, dynamic>;
+            final mentorId = doc.id;
+            return ArticleMentorCard(
+              mentor: mentor,
+              mentorId: mentorId,
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        MentorDetailsScreen(mentorId: mentorId),
+                  ),
+                );
+              },
+            );
+          }).toList(),
+          GestureDetector(
+            onTap: () {
+              Navigator.pushNamed(context, '/mentor-list-screen');
+            },
+            child: Container(
+              width: double.infinity,
+              color: Colors.transparent,
+              child: const Center(
+                child: Icon(
+                  Icons.arrow_forward_rounded,
+                  size: 50,
+                  color: Colors.grey,
+                ),
               ),
             ),
           ),
-        ),
-      ];
+        ];
 
-      // ✅ Use `.builder` to create infinite scroll while ensuring the first card is shown first
-      return CarouselSlider.builder(
-        itemCount: carouselItems.length,
-        itemBuilder: (context, index, realIndex) {
-          final displayIndex = index % carouselItems.length; 
-          return carouselItems[displayIndex];
-        },
-        options: CarouselOptions(
-          height: 220.0,
-          viewportFraction: isWeb ? 0.33 : 0.8,
-          enableInfiniteScroll: true,       // ✅ Circular scrolling
-          autoPlay: false,
-          initialPage: 0,                    // ✅ Starts with the first mentor card
-          scrollPhysics: const BouncingScrollPhysics(),
-          padEnds: false,                    // 🔥 Ensures the first card appears at the start
-        ),
-      );
-    },
-  );
-}
-
+        return CarouselSlider.builder(
+          itemCount: carouselItems.length,
+          itemBuilder: (context, index, realIndex) {
+            final displayIndex = index % carouselItems.length;
+            return carouselItems[displayIndex];
+          },
+          options: CarouselOptions(
+            height: isWeb ? 220.0 : 180.0, // Adjusted height for mobile
+            viewportFraction:
+                isWeb ? 0.33 : 0.8, // Adjusted viewport for mobile
+            enableInfiniteScroll: true,
+            autoPlay: false,
+            initialPage: 0,
+            scrollPhysics: const BouncingScrollPhysics(),
+            padEnds: false,
+          ),
+        );
+      },
+    );
+  }
 
   /// ✅ Dynamic Article Card with Likes on Left & 'Read More' on Right
   Widget _buildArticleCard(Map<String, dynamic> article, ThemeData theme) {
@@ -274,13 +285,17 @@ class ArticleListState extends State<ArticleList> {
 
     return Card(
       elevation: 6,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      shadowColor: Theme.of(context).brightness == Brightness.dark
+          ? Colors.white
+          : Colors.black,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16),),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (hasImage)
             ClipRRect(
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+              borderRadius:
+                  const BorderRadius.vertical(top: Radius.circular(16)),
               child: Image.network(
                 article['cover_image'],
                 width: double.infinity,
@@ -292,19 +307,47 @@ class ArticleListState extends State<ArticleList> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // Article Title
                 Text(
                   article['title'] ?? 'No title available',
-                  style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  style: const TextStyle(
+                      fontSize: 20, fontWeight: FontWeight.bold),
+                  maxLines: 2, // Limit title to 2 lines
+                  overflow: TextOverflow.ellipsis, // Add ellipsis for overflow
                 ),
                 const SizedBox(height: 8),
+
+                // Likes and 'Read More' Button
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('❤️ ${article['positive_reactions_count'] ?? 0} Likes'),
+                    // Likes Text
+                    Flexible(
+                      child: Text(
+                        '❤️ ${article['positive_reactions_count'] ?? 0} Likes',
+                        style: const TextStyle(fontSize: 14),
+                        overflow: TextOverflow.ellipsis, // Prevent overflow
+                      ),
+                    ),
+
+                    // 'Read More' Button
                     ElevatedButton.icon(
                       onPressed: () => _showArticleDetails(context, article),
-                      icon: const Icon(Icons.read_more),
-                      label: const Text('Read More'),
+                      icon: Icon(
+                        Icons.read_more,
+                        color: Theme.of(context).colorScheme.secondary,
+                      ),
+                      label: Text(
+                        'Read More',
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.secondary,
+                        ),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 4),
+                        textStyle: const TextStyle(fontSize: 14),
+                      ),
                     ),
                   ],
                 ),

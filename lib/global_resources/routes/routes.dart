@@ -26,7 +26,7 @@ import 'package:codefusion/resources_hub/screens/resources_page.dart';
 import 'package:codefusion/resume/page/resume_input_page.dart';
 import 'package:codefusion/screens/settings_screen.dart';
 import 'package:codefusion/screens/main_home_screen.dart';
-import 'package:codefusion/screens/ques_ans_screen.dart';
+// import 'package:codefusion/screens/ques_ans_screen.dart';
 import 'package:codefusion/meet%20&%20chat/screens/home_screen.dart';
 
 Map<String, WidgetBuilder> getAppRoutes() {
@@ -53,7 +53,7 @@ Map<String, WidgetBuilder> getAppRoutes() {
     '/mentee-requests': (context) => const MenteeRequestsScreen(),
     '/mentees-list': (context) => const MenteesListScreen(),
     // other routes...
-    '/que-answer': (context) => const QuesAnsScreen(),
+    // '/que-answer': (context) => const QuesAnsScreen(),
     '/settings': (context) => const SettingsScreen(),
     // '/chat-bot': (context) => const BotHomePage(),
     // '/chat-bot': (context) => const ChatPage(),

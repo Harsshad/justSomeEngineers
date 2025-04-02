@@ -18,6 +18,7 @@ class ArticleMentorCard extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Card(
+        shadowColor: Theme.of(context).brightness == Brightness.dark ? Colors.white : Colors.black,
         elevation: 4,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),

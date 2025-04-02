@@ -24,7 +24,7 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
               onPressed: () => Scaffold.of(context).openDrawer(),
               icon: Icon(
                 Icons.menu,
-                color: Theme.of(context).colorScheme.inversePrimary,
+                color: Theme.of(context).colorScheme.secondary,
               ),
             ),
           ),

@@ -58,183 +58,182 @@ class _UserProfileState extends State<UserProfile> {
 
   @override
   @override
-Widget build(BuildContext context) {
-  final themeProvider = Provider.of<ThemeProvider>(context);
-  final isDarkMode = themeProvider.isDarkMode;
+  Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
+    final isDarkMode = themeProvider.isDarkMode;
 
-  return Scaffold(
-    appBar: AppBar(
-      backgroundColor: Colors.transparent,
-      elevation: 0,
-      leading: IconButton(
-        icon: Icon(
-          Icons.arrow_back,
-          color: isDarkMode ? Colors.white : const Color(0xFF2A2824),
-        ),
-        onPressed: () {
-          Navigator.pushNamedAndRemoveUntil(
-            context,
-            '/main-home',
-            (route) => false,
-          );
-        },
-      ),
-      title: Text(
-        'User Profile',
-        style: TextStyle(
-          fontSize: 22,
-          fontWeight: FontWeight.bold,
-          letterSpacing: 1.2,
-          color: isDarkMode ? Colors.white : const Color(0xFF2A2824),
-        ),
-      ),
-      actions: [
-        IconButton(
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: IconButton(
           icon: Icon(
-            themeProvider.isDarkMode ? Icons.light_mode : Icons.dark_mode,
-            color: Colors.white,
+            Icons.arrow_back,
+            color: isDarkMode ? Colors.white : const Color(0xFF2A2824),
           ),
-          onPressed: themeProvider.toggleTheme,
+          onPressed: () {
+            Navigator.pushNamedAndRemoveUntil(
+              context,
+              '/main-home',
+              (route) => false,
+            );
+          },
         ),
-      ],
-      flexibleSpace: ClipRRect(
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
-          child: Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: isDarkMode
-                    ? [Colors.black87, Colors.blueGrey.shade900]
-                    : [
-                        const Color(0xFFDFD7C2),
-                        const Color(0xFFF7DB4C)
-                      ],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.5),
-                  blurRadius: 10,
-                  spreadRadius: 1,
+        title: Text(
+          'User Profile',
+          style: TextStyle(
+            fontSize: 22,
+            fontWeight: FontWeight.bold,
+            letterSpacing: 1.2,
+            color: isDarkMode ? Colors.white : const Color(0xFF2A2824),
+          ),
+        ),
+        actions: [
+          IconButton(
+            icon: Icon(
+              themeProvider.isDarkMode ? Icons.light_mode : Icons.dark_mode,
+              color: Colors.white,
+            ),
+            onPressed: themeProvider.toggleTheme,
+          ),
+        ],
+        flexibleSpace: ClipRRect(
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
+            child: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: isDarkMode
+                      ? [Colors.black87, Colors.blueGrey.shade900]
+                      : [const Color(0xFFDFD7C2), const Color(0xFFF7DB4C)],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
                 ),
-              ],
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.5),
+                    blurRadius: 10,
+                    spreadRadius: 1,
+                  ),
+                ],
+              ),
             ),
           ),
         ),
       ),
-    ),
-    body: Stack(
-      children: [
-        _buildBackground(isDarkMode),
-        _buildProfileContent(context),
-      ],
-    ),
-  );
-}
-/// ✅ Background Widget
-Widget _buildBackground(bool isDarkMode) {
-  return Positioned.fill(
-    child: Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: isDarkMode
-              ? [Colors.black87, Colors.blueGrey.shade900]
-              : [const Color(0xFFDFD7C2), const Color(0xFFF7DB4C)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        image: DecorationImage(
-          image: NetworkImage(bgBannerImageUrl ?? Constants.default_banner),
-          fit: BoxFit.cover,
-          opacity: 0.3, // Adjust opacity to make background image subtle
-        ),
+      body: Stack(
+        children: [
+          _buildBackground(isDarkMode),
+          _buildProfileContent(context),
+        ],
       ),
-    ),
-  );
-}
+    );
+  }
 
-
-/// ✅ Profile Content with Centered Padding
-Widget _buildProfileContent(BuildContext context) {
-  final themeProvider = Provider.of<ThemeProvider>(context);
-  final isDarkMode = themeProvider.isDarkMode;
-
-  return SingleChildScrollView(
-    padding: const EdgeInsets.symmetric(vertical: 40), // Vertical padding
-    child: Center(  // Centering the content
+  /// ✅ Background Widget
+  Widget _buildBackground(bool isDarkMode) {
+    return Positioned.fill(
       child: Container(
-        constraints: BoxConstraints(maxWidth: 800), // Limiting width for large screens
-        padding: const EdgeInsets.symmetric(horizontal: 24), // Horizontal padding
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            _buildProfileImage(),
-            const SizedBox(height: 16),
-            _buildUserInfoCard(context),
-            const SizedBox(height: 24),
-            _buildSocialLinks(),
-            const SizedBox(height: 32),
-            _buildAboutSection(context),
-            const SizedBox(height: 40),
-            _buildEditButton(context),
-          ],
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: isDarkMode
+                ? [Colors.black87, Colors.blueGrey.shade900]
+                : [const Color(0xFFDFD7C2), const Color(0xFFF7DB4C)],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          image: DecorationImage(
+            image: NetworkImage(bgBannerImageUrl ?? Constants.default_banner),
+            fit: BoxFit.cover,
+            opacity: 0.3, // Adjust opacity to make background image subtle
+          ),
         ),
       ),
-    ),
-  );
-}
+    );
+  }
+
+  /// ✅ Profile Content with Centered Padding
+  Widget _buildProfileContent(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
+    final isDarkMode = themeProvider.isDarkMode;
+
+    return SingleChildScrollView(
+      padding: const EdgeInsets.symmetric(vertical: 40), // Vertical padding
+      child: Center(
+        // Centering the content
+        child: Container(
+          constraints:
+              BoxConstraints(maxWidth: 800), // Limiting width for large screens
+          padding:
+              const EdgeInsets.symmetric(horizontal: 24), // Horizontal padding
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              _buildProfileImage(),
+              const SizedBox(height: 16),
+              _buildUserInfoCard(context),
+              const SizedBox(height: 24),
+              _buildSocialLinks(),
+              const SizedBox(height: 32),
+              _buildAboutSection(context),
+              const SizedBox(height: 40),
+              _buildEditButton(context),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 
   /// ✅ About Section
-Widget _buildAboutSection(BuildContext context) {
-  final themeProvider = Provider.of<ThemeProvider>(context);
-  final isDarkMode = themeProvider.isDarkMode;
+  Widget _buildAboutSection(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
+    final isDarkMode = themeProvider.isDarkMode;
 
-  return Container(
-    width: double.infinity,
-    padding: const EdgeInsets.all(24),
-    decoration: BoxDecoration(
-      color: isDarkMode
-          ? Colors.blueGrey.shade900
-          : const Color(0xFFDFD7C2),  // Light mode color
-      borderRadius: BorderRadius.circular(20),
-      boxShadow: [
-        BoxShadow(
-          color: Colors.black.withOpacity(0.2),
-          blurRadius: 8,
-          offset: const Offset(0, 4),
-        ),
-      ],
-    ),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'About Me',
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-            color: isDarkMode
-                ? Colors.white
-                : const Color(0xFF2A2824),  // Light mode text color
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        color: isDarkMode
+            ? Colors.blueGrey.shade900
+            : const Color(0xFFDFD7C2), // Light mode color
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.2),
+            blurRadius: 8,
+            offset: const Offset(0, 4),
           ),
-        ),
-        const SizedBox(height: 12),
-        Text(
-          about ?? 'No about info available.',
-          style: TextStyle(
-            fontSize: 16,
-            height: 1.5,
-            color: isDarkMode
-                ? Colors.white70
-                : const Color(0xFF615D52),  // Light mode text color
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'About Me',
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: isDarkMode
+                  ? Colors.white
+                  : const Color(0xFF2A2824), // Light mode text color
+            ),
           ),
-        ),
-      ],
-    ),
-  );
-}
-
+          const SizedBox(height: 12),
+          Text(
+            about ?? 'No about info available.',
+            style: TextStyle(
+              fontSize: 16,
+              height: 1.5,
+              color: isDarkMode
+                  ? Colors.white70
+                  : const Color(0xFF615D52), // Light mode text color
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
   /// ✅ Profile Image
   Widget _buildProfileImage() {
@@ -333,7 +332,12 @@ Widget _buildAboutSection(BuildContext context) {
     return ElevatedButton.icon(
       onPressed: () => Navigator.pushNamed(context, '/user-profile-form'),
       icon: const Icon(Icons.edit),
-      label: const Text('Edit Profile'),
+      label: Text(
+        'Edit Profile',
+        style: TextStyle(
+          color: Theme.of(context).colorScheme.secondary,
+        ),
+      ),
     );
   }
 

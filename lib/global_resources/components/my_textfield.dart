@@ -6,6 +6,7 @@ class MyTextfield extends StatelessWidget {
   final TextEditingController controller;
   final FocusNode focusNode;
   final String? Function(String?)? validator;
+  final Color? borderColor;
 
   const MyTextfield({
     Key? key,
@@ -14,6 +15,7 @@ class MyTextfield extends StatelessWidget {
     required this.controller,
     required this.focusNode,
     this.validator,
+    this.borderColor,
   }) : super(key: key);
 
   @override
@@ -23,6 +25,12 @@ class MyTextfield extends StatelessWidget {
       focusNode: focusNode,
       obscureText: obscureText,
       decoration: InputDecoration(
+        focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(
+            color: Theme.of(context).colorScheme.secondary,
+          ), 
+          borderRadius: BorderRadius.circular(12),
+        ),
         hintText: hintText,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),

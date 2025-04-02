@@ -54,7 +54,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
     final theme = Theme.of(context);
 
     return Drawer(
-      backgroundColor: theme.colorScheme.background,
+      backgroundColor: theme.drawerTheme.backgroundColor,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -69,12 +69,12 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                         Image.asset(
                           Constants.logoPath,
                           height: 100,
-                          color: Theme.of(context).colorScheme.inversePrimary,
+                          color: Theme.of(context).colorScheme.secondary,
                         ),
                         Text(
                           'CodeFusion',
                           style: TextStyle(
-                            color: Theme.of(context).colorScheme.inversePrimary,
+                            color: Theme.of(context).colorScheme.secondary,
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
                           ),
@@ -128,7 +128,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                   ListTile(
                     title: const Text('CodeQuery'),
                     leading: Image.asset(
-                      color: Theme.of(context).colorScheme.inversePrimary,
+                      color: Theme.of(context).colorScheme.secondary,
                       Constants.codequery,
                       scale: 17,
                     ),
@@ -189,7 +189,8 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                             // Navigator.pop(context);
 
                             // ✅ Add a delay to prevent navigator lock issue
-                            Future.delayed(Duration(milliseconds: 300), () {
+                            Future.delayed(const Duration(milliseconds: 300),
+                                () {
                               if (mounted) {
                                 switch (value) {
                                   case 'Mentors List':
