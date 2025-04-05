@@ -33,6 +33,7 @@ class _MeetingScreenState extends State<MeetingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Column(
       children: [
         Row(
@@ -76,7 +77,7 @@ class _MeetingScreenState extends State<MeetingScreen> {
           child: Text(
             'Create/Join Meeting with just a click',
             style: TextStyle(
-                color: Theme.of(context).colorScheme.primary,
+                color: (isDarkMode ? Colors.white : Colors.black),
                 fontSize: 18,
                 fontWeight: FontWeight.bold),
           ),

@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:codefusion/global_resources/components/animated_shadow_button.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -111,180 +113,256 @@ class _PostQuestionScreenState extends State<PostQuestionScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pushNamedAndRemoveUntil(
-              context,
-              '/main-home',
-              (route) => false,
-            );
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
-            // Go back to the previous page
-          },
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: isDarkMode
+              ? [Colors.black87, Colors.blueGrey.shade900] // Dark mode gradient
+              : [
+                  const Color(0xFFDFD7C2),
+                  const Color(0xFFF7DB4C)
+                ], // Light mode gradient
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
         ),
-        title: Text(
-          'Post a Question',
-          style: TextStyle(
+      ),
+      child: Scaffold(
+        backgroundColor: Colors.transparent, // Transparent to show gradient
+        appBar: AppBar(
+          backgroundColor: Colors.transparent, // Transparent AppBar
+          elevation: 0, // No elevation for a clean look
+          leading: IconButton(
+            icon: Icon(
+              Icons.arrow_back,
+              color: isDarkMode ? Colors.white : const Color(0xFF2A2824),
+            ),
+            onPressed: () {
+              Navigator.pushNamedAndRemoveUntil(
+                context,
+                '/main-home',
+                (route) => false,
+              );
+            },
+          ),
+          title: Text(
+            'Post a Question',
+            style: TextStyle(
               fontFamily: 'SourceCodePro',
               fontWeight: FontWeight.bold,
-              color: Theme.of(context).colorScheme.primary),
-        ),
-        backgroundColor: Colors.blueGrey[900],
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            TextField(
-              controller: _titleController,
-              decoration: InputDecoration(
-                labelText: 'Title',
-                labelStyle: TextStyle(
-                  fontFamily: 'SourceCodePro',
-                  color: Colors.blueGrey[700],
-                ),
-                filled: true,
-                fillColor: Colors.blueGrey[50],
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide.none,
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide(
-                    color: Colors.blueGrey[700]!,
-                  ),
-                ),
-              ),
+              fontSize: 22,
+              color: isDarkMode ? Colors.white : const Color(0xFF2A2824),
             ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: _descriptionController,
-              decoration: InputDecoration(
-                labelText: 'Description',
-                labelStyle: TextStyle(
-                  fontFamily: 'SourceCodePro',
-                  color: Colors.blueGrey[700],
-                ),
-                filled: true,
-                fillColor: Colors.blueGrey[50],
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide.none,
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide(
-                    color: Colors.blueGrey[700]!,
-                  ),
-                ),
-              ),
-              maxLines: 4,
-            ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: _tagsController,
-              decoration: InputDecoration(
-                labelText: 'Tags (comma-separated)',
-                labelStyle: TextStyle(
-                  fontFamily: 'SourceCodePro',
-                  color: Colors.blueGrey[700],
-                ),
-                filled: true,
-                fillColor: Colors.blueGrey[50],
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide.none,
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide(
-                    color: Colors.blueGrey[700]!,
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: _linkController,
-              decoration: InputDecoration(
-                labelText: 'Link (optional)',
-                labelStyle: TextStyle(
-                  fontFamily: 'SourceCodePro',
-                  color: Colors.blueGrey[700],
-                ),
-                filled: true,
-                fillColor: Colors.blueGrey[50],
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide.none,
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide(
-                    color: Colors.blueGrey[700]!,
-                  ),
-                ),
-              ),
-              onChanged: (value) {
-                setState(() {
-                  _linkPreviewUrl = value;
-                });
-              },
-            ),
-            const SizedBox(height: 16),
-            if (_linkPreviewUrl != null && _linkPreviewUrl!.isNotEmpty)
-              LinkPreview(
-                width: MediaQuery.of(context).size.width,
-                enableAnimation: true,
-                onPreviewDataFetched: (data) {},
-                previewData: null,
-                text: _linkPreviewUrl!,
-              ),
-            const SizedBox(height: 16),
-            if (_imageBytes != null)
-              Container(
+          ),
+          flexibleSpace: ClipRRect(
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12), // Blur effect
+              child: Container(
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12),
+                  gradient: LinearGradient(
+                    colors: isDarkMode
+                        ? [
+                            Colors.black87,
+                            Colors.blueGrey.shade900
+                          ] // Dark mode gradient
+                        : [
+                            const Color(0xFFDFD7C2),
+                            const Color(0xFFF7DB4C)
+                          ], // Light mode gradient
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      spreadRadius: 5,
-                      blurRadius: 7,
-                      offset: const Offset(0, 3),
+                      color: Colors.black.withOpacity(0.5),
+                      blurRadius: 10,
+                      spreadRadius: 1,
                     ),
                   ],
                 ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(12),
-                  child: Image.memory(_imageBytes!),
+              ),
+            ),
+          ),
+        ),
+        body: LayoutBuilder(builder: (context, constraints) {
+          double screenWidth = MediaQuery.of(context).size.width;
+          double maxWidth =
+              screenWidth > 1000 ? screenWidth * 0.7 : screenWidth;
+          return SingleChildScrollView(
+            padding: const EdgeInsets.all(16.0),
+            child: Center(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(maxWidth: maxWidth),
+                child: Column(
+                  children: [
+                    TextField(
+                      controller: _titleController,
+                      decoration: InputDecoration(
+                        labelText: 'Title',
+                        labelStyle: TextStyle(
+                            fontFamily: 'SourceCodePro',
+                            color: (isDarkMode ? Colors.white : Colors.black)),
+                        filled: true,
+                        fillColor: isDarkMode
+                            ? Colors.blueGrey[800]
+                            : Colors.blueGrey[50],
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide.none,
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(
+                            color: isDarkMode
+                                ? Colors.blueGrey[300]!
+                                : Colors.blueGrey[700]!,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    TextField(
+                      controller: _descriptionController,
+                      decoration: InputDecoration(
+                        labelText: 'Description',
+                        labelStyle: TextStyle(
+                            fontFamily: 'SourceCodePro',
+                            color: (isDarkMode ? Colors.white : Colors.black)),
+                        filled: true,
+                        fillColor: isDarkMode
+                            ? Colors.blueGrey[800]
+                            : Colors.blueGrey[50],
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide.none,
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(
+                            color: isDarkMode
+                                ? Colors.blueGrey[300]!
+                                : Colors.blueGrey[700]!,
+                          ),
+                        ),
+                      ),
+                      maxLines: 4,
+                    ),
+                    const SizedBox(height: 16),
+                    TextField(
+                      controller: _tagsController,
+                      decoration: InputDecoration(
+                        labelText: 'Tags (comma-separated)',
+                        labelStyle: TextStyle(
+                            fontFamily: 'SourceCodePro',
+                            color: (isDarkMode ? Colors.white : Colors.black)),
+                        filled: true,
+                        fillColor: isDarkMode
+                            ? Colors.blueGrey[800]
+                            : Colors.blueGrey[50],
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide.none,
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(
+                            color: isDarkMode
+                                ? Colors.blueGrey[300]!
+                                : Colors.blueGrey[700]!,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    TextField(
+                      controller: _linkController,
+                      decoration: InputDecoration(
+                        labelText: 'Link (optional)',
+                        labelStyle: TextStyle(
+                            fontFamily: 'SourceCodePro',
+                            color: (isDarkMode ? Colors.white : Colors.black)),
+                        filled: true,
+                        fillColor: isDarkMode
+                            ? Colors.blueGrey[800]
+                            : Colors.blueGrey[50],
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide.none,
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(
+                            color: isDarkMode
+                                ? Colors.blueGrey[300]!
+                                : Colors.blueGrey[700]!,
+                          ),
+                        ),
+                      ),
+                      onChanged: (value) {
+                        setState(() {
+                          _linkPreviewUrl = value;
+                        });
+                      },
+                    ),
+                    const SizedBox(height: 16),
+                    if (_linkPreviewUrl != null && _linkPreviewUrl!.isNotEmpty)
+                      LinkPreview(
+                        width: MediaQuery.of(context).size.width,
+                        enableAnimation: true,
+                        onPreviewDataFetched: (data) {},
+                        previewData: null,
+                        text: _linkPreviewUrl!,
+                      ),
+                    const SizedBox(height: 16),
+                    if (_imageBytes != null)
+                      Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.5),
+                              spreadRadius: 5,
+                              blurRadius: 7,
+                              offset: const Offset(0, 3),
+                            ),
+                          ],
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(12),
+                          child: Image.memory(_imageBytes!),
+                        ),
+                      ),
+                    const SizedBox(height: 16),
+                    AnimatedShadowButton(
+                      text: 'Pick Image',
+                      icon: Icon(
+                        Icons.image_rounded,
+                        color: isDarkMode
+                            ? Colors.blueGrey[300]
+                            : Colors.blueGrey[500],
+                      ),
+                      onPressed: _pickImage,
+                    ),
+                    const SizedBox(height: 16),
+                    _isPosting
+                        ? const CircularProgressIndicator()
+                        : AnimatedShadowButton(
+                            text: 'Post Question',
+                            onPressed: _postQuestion,
+                            icon: Icon(
+                              Icons.send_rounded,
+                              color: isDarkMode
+                                  ? Colors.blueGrey[300]
+                                  : Colors.blueGrey[500],
+                            ),
+                          ),
+                  ],
                 ),
               ),
-            const SizedBox(height: 16),
-            AnimatedShadowButton(
-              text: 'Pick Image',
-              icon: Icon(
-                Icons.image_rounded,
-                color: Colors.blueGrey[500],
-              ),
-              onPressed: _pickImage,
             ),
-            const SizedBox(height: 16),
-            _isPosting
-                ? const CircularProgressIndicator()
-                : AnimatedShadowButton(
-                    text: 'Post Question',
-                    onPressed: _postQuestion,
-                    icon: Icon(
-                      Icons.send_rounded,
-                      color: Colors.blueGrey[500],
-                    ),
-                  ),
-          ],
-        ),
+          );
+        }),
       ),
     );
   }
