@@ -14,11 +14,12 @@ class InfoCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 8),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.7),
+        color: const Color(0xFF615D52).withOpacity(0.8),
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
@@ -36,7 +37,7 @@ class InfoCard extends StatelessWidget {
               color: Colors.deepPurple.withOpacity(0.1),
               borderRadius: BorderRadius.circular(8),
             ),
-            child: Icon(icon, color:  Theme.of(context).colorScheme.primary,),
+            child: Icon(icon, color: (isDarkMode ? Colors.white :  Colors.black),),
           ),
           const SizedBox(width: 16),
           Expanded(
@@ -45,10 +46,10 @@ class InfoCard extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.bold,
-                    color: Colors.grey,
+                    color: (isDarkMode ? Colors.white :  Colors.black),
                   ),
                 ),
                 const SizedBox(height: 4),
@@ -56,9 +57,9 @@ class InfoCard extends StatelessWidget {
                   content,
                   style:  TextStyle(
                     fontSize: 16,
-                    fontWeight: FontWeight.w600,
+                    fontWeight: FontWeight.w500,
                     // color: Colors.black87,
-                    color: Theme.of(context).colorScheme.primary,
+                    color: (isDarkMode ? Colors.white :  Colors.black),
                   ),
                 ),
               ],

@@ -52,6 +52,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
     return Drawer(
       backgroundColor: theme.drawerTheme.backgroundColor,
@@ -156,7 +157,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                     trailing: DropdownButtonHideUnderline(
                       child: DropdownButton2<String>(
                         customButton: const Icon(Icons.arrow_drop_down),
-                        items: (isMentor
+                        items: (isMentor  //how can I change the color of the drop down list
                                 ? [
                                     'Mentors List',
                                     'Mentee Requests',
@@ -171,9 +172,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                                     style: TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.bold,
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .inversePrimary,
+                                      color: isDarkMode ? Colors.white : const Color(0xFF2A2824),
                                     ),
                                     overflow: TextOverflow.ellipsis,
                                   ),

@@ -6,6 +6,7 @@ class Message {
   final String receiverID;
   final String message;
   final Timestamp timestamp;
+  final bool isRead;
 
   Message({
     required this.senderID,
@@ -13,6 +14,7 @@ class Message {
     required this.receiverID,
     required this.message,
     required this.timestamp,
+    required this.isRead,
   });
 
   //convert to a map
@@ -24,6 +26,7 @@ class Message {
       'receiverID': receiverID,
       'message': message,
       'timestamp': timestamp,
+      'isRead': isRead,
     };
   }
 }

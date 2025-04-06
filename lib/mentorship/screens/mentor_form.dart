@@ -168,6 +168,7 @@ class _MentorFormsState extends State<MentorForms> {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
@@ -182,97 +183,104 @@ class _MentorFormsState extends State<MentorForms> {
         ),
         child: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: Form(
-            key: _formKey,
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  const SizedBox(height: 20), // Add spacing above CircleAvatar
-                  Stack(
+          child: Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(
+                maxWidth: 900,
+              ),
+              child: Form(
+                key: _formKey,
+                child: SingleChildScrollView(
+                  child: Column(
                     children: [
-                      GestureDetector(
-                        onTap: _pickProfileImage,
-                        child: AnimatedContainer(
-                          duration: const Duration(milliseconds: 300),
-                          curve: Curves.easeInOut,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.5),
-                                spreadRadius: 5,
-                                blurRadius: 7,
-                                offset: const Offset(0, 3),
+                      const SizedBox(height: 20), // Add spacing above CircleAvatar
+                      Stack(
+                        children: [
+                          GestureDetector(
+                            onTap: _pickProfileImage,
+                            child: AnimatedContainer(
+                              duration: const Duration(milliseconds: 300),
+                              curve: Curves.easeInOut,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey.withOpacity(0.5),
+                                    spreadRadius: 5,
+                                    blurRadius: 7,
+                                    offset: const Offset(0, 3),
+                                  ),
+                                ],
                               ),
-                            ],
+                              child: CircleAvatar(
+                                radius: 60,
+                                backgroundImage: _profileImage != null
+                                    ? MemoryImage(_profileImage!)
+                                    : (_profileImageUrl != null
+                                        ? NetworkImage(_profileImageUrl!)
+                                        : const AssetImage(
+                                                Constants.default_profile)
+                                            as ImageProvider),
+                              ),
+                            ),
                           ),
-                          child: CircleAvatar(
-                            radius: 60,
-                            backgroundImage: _profileImage != null
-                                ? MemoryImage(_profileImage!)
-                                : (_profileImageUrl != null
-                                    ? NetworkImage(_profileImageUrl!)
-                                    : const AssetImage(
-                                            Constants.default_profile)
-                                        as ImageProvider),
+                          Positioned(
+                            bottom: -6,
+                            left: 80,
+                            child: IconButton(
+                              icon: Icon(
+                                Icons.add_a_photo,
+                                size: 26,
+                                color: Theme.of(context).colorScheme.tertiary,
+                              ),
+                              onPressed: _pickProfileImage,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                      const Text(
+                        "Upload an Image ",
+                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                      ),
+                      const SizedBox(height: 16),
+                      ..._buildFormFields(),
+                      const SizedBox(height: 16),
+                      CheckboxListTile(
+                        activeColor: Theme.of(context).colorScheme.primary,
+                        title: const Text('Paid Mentorship',
+                            style: TextStyle(fontSize: 18)),
+                        value: isPaid,
+                        onChanged: (value) => setState(() => isPaid = value!),
+                      ),
+                      const SizedBox(height: 20),
+                      ElevatedButton(
+                        onPressed: _saveDetails,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Theme.of(context).colorScheme.primary,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          elevation: 5,
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 12, horizontal: 24),
+                          child: Text(
+                            'Save Details',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: (isDarkMode ? Colors.white :  Colors.black),
+                            ),
                           ),
                         ),
+                        
                       ),
-                      Positioned(
-                        bottom: -6,
-                        left: 80,
-                        child: IconButton(
-                          icon: Icon(
-                            Icons.add_a_photo,
-                            size: 26,
-                            color: Theme.of(context).colorScheme.tertiary,
-                          ),
-                          onPressed: _pickProfileImage,
-                        ),
-                      ),
+                      const SizedBox(height: 90),
                     ],
                   ),
-                  const SizedBox(height: 16),
-                  const Text(
-                    "Upload an Image ",
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                  ),
-                  const SizedBox(height: 16),
-                  ..._buildFormFields(),
-                  const SizedBox(height: 16),
-                  CheckboxListTile(
-                    activeColor: Theme.of(context).colorScheme.primary,
-                    title: const Text('Paid Mentorship',
-                        style: TextStyle(fontSize: 18)),
-                    value: isPaid,
-                    onChanged: (value) => setState(() => isPaid = value!),
-                  ),
-                  const SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: _saveDetails,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Theme.of(context).colorScheme.primary,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      elevation: 5,
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 12, horizontal: 24),
-                      child: Text(
-                        'Save Details',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Theme.of(context).colorScheme.surface,
-                        ),
-                      ),
-                    ),
-                    
-                  ),
-                  const SizedBox(height: 90),
-                ],
+                ),
               ),
             ),
           ),

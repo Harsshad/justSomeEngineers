@@ -12,15 +12,16 @@ class ResourcesTabBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return selectedIndex == 0
         ? TabBar(
             controller: tabController,
             indicator: BoxDecoration(
               borderRadius: BorderRadius.circular(50),
-              color: Theme.of(context).colorScheme.inversePrimary,
+              color: const Color(0xFF615D52).withOpacity(0.8),
             ),
             labelColor: Colors.white,
-            unselectedLabelColor: Theme.of(context).colorScheme.primary,
+            unselectedLabelColor: (isDarkMode ? Colors.white :  Colors.black),
             tabs: const [
               Tab(
                 text: '   Medium Articles   ',

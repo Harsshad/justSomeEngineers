@@ -140,7 +140,7 @@ class _PostAnswerScreenState extends State<PostAnswerScreen> {
             onPressed: () {
               Navigator.pushNamedAndRemoveUntil(
                 context,
-                '/main-home',
+                '/que-ans',
                 (route) => false,
               );
             },

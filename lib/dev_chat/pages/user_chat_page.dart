@@ -1,17 +1,19 @@
+import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:codefusion/dev_chat/chat/chat_service.dart';
 import 'package:codefusion/dev_chat/components/chat_bubble.dart';
 import 'package:codefusion/global_resources/auth/auth_methods.dart';
 import 'package:codefusion/global_resources/components/my_textfield.dart';
+import 'package:codefusion/global_resources/constants/constants.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class UserChatPage extends StatefulWidget {
-  // final String receiverEmail;
   final String receiverName;
   final String receiverID;
+
   const UserChatPage({
     super.key,
-    // required this.receiverEmail,
     required this.receiverName,
     required this.receiverID,
   });
@@ -21,30 +23,23 @@ class UserChatPage extends StatefulWidget {
 }
 
 class _UserChatPageState extends State<UserChatPage> {
-  //text controller
   final TextEditingController _messageController = TextEditingController();
-
-  //chat and auth services
   final ChatService _chatService = ChatService();
   final AuthService _authService = AuthService();
-
-  //for textfield focus
+  final TextEditingController _searchController = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
   FocusNode myFocusNode = FocusNode();
+  String _searchQuery = '';
 
   @override
   void initState() {
     super.initState();
-
-    //add listene to focus node
     myFocusNode.addListener(() {
-      //cause a delay so that the keyboard has time to show up then the amount od remaining space will be calculated and then scroll down
       Future.delayed(
         const Duration(milliseconds: 500),
         () => scrollDown(),
       );
     });
-
-    //wait a bit for listview to be then scroll to bottom
     Future.delayed(
       const Duration(milliseconds: 500),
       () => scrollDown(),
@@ -54,12 +49,11 @@ class _UserChatPageState extends State<UserChatPage> {
   @override
   void dispose() {
     myFocusNode.dispose();
-    _messageController.dispose();
+    _searchController.dispose();
+    super.dispose();
     super.dispose();
   }
 
-  //scroll controller
-  final ScrollController _scrollController = ScrollController();
   void scrollDown() {
     _scrollController.animateTo(
       _scrollController.position.maxScrollExtent,
@@ -68,15 +62,10 @@ class _UserChatPageState extends State<UserChatPage> {
     );
   }
 
-  //send message
   void sendMessage() async {
-    //if there is something inside the textfield
     if (_messageController.text.isNotEmpty) {
-      //send the message
       await _chatService.sendMessage(
           widget.receiverID, _messageController.text);
-
-      //clear text controller
       _messageController.clear();
     }
     scrollDown();
@@ -84,9 +73,33 @@ class _UserChatPageState extends State<UserChatPage> {
 
   @override
   Widget build(BuildContext context) {
+    final isLargeScreen = MediaQuery.of(context).size.width > 800;
+
+    return isLargeScreen
+        ? _buildLargeScreenLayout(context)
+        : _buildMobileLayout(context);
+  }
+
+void markMessagesAsRead(String otherUserId) async {
+  final currentUserID = FirebaseAuth.instance.currentUser!.uid;
+  final chatRoomID = _chatService.getChatRoomID(currentUserID, otherUserId);
+
+  final unreadMessages = await FirebaseFirestore.instance
+      .collection("chat_rooms")
+      .doc(chatRoomID)
+      .collection("messages")
+      .where("receiverID", isEqualTo: currentUserID)
+      .where("isRead", isEqualTo: false)
+      .get();
+
+  for (var doc in unreadMessages.docs) {
+    doc.reference.update({"isRead": true});
+  }
+}
+  /// Mobile Layout (Unchanged)
+  Widget _buildMobileLayout(BuildContext context) {
     return Scaffold(
-            appBar: AppBar(
-              
+      appBar: AppBar(
         title: Text(
           widget.receiverName,
           style: TextStyle(
@@ -106,10 +119,8 @@ class _UserChatPageState extends State<UserChatPage> {
           },
         ),
       ),
-      
       body: Column(
         children: [
-          //display all the messages
           Expanded(
             child: _buildMessageList(),
           ),
@@ -119,6 +130,130 @@ class _UserChatPageState extends State<UserChatPage> {
     );
   }
 
+  /// Large Screen Layout
+Widget _buildLargeScreenLayout(BuildContext context) {
+  return Scaffold(
+    body: Row(
+      children: [
+        // LEFT PANEL: Chat List (30%)
+        Container(
+          width: MediaQuery.of(context).size.width * 0.3,
+          color: Colors.blueGrey[900],
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // AppBar style heading
+              Container(
+                padding: const EdgeInsets.all(16),
+                color: Colors.blueGrey[800],
+                child: const Row(
+                  children: [
+                    Text(
+                      'Chats',
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                    Spacer(),
+                    Icon(Icons.chat, color: Colors.white70),
+                  ],
+                ),
+              ),
+
+              // Search bar in AppBar
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                color: Colors.blueGrey[800],
+                child: TextField(
+                  controller: _searchController,
+                  onChanged: (value) {
+                    setState(() {
+                      _searchQuery = value.toLowerCase();
+                    });
+                  },
+                  style: const TextStyle(color: Colors.white),
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: Colors.blueGrey[700],
+                    hintText: 'Search...',
+                    hintStyle: const TextStyle(color: Colors.white70),
+                    prefixIcon: const Icon(Icons.search, color: Colors.white70),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: BorderSide.none,
+                    ),
+                  ),
+                ),
+              ),
+
+              // Chats list
+              Expanded(child: _buildChatList()),
+            ],
+          ),
+        ),
+
+        // RIGHT PANEL: Messages Area
+        Expanded(
+          child: Column(
+            children: [
+              _buildLargeScreenAppBar(context),
+              Expanded(child: _buildMessageList()),
+              _buildUserInput(),
+            ],
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+
+  /// Chat List Widget
+
+ Widget _buildChatList() {
+  return StreamBuilder<List<Map<String, dynamic>>>(
+    stream: _chatService.getUserStreamExcludingBlocked(),
+    builder: (context, snapshot) {
+      if (snapshot.hasError) return const Center(child: Text('Error loading chats'));
+      if (snapshot.connectionState == ConnectionState.waiting) return const Center(child: CircularProgressIndicator());
+
+      var users = snapshot.data ?? [];
+
+      // Filter users based on the search query (name or email)
+      users = users.where((user) {
+        final fullName = user['fullName']?.toLowerCase() ?? '';
+        final email = user['email']?.toLowerCase() ?? '';
+        return fullName.contains(_searchQuery) || email.contains(_searchQuery);
+      }).toList();
+
+      return ListView.builder(
+        itemCount: users.length,
+        itemBuilder: (context, index) {
+          return buildChatCard(users[index]);
+        },
+      );
+    },
+  );
+}
+
+  /// Large Screen AppBar
+  Widget _buildLargeScreenAppBar(BuildContext context) {
+    return AppBar(
+      title: Text(
+        widget.receiverName,
+        style: TextStyle(
+          fontFamily: 'SourceCodePro',
+          fontWeight: FontWeight.bold,
+          color: Theme.of(context).colorScheme.primary,
+        ),
+      ),
+      backgroundColor: Colors.blueGrey[800],
+    );
+  }
+
+  /// Message List Widget
   Widget _buildMessageList() {
     String senderID = _authService.getCurrentUser()!.uid;
     return StreamBuilder<QuerySnapshot>(
@@ -137,22 +272,17 @@ class _UserChatPageState extends State<UserChatPage> {
           controller: _scrollController,
           itemCount: messages.length,
           itemBuilder: (context, index) {
-            return _buildMessageItem(
-              messages[index],
-            );
+            return _buildMessageItem(messages[index]);
           },
         );
       },
     );
   }
 
+  /// Message Item Widget
   Widget _buildMessageItem(DocumentSnapshot doc) {
     Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-
-    //is current user
     bool isCurrentUser = data['senderID'] == _authService.getCurrentUser()!.uid;
-
-    //align messages to the right if sender s the current user, otherwise left
     var alignment =
         isCurrentUser ? Alignment.centerRight : Alignment.centerLeft;
 
@@ -171,21 +301,66 @@ class _UserChatPageState extends State<UserChatPage> {
         ],
       ),
     );
-    // return Container(
-    //   alignment: alignment,
-    // child: Text(
-    //   data["message"],
-    // ),
-    // );
   }
 
-  //build message input
+  Widget buildChatCard(Map<String, dynamic> userData) {
+  String senderID = userData['uid'];
+
+  return FutureBuilder<int>(
+    future: _chatService.getUnreadMessageCount(senderID),
+    builder: (context, snapshot) {
+      int unreadCount = snapshot.data ?? 0;
+
+      return ListTile(
+        leading: CircleAvatar(
+          radius: 25,
+          backgroundImage: userData['profileImage'] != null &&
+                  userData['profileImage'].isNotEmpty
+              ? NetworkImage(userData['profileImage'])
+              : const AssetImage(Constants.default_profile)
+                  as ImageProvider,
+          onBackgroundImageError: (_, __) {
+            debugPrint('Failed to load profile image');
+          },
+        ),
+        title: Text(
+          userData['fullName'] ?? 'N/A',
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
+        trailing: unreadCount > 0
+            ? CircleAvatar(
+                radius: 12,
+                backgroundColor: Colors.red,
+                child: Text(
+                  '$unreadCount',
+                  style: const TextStyle(color: Colors.white, fontSize: 12),
+                ),
+              )
+            : null,
+        onTap: () {
+          markMessagesAsRead(senderID);
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) => UserChatPage(
+                receiverName: userData['fullName'] ?? 'N/A',
+                receiverID: senderID,
+              ),
+            ),
+          );
+        },
+      );
+    },
+  );
+}
+
+
+  /// User Input Widget
   Widget _buildUserInput() {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 50.0),
+      padding: const EdgeInsets.only(bottom: 20.0, left: 16),
       child: Row(
         children: [
-          //textfield should take up most of the space
           Expanded(
             child: MyTextfield(
               hintText: "Type a message",
@@ -194,8 +369,6 @@ class _UserChatPageState extends State<UserChatPage> {
               focusNode: myFocusNode,
             ),
           ),
-
-          //send Button
           Container(
             decoration: const BoxDecoration(
               color: Colors.green,

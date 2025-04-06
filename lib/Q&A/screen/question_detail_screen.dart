@@ -123,7 +123,7 @@ class _QuestionDetailScreenState extends State<QuestionDetailScreen> {
             onPressed: () {
               Navigator.pushNamedAndRemoveUntil(
                 context,
-                '/main-home',
+                '/que-ans',
                 (route) => false,
               );
             },

@@ -51,6 +51,7 @@ class BlockedUsersPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     String userId = authService.getCurrentUser()!.uid;
     final theme = Theme.of(context).colorScheme;
 
@@ -69,7 +70,7 @@ class BlockedUsersPage extends StatelessWidget {
             // Go back to the previous page
           },
         ),
-        title: const Text("Blocked Users"),
+        title:  Text("Blocked Users", style: TextStyle(color: (isDark ? Colors.white : Colors.black),),),
         backgroundColor: theme.background,
         foregroundColor: theme.inversePrimary,
         elevation: 4,
@@ -107,7 +108,7 @@ class BlockedUsersPage extends StatelessWidget {
               final user = blockedUsers[index];
 
               return UserTile(
-                text: user["email"],
+                text: user["fullName"] ?? '',
                 profileImage: user["profileImage"] ?? '',
                 onTap: () => _showUnblockDialog(context, user['uid']),
               );

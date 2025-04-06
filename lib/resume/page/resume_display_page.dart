@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_resume_template/flutter_resume_template.dart';
 
 class ResumeDisplayPage extends StatelessWidget {
   final String fullName;
@@ -27,83 +26,214 @@ class ResumeDisplayPage extends StatelessWidget {
     required this.profileImage,
   }) : super(key: key);
 
-  Future<void> downloadResume(
-      GlobalKey<State<StatefulWidget>> globalKey, BuildContext context) async {
-    try {
-      // Call the `PdfHandler` to create the resume PDF
-      await PdfHandler().createResume(globalKey);
-
-      // If successful, show success toast message
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Resume downloaded successfully.'),
-          backgroundColor: Colors.green,
-        ),
-      );
-    } catch (e) {
-      // If failed, show error toast message
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Resume not downloaded successfully. Error: $e'),
-          backgroundColor: Colors.red,
-        ),
-      );
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    final data = TemplateData(
-      fullName: fullName,
-      currentPosition: currentPosition,
-      address: address,
-      bio: bio,
-      experience: experiences
-          .map((e) => ExperienceData(
-                experienceTitle: e,
-                experienceLocation: '',
-                experiencePeriod: '',
-                experiencePlace: '',
-                experienceDescription: e,
-              ))
-          .toList(),
-      educationDetails: educationDetails.map((e) => Education(e, '')).toList(),
-      languages: languages.map((e) => Language(e, 3)).toList(),
-      hobbies: hobbies,
-      email: email,
-      image: profileImage, // Ensure profileImageUrl is passed correctly
-    );
-
-    final GlobalKey<State<StatefulWidget>> globalKey = GlobalKey();
-
     return Scaffold(
       appBar: AppBar(
-         leading: IconButton(
+        leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.pushNamedAndRemoveUntil(
-              context,
-              '/main-home',
-              (route) => false,
-            );
-
-            // Go back to the previous page
+            Navigator.pop(context);
           },
         ),
         title: const Text('Your Resume'),
+        backgroundColor: Colors.blueGrey[900],
       ),
-      body: FlutterResumeTemplate(
-        key: globalKey,
-        data: data,
-        templateTheme: TemplateTheme.classic,
-        mode: TemplateMode.shakeEditAndSaveMode,
-        onSaveResume: (key) async {
-          await downloadResume(key, context);
-          return key;
+      body: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 900),
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Profile Section
+                Center(
+                  child: Column(
+                    children: [
+                      CircleAvatar(
+                        radius: 50,
+                        backgroundImage: profileImage.isNotEmpty
+                            ? NetworkImage(profileImage)
+                            : const AssetImage('assets/images/default_profile.png')
+                                as ImageProvider,
+                        backgroundColor: Colors.grey[300],
+                      ),
+                      const SizedBox(height: 10),
+                      Text(
+                        fullName,
+                        style: const TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black87,
+                        ),
+                      ),
+                      const SizedBox(height: 5),
+                      Text(
+                        currentPosition,
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.blueGrey,
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      Text(
+                        email,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          color: Colors.blueGrey,
+                        ),
+                      ),
+                      const SizedBox(height: 5),
+                      Text(
+                        address,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          color: Colors.blueGrey,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 20),
+          
+                // Bio Section
+                const Text(
+                  'Bio',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black87,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                Text(
+                  bio,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    color: Colors.black54,
+                  ),
+                ),
+                const SizedBox(height: 20),
+          
+                // Experience Section
+                const Text(
+                  'Experience',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black87,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                ...experiences.map((experience) => Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 5.0),
+                      child: Row(
+                        children: [
+                          const Icon(Icons.work, color: Colors.blueGrey, size: 20),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: Text(
+                              experience,
+                              style: const TextStyle(
+                                fontSize: 16,
+                                color: Colors.black54,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    )),
+                const SizedBox(height: 20),
+          
+                // Education Section
+                const Text(
+                  'Education',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black87,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                ...educationDetails.map((education) => Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 5.0),
+                      child: Row(
+                        children: [
+                          const Icon(Icons.school, color: Colors.blueGrey, size: 20),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: Text(
+                              education,
+                              style: const TextStyle(
+                                fontSize: 16,
+                                color: Colors.black54,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    )),
+                const SizedBox(height: 20),
+          
+                // Languages Section
+                const Text(
+                  'Languages',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black87,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                Wrap(
+                  spacing: 10,
+                  children: languages
+                      .map((language) => Chip(
+                            label: Text(language),
+                            backgroundColor: Colors.blueGrey[100],
+                          ))
+                      .toList(),
+                ),
+                const SizedBox(height: 20),
+          
+                // Hobbies Section
+                const Text(
+                  'Hobbies',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black87,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                Wrap(
+                  spacing: 10,
+                  children: hobbies
+                      .map((hobby) => Chip(
+                            label: Text(hobby),
+                            backgroundColor: Colors.blueGrey[100],
+                          ))
+                      .toList(),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          // Add functionality to download the resume
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Download functionality coming soon!'),
+            ),
+          );
         },
-        enableDivider: true,
-        showButtons: true,
-        backgroundColor: Colors.grey[200],
+        label: const Text('Download Resume'),
+        icon: const Icon(Icons.download),
+        backgroundColor: Colors.blueGrey[900],
       ),
     );
   }

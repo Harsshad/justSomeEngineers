@@ -22,7 +22,7 @@ class RoadmapWidget extends StatelessWidget {
           duration: const Duration(milliseconds: 500),
           curve: Curves.easeInOut,
           decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.background,
+            color: const Color(0xFF615D52).withOpacity(0.8),
             borderRadius: BorderRadius.circular(12),
             boxShadow: [
               BoxShadow(
@@ -40,6 +40,7 @@ class RoadmapWidget extends StatelessWidget {
   }
 
   Widget _parseRoadmapContent(BuildContext context, String content) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     final regex = RegExp(r'\*\*(.*?)\*\*');
     final matches = regex.allMatches(content);
 
@@ -48,7 +49,7 @@ class RoadmapWidget extends StatelessWidget {
         content,
         style: TextStyle(
           fontSize: 16,
-          color: Theme.of(context).colorScheme.primary,
+          color: (isDarkMode ? Colors.white : Colors.black),
         ),
       );
     }
@@ -62,7 +63,7 @@ class RoadmapWidget extends StatelessWidget {
           text: content.substring(lastMatchEnd, match.start),
           style: TextStyle(
             fontSize: 16,
-            color: Theme.of(context).colorScheme.inversePrimary,
+            color: (isDarkMode ? Colors.white : Colors.black),
           ),
         ));
       }
@@ -71,7 +72,7 @@ class RoadmapWidget extends StatelessWidget {
         style: TextStyle(
           fontSize: 16,
           fontWeight: FontWeight.bold,
-          color: Theme.of(context).colorScheme.inversePrimary,
+          color: (isDarkMode ? Colors.white : Colors.black),
         ),
       ));
       lastMatchEnd = match.end;
@@ -82,7 +83,7 @@ class RoadmapWidget extends StatelessWidget {
         text: content.substring(lastMatchEnd),
         style: TextStyle(
           fontSize: 16,
-          color: Theme.of(context).colorScheme.inversePrimary,
+          color: (isDarkMode ? Colors.white : Colors.black),
         ),
       ));
     }

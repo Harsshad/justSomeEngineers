@@ -1,13 +1,12 @@
+import 'dart:ui';
 import 'package:codefusion/config.dart';
+import 'package:codefusion/resources_hub/screens/roadmap_detail_page.dart';
 import 'package:codefusion/resources_hub/services/devto_service.dart';
 import 'package:codefusion/resources_hub/services/medium_service.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
-import 'package:codefusion/resources_hub/models/article_list.dart';
-import 'package:codefusion/resources_hub/models/devto_article_list.dart';
-import 'package:codefusion/resources_hub/models/video_list.dart';
 import 'package:codefusion/resources_hub/services/gemini_service.dart';
 import 'package:codefusion/resources_hub/services/resources_service.dart';
 import 'package:codefusion/resources_hub/widgets/roadmap_widget.dart';
@@ -28,8 +27,7 @@ class _ResourcesPageState extends State<ResourcesPage>
   final TextEditingController _searchController = TextEditingController();
   final TextEditingController _videoSearchController = TextEditingController();
   final ResourcesService _resourcesService = ResourcesService();
-  final GeminiService _geminiService =
-      GeminiService(Config.geminiApi);
+  final GeminiService _geminiService = GeminiService(Config.geminiApi);
   List<Article> _articles = [];
   List<Video> _videos = [];
   List<DevToArticle> _devToArticles = [];
@@ -54,10 +52,12 @@ class _ResourcesPageState extends State<ResourcesPage>
           .where('uid', isEqualTo: user.uid)
           .get();
       setState(() {
-        _savedRoadmaps = roadmapDocs.docs.map((doc) => {
-              'id': doc.id,
-              'roadmap': doc['roadmap'],
-            }).toList();
+        _savedRoadmaps = roadmapDocs.docs
+            .map((doc) => {
+                  'id': doc.id,
+                  'roadmap': doc['roadmap'],
+                })
+            .toList();
       });
     }
   }
@@ -71,7 +71,7 @@ class _ResourcesPageState extends State<ResourcesPage>
       });
       _loadSavedRoadmaps();
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Roadmap saved successfully!')),
+        const SnackBar(content: Text('Roadmap saved successfully!')),
       );
     }
   }
@@ -93,6 +93,7 @@ class _ResourcesPageState extends State<ResourcesPage>
   }
 
   void _viewSavedRoadmaps() {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     showModalBottomSheet(
       context: context,
       builder: (context) {
@@ -102,18 +103,28 @@ class _ResourcesPageState extends State<ResourcesPage>
             String roadmapTitle = _savedRoadmaps[index]['roadmap'];
 
             // Check if the roadmap title starts and ends with '!!!'
-            bool isHeading = roadmapTitle.startsWith('!!!') && roadmapTitle.endsWith('!!!');
+            bool isHeading =
+                roadmapTitle.startsWith('!!!') && roadmapTitle.endsWith('!!!');
 
             return Column(
               children: [
                 ListTile(
                   title: Text(
-                    isHeading ? roadmapTitle.substring(3, roadmapTitle.length - 3) : roadmapTitle,
+                    isHeading
+                        ? roadmapTitle.substring(3, roadmapTitle.length - 3)
+                        : roadmapTitle,
                     style: TextStyle(
-                      fontWeight: isHeading ? FontWeight.bold : FontWeight.normal,
-                      color: isHeading ? Colors.blue : Colors.black,
+                      fontWeight:
+                          isHeading ? FontWeight.bold : FontWeight.normal,
+                       color: (isDarkMode ? Colors.white :  Colors.black),
                       shadows: isHeading
-                          ? [Shadow(blurRadius: 10.0, color: Colors.blueAccent, offset: Offset(2.0, 2.0))]
+                          ? [
+                              const Shadow(
+                                blurRadius: 10.0,
+                                color: Colors.blueAccent,
+                                offset: Offset(2.0, 2.0),
+                              )
+                            ]
                           : null,
                     ),
                   ),
@@ -129,7 +140,7 @@ class _ResourcesPageState extends State<ResourcesPage>
                   },
                 ),
                 if (isHeading)
-                  Divider(
+                  const Divider(
                     color: Colors.blue,
                     thickness: 2.0,
                   ),
@@ -143,150 +154,156 @@ class _ResourcesPageState extends State<ResourcesPage>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      extendBody: true,
-      // appBar: AppBar(
-      //   title: Text(
-      //     'Resume Generator',
-      //     style: TextStyle(
-      //       fontFamily: 'SourceCodePro',
-      //       fontWeight: FontWeight.bold,
-      //       color: Theme.of(context).colorScheme.primary,
-      //     ),
-      //   ),
-      //   backgroundColor: Colors.blueGrey[800],
-      // ),
-      appBar: AppBar(
-         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pushNamedAndRemoveUntil(
-              context,
-              '/main-home',
-              (route) => false,
-            );
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
-            // Go back to the previous page
-          },
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: isDarkMode
+              ? [Colors.black87, Colors.blueGrey.shade900]
+              : [const Color(0xFFDFD7C2), const Color(0xFFF7DB4C)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
         ),
-        title:  Text(
-          'Resources Hub',
-          style: TextStyle(
-            fontFamily: 'SourceCodePro',
-            fontWeight: FontWeight.bold,
-            color: Theme.of(context).colorScheme.primary,
-          ),
-        ),
-        backgroundColor: Colors.blueGrey[800],
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.menu),
-            onPressed: _viewSavedRoadmaps,
-          ),
-        ],
-        bottom: _selectedIndex == 0
-            ? ResourcesTabBar(
-                tabController: _tabController,
-                selectedIndex: _selectedIndex,
-              )
-            : null,
       ),
-      body: Column(
-        children: [
-          if (_selectedIndex == 0 || _selectedIndex == 1) ...[
-            ResourcesSearch(
-              onSearchComplete: _onSearchComplete,
-              searchController: _selectedIndex == 0
-                  ? _searchController
-                  : _videoSearchController,
-              videoSearchController: _videoSearchController,
-              resourcesService: _resourcesService,
-              geminiService: _geminiService,
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.pushNamedAndRemoveUntil(
+                context,
+                '/main-home',
+                (route) => false,
+              );
+            },
+          ),
+          title: Text(
+            'Resources Hub',
+            style: TextStyle(
+              fontFamily: 'SourceCodePro',
+              fontWeight: FontWeight.bold,
+              fontSize: 22,
+              color: isDarkMode ? Colors.white : const Color(0xFF2A2824),
             ),
-            const SizedBox(height: 16),
-          ] else if (_selectedIndex == 2) ...[
-            ResourcesSearch(
-              onSearchComplete: _onSearchComplete,
-              searchController: _searchController,
-              videoSearchController: _videoSearchController,
-              resourcesService: _resourcesService,
-              geminiService: _geminiService,
-              isRoadmapSearch: true,
-            ),
-            const SizedBox(height: 16),
-            Expanded(
-              child: RoadmapWidget(roadmap: _roadmap),
-            ),
-            const SizedBox(height: 16),
-          ],
-          if (_selectedIndex != 2)
-            Expanded(
-              child: ResourcesTabView(
-                tabController: _tabController,
-                isLoading: _isLoading,
-                articles: _articles,
-                devToArticles: _devToArticles,
-                videos: _videos,
-                selectedIndex: _selectedIndex,
+          ),
+          flexibleSpace: ClipRRect(
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: isDarkMode
+                        ? [Colors.black87, Colors.blueGrey.shade900]
+                        : [const Color(0xFFDFD7C2), const Color(0xFFF7DB4C)],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.5),
+                      blurRadius: 10,
+                      spreadRadius: 1,
+                    ),
+                  ],
+                ),
               ),
             ),
-        ],
-      ),
-      floatingActionButton: _selectedIndex == 2
-          ? FloatingActionButton(
-              onPressed: () => _saveRoadmap(_roadmap),
-              child: const Icon(Icons.save),
-            )
-          : null,
-      bottomNavigationBar: CurvedNavigationBar(
-        color: Theme.of(context).colorScheme.background,
-        buttonBackgroundColor: Colors.transparent,
-        backgroundColor: Colors.transparent,
-        items: <Widget>[
-          Icon(
-            Icons.article_outlined,
-            size: 30,
-            color: Theme.of(context).colorScheme.primary,
           ),
-          Icon(
-            Icons.video_library_outlined,
-            size: 30,
-            color: Theme.of(context).colorScheme.primary,
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.menu),
+              onPressed: _viewSavedRoadmaps,
+            ),
+          ],
+          bottom: _selectedIndex == 0
+              ? ResourcesTabBar(
+                  tabController: _tabController,
+                  selectedIndex: _selectedIndex,
+                )
+              : null,
+        ),
+        body: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(
+              maxWidth: 900,
+            ),
+            child: Column(
+              children: [
+                if (_selectedIndex == 0 || _selectedIndex == 1) ...[
+                  ResourcesSearch(
+                    onSearchComplete: _onSearchComplete,
+                    searchController: _selectedIndex == 0
+                        ? _searchController
+                        : _videoSearchController,
+                    videoSearchController: _videoSearchController,
+                    resourcesService: _resourcesService,
+                    geminiService: _geminiService,
+                  ),
+                  const SizedBox(height: 16),
+                ] else if (_selectedIndex == 2) ...[
+                  ResourcesSearch(
+                    onSearchComplete: _onSearchComplete,
+                    searchController: _searchController,
+                    videoSearchController: _videoSearchController,
+                    resourcesService: _resourcesService,
+                    geminiService: _geminiService,
+                    isRoadmapSearch: true,
+                  ),
+                  const SizedBox(height: 16),
+                  Expanded(
+                    child: RoadmapWidget(roadmap: _roadmap),
+                  ),
+                  const SizedBox(height: 16),
+                ],
+                if (_selectedIndex != 2)
+                  Expanded(
+                    child: ResourcesTabView(
+                      tabController: _tabController,
+                      isLoading: _isLoading,
+                      articles: _articles,
+                      devToArticles: _devToArticles,
+                      videos: _videos,
+                      selectedIndex: _selectedIndex,
+                    ),
+                  ),
+              ],
+            ),
           ),
-          Icon(
-            Icons.map_outlined,
-            size: 30,
-            color: Theme.of(context).colorScheme.primary,
-          ),
-        ],
-        onTap: _onTabSelected,
-        index: _selectedIndex,
-      ),
-    );
-  }
-}
-
-class RoadmapDetailPage extends StatelessWidget {
-  final String roadmapId;
-
-  const RoadmapDetailPage({Key? key, required this.roadmapId}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Roadmap Detail')),
-      body: FutureBuilder<DocumentSnapshot>(
-        future:
-            FirebaseFirestore.instance.collection('roadmaps').doc(roadmapId).get(),
-        builder: (context, snapshot) {
-          if (!snapshot.hasData || !snapshot.data!.exists) {
-            return Center(child: Text('Roadmap not found'));
-          }
-          return Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: RoadmapWidget(roadmap: snapshot.data!['roadmap']),
-          );
-        },
+        ),
+        floatingActionButton: _selectedIndex == 2
+            ? FloatingActionButton(
+                onPressed: () => _saveRoadmap(_roadmap),
+                child: const Icon(Icons.save),
+              )
+            : null,
+        bottomNavigationBar: CurvedNavigationBar(
+          color: Theme.of(context).colorScheme.background,
+          buttonBackgroundColor: Colors.transparent,
+          backgroundColor: Colors.transparent,
+          items: <Widget>[
+            Icon(
+              Icons.article_outlined,
+              size: 30,
+              color: (isDarkMode ? Colors.white : Colors.black),
+            ),
+            Icon(
+              Icons.video_library_outlined,
+              size: 30,
+              color: (isDarkMode ? Colors.white : Colors.black),
+            ),
+            Icon(
+              Icons.map_outlined,
+              size: 30,
+              color: (isDarkMode ? Colors.white : Colors.black),
+            ),
+          ],
+          onTap: _onTabSelected,
+          index: _selectedIndex,
+        ),
       ),
     );
   }

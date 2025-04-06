@@ -30,46 +30,76 @@ class ChatService extends ChangeNotifier {
       },
     );
   }
-
+String getChatRoomID(String userID1, String userID2) {
+  List<String> ids = [userID1, userID2];
+  ids.sort();
+  return ids.join("_");
+}
 //get all users stream except blocked users
 
   Stream<List<Map<String, dynamic>>> getUserStreamExcludingBlocked() {
-    final currentUser = _auth.currentUser;
+  final currentUser = _auth.currentUser;
 
-    return _firestore
-        .collection('users')
-        .doc(currentUser!.uid)
-        .collection('BlockedUsers')
-        .snapshots()
-        .asyncMap((snapshot) async {
-      //get blocked user ids
-      final blockedUsersIds = snapshot.docs.map((doc) => doc.id).toList();
-
-      //get all users
-      final usersSnapshot = await _firestore.collection('users').get();
-      final mentorsSnapshot = await _firestore.collection('mentors').get();
-
-      //Combine all users and mentors
-      final allUsersAndMentors = [
-        ...usersSnapshot.docs.map((doc) => doc.data()..['role'] = "User"),
-        ...mentorsSnapshot.docs.map((doc) => doc.data()..['role'] = "Mentor"),
-      ];
-
-      //return as stream list
-      // return usersSnapshot.docs
-      //     .where((doc) =>
-      //         doc.data()['email'] != currentUser.email &&
-      //         !blockedUsersIds.contains(doc.id))
-      //     .map((doc) => doc.data())
-      //     .toList();
-
-      return allUsersAndMentors
-          .where((user) =>
-              user['email'] != currentUser.email &&
-              !blockedUsersIds.contains(user['uid']))
-          .toList();
-    });
+  if (currentUser == null) {
+    return const Stream.empty(); // Return an empty stream if no user is logged in
   }
+
+  return _firestore
+      .collection('users')
+      .doc(currentUser.uid)
+      .collection('BlockedUsers')
+      .snapshots()
+      .asyncMap((snapshot) async {
+    // Get blocked user IDs
+    final blockedUsersIds = snapshot.docs.map((doc) => doc.id).toList();
+
+    // Get all users
+    final usersSnapshot = await _firestore.collection('users').get();
+    final mentorsSnapshot = await _firestore.collection('mentors').get();
+
+    // Combine all users and mentors
+    final allUsersAndMentors = [
+      ...usersSnapshot.docs.map((doc) {
+        final data = doc.data();
+        data['uid'] = doc.id; // Add UID to user data
+        data['role'] = "User"; // Add role as "User"
+        return data;
+      }),
+      ...mentorsSnapshot.docs.map((doc) {
+        final data = doc.data();
+        data['uid'] = doc.id; // Add UID to mentor data
+        data['role'] = "Mentor"; // Add role as "Mentor"
+        return data;
+      }),
+    ];
+
+    // Filter out blocked users
+    return allUsersAndMentors
+        .where((user) =>
+            user['email'] != currentUser.email &&
+            !blockedUsersIds.contains(user['uid']))
+        .toList();
+  });
+}
+
+Future<int> getUnreadMessageCount(String senderID) async {
+  final String currentUserID = _auth.currentUser!.uid;
+  List<String> ids = [currentUserID, senderID];
+  ids.sort();
+  String chatRoomID = ids.join("_");
+
+  final unreadMessagesSnapshot = await _firestore
+      .collection("chat_rooms")
+      .doc(chatRoomID)
+      .collection("messages")
+      .where("receiverID", isEqualTo: currentUserID)
+      .where("isRead", isEqualTo: false)
+      .get();
+
+  return unreadMessagesSnapshot.docs.length;
+}
+
+
 
   //send message
   Future<void> sendMessage(String receiverID, String message) async {
@@ -81,6 +111,7 @@ class ChatService extends ChangeNotifier {
   final String currentUserID = _auth.currentUser!.uid;
   final String senderEmail = _auth.currentUser!.email!;
   final Timestamp timestamp = Timestamp.now();
+  
 
   Message newMessage = Message(
     senderID: currentUserID,
@@ -88,6 +119,7 @@ class ChatService extends ChangeNotifier {
     receiverID: receiverID, // 
     message: message,
     timestamp: timestamp,
+    isRead: false,
   );
 
   List<String> ids = [currentUserID, receiverID];
