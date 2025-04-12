@@ -1,84 +1,133 @@
-<h1 align="center">🌌 CodeFusion</h1>
-<h3 align="center">✨ Revolutionizing Collaboration for Developers</h3>
+<h1 align="center">🚀 CodeFusion</h1>
+<h3 align="center">🌐 Your Complete Developer Collaboration Platform</h3>
 
 <p align="center">
-  <img src="https://img.shields.io/github/license/harsshad/CodeFusion?style=flat-square" alt="License" />
-  <img src="https://img.shields.io/github/stars/harsshad/CodeFusion?style=social" alt="Stars" />
-  <img src="https://img.shields.io/github/forks/harsshad/CodeFusion?style=social" alt="Forks" />
-</p>
-
-<p align="center">
-  <img src="https://github.com/harsshad/CodeFusion/assets/placeholder.gif" alt="CodeFusion" width="600" />
-</p>
-
----
-
-<p align="center">
-  🚀 <b>Your one-stop platform for developers to connect, learn, and collaborate!</b> 
-</p>
-
----
-
-<h2 align="left">🌟 Features</h2>
-<ul>
-  <li>🗣️ <b>Q&A Forums:</b> Exchange ideas, solve coding challenges, and learn from the community. Find answers to your coding problems and discuss emerging tech trends in a vibrant, supportive environment. </li>
-  <li>🧑‍🏫 <b>Personalized Mentorship:</b> Connect with industry experts for career guidance and technical help. Get one-on-one mentorship tailored to your goals. </li>
-  <li>📚 <b>Resource Library:</b> A curated collection of the best coding tutorials, projects, and references. Stay ahead with the latest tools and techniques. </li>
-  <li>💼 <b>Job Board:</b> Explore job opportunities tailored for developers. Get connected with top recruiters and secure your dream job. </li>
-</ul>
-
----
-
-<h2 align="left">🔧 How CodeFusion Empowers You</h2>
-<p>CodeFusion provides a dynamic ecosystem tailored for developers. From learning new technologies to building professional networks, here’s how each feature transforms your developer journey:</p>
-<ul>
-  <li><b>Collaborative Problem Solving:</b> Use the Q&A forums to get solutions from global peers.</li>
-  <li><b>Skill Enhancement:</b> Leverage our mentorship and resource library to refine your skills.</li>
-  <li><b>Career Advancement:</b> Access job listings and professional growth opportunities.</li>
-  <li><b>Global Networking:</b> Meet developers worldwide through events and webinars.</li>
-  <li><b>Real-Time Updates:</b> Get notifications on the latest trends and technologies in the industry.</li>
-</ul>
-
----
-
-<h2 align="left">🛠️ Contributing</h2>
-<p>We welcome contributions from everyone! Here's how you can contribute:</p>
-<ul>
-  <li>🐛 Report bugs</li>
-  <li>✨ Suggest new features</li>
-  <li>🛠️ Fix issues and submit pull requests</li>
-</ul>
-<p>
-  <b>Check out our <a href="https://github.com/harsshad/CodeFusion/CONTRIBUTING.md" target="_blank">Contributing Guide</a>.</b>
-</p>
-
----
-
-<h2 align="left">🤝 Connect with Us</h2>
-<p align="left">
-  <a href="https://linkedin.com/in/harsshad-sivsharan003" target="blank">
-    <img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/linked-in-alt.svg" alt="LinkedIn" height="30" width="40" />
+  <a href="https://codefusion-f6d69.web.app/" target="_blank">
+    <img src="https://img.shields.io/badge/Live-Demo-success?style=flat-square&logo=vercel&color=brightgreen" />
   </a>
-  <a href="https://instagram.com/the_hashborg011_" target="blank">
-    <img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/instagram.svg" alt="Instagram" height="30" width="40" />
-  </a>
-  <a href="mailto:hexadron003@gmail.com" target="blank">
-    <img align="center" src="https://cdn-icons-png.flaticon.com/512/732/732200.png" alt="Email" height="30" width="40" />
-  </a>
+  <img src="https://img.shields.io/github/license/harsshad/CodeFusion?style=flat-square" />
+  <img src="https://img.shields.io/github/stars/harsshad/CodeFusion?style=social" />
+  <img src="https://img.shields.io/github/forks/harsshad/CodeFusion?style=social" />
 </p>
-
----
-
-<h2 align="left">💖 Support</h2>
-<p>If you like this project, consider supporting us by buying a coffee! ☕</p>
-<a href="https://www.buymeacoffee.com/harsshad" target="_blank">
-  <img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" height="50" width="210" alt="Buy Me a Coffee" />
-</a>
-
----
 
 <p align="center">
-  <img src="https://github-readme-stats.vercel.app/api?username=harsshad&show_icons=true&locale=en" alt="harsshad" />
-  <img src="https://github-readme-streak-stats.herokuapp.com/?user=harsshad" alt="harsshad" />
+  <img src="https://github.com/harsshad/CodeFusion/assets/demo.gif" alt="CodeFusion UI Preview" width="800" />
 </p>
-"# justSomeEngineers" 
+
+---
+
+## 🧠 What is CodeFusion?
+
+> CodeFusion is an all-in-one platform for developers to learn, grow, and collaborate. Whether you're a student, a mentor, or a professional — we've got something for you.
+
+Built with **Flutter + Firebase**, it's cross-platform, modern, and packed with powerful modules — from AI chatbots to mentorship, code Q&A, dev chats, job boards, and resume generation.
+
+---
+
+## 🌟 Features & Modules
+
+### 🏠 Home
+- Showcases **7 latest mentors** (real-time, scrollable).
+- Displays trending **Dev.to articles** via API integration.
+
+### 👨‍💻 Profile Page
+- Users & mentors can view full profiles.
+- Users get an **Edit Profile** option.
+
+### 🤖 CodeMate (AI ChatBot)
+- Integrated with **Gemini API**.
+- Ask code, career, or tech questions.
+
+### ❓ CodeQuery (Q&A)
+- Ask and answer questions.
+- Upload images, links, get **upvotes/downvotes**.
+- Most voted answer appears at the top.
+
+### 🧑‍🏫 DevGuru (Mentorship)
+- Mentors see:
+  - ✅ Mentee Requests
+  - ✅ My Mentees
+  - ✅ Profile Editor
+- Users see:
+  - 🔍 Mentor List with filters (Web Dev, App Dev, etc.)
+  - 📬 Applied Mentors
+- Requests flow with **approval system**.
+
+### 📹 FusionMeet
+- Seamless **video calling** via `Jitsi Meet`.
+- **Only available on mobile platforms**.
+
+### 📚 Resource Library
+- 🔍 Search any tech/language.
+- Tabs:
+  - 📄 **Articles** from Dev.to & Medium.
+  - 🎥 **Videos** from YouTube API.
+  - 🗺️ **Roadmaps** with Save & Manage features.
+
+### 💬 DevChat (Messaging)
+- Real-time 1-on-1 chat.
+- Tab separation: 🧑 Users | 🧑‍🏫 Mentors
+- 🔒 Block & report system included.
+- 🔴 Shows unread message count.
+
+### 📄 Resume Generator
+- Enter details, auto-generate a **professional resume** PDF.
+
+### 💼 Job Board
+- Powered by **LinkedIn API**.
+- Role-based, company-based job search in real-time.
+
+### ⚙️ Settings
+- 🌙 Dark Mode toggle.
+- 👥 View & Unblock users.
+
+### 🔐 Auth System
+- Firebase Auth with:
+  - Email/Password Login
+  - Role-based dashboard
+
+---
+
+## 📲 Hosted Web App
+
+### 🔗 [🌍 View Live Demo](https://codefusion-f6d69.web.app/)
+
+> 💡 Optimized for both Web & Mobile. FusionMeet is mobile-only.
+
+---
+
+## 🔧 Tech Stack
+
+| Layer       | Tech Used                         |
+|-------------|-----------------------------------|
+| 📱 Frontend | Flutter                           |
+| 🔥 Backend  | Firebase (Auth, Firestore, Storage) |
+| 🤖 AI       | Gemini API (for chatbot)          |
+| 📞 Calls     | Jitsi Meet SDK                    |
+| 📡 APIs     | Dev.to, Medium, YouTube, LinkedIn |
+| 📦 State    | Provider                          |
+
+---
+
+## 🧪 Algorithms Used
+
+- 🔎 **Search Filter** for mentor/user search
+- 📥 **StreamBuilder + Firestore Listeners** for real-time updates
+- 🗳️ **Upvote/Downvote Sorting** for Q&A
+- 📤 **Unread Message Tracker** using message metadata
+- 🧠 **Gemini NLP** for chatbot integration
+- 🧮 **Role-Based Access** (Mentor/User-based UI switching)
+
+---
+
+## 🚀 How To Use
+
+```bash
+# 1. Clone the repository
+git clone https://github.com/harsshad/CodeFusion.git
+
+# 2. Open with Flutter-supported IDE (e.g., VSCode)
+
+# 3. Run the app
+flutter run -d chrome # for web
+flutter run -d <device_id> # for mobile
