@@ -178,11 +178,11 @@ class _BotChatScreenState extends State<BotChatScreen>
         crossAxisAlignment: isUser ? CrossAxisAlignment.end : CrossAxisAlignment.start,
         children: [
           FractionallySizedBox(
-            widthFactor: 0.8, // Restrict chat bubble width to 70% of the screen
+            widthFactor: 0.8,
             child: Material(
               color: isUser
-                  ? (isDarkMode ? Colors.blueGrey.shade900 : const Color(0xFFDFD7C2)) // User bubble color
-                  : (isDarkMode ? const Color(0xFFDFD7C2) : Colors.blueGrey.shade900), // Bot bubble color
+                  ? (isDarkMode ? Colors.blueGrey.shade900 : const Color(0xFFDFD7C2))
+                  : (isDarkMode ? const Color(0xFFDFD7C2) : Colors.blueGrey.shade900),
               elevation: 5,
               borderRadius: BorderRadius.only(
                 topLeft: const Radius.circular(20),

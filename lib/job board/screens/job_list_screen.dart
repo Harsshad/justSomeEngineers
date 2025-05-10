@@ -59,7 +59,7 @@ class _JobListScreenState extends State<JobListScreen> {
         backgroundColor: Colors.blueGrey[900],
         actions: [
           IconButton(
-            icon: Icon(Icons.search,),
+            icon: const Icon(Icons.search,),  //what happens if I put a const here and what happens if I dont
             onPressed: () {
               showSearch(
                 context: context,
@@ -84,12 +84,12 @@ class _JobListScreenState extends State<JobListScreen> {
               itemBuilder: (context, index) {
                 final job = filteredJobs[index];
                 return Card(
-                  margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                  margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
                   child: ListTile(
                     title: Text(job.title),
                     subtitle: Text('${job.organization} - ${job.location}'),
                     trailing: IconButton(
-                      icon: Icon(Icons.link),
+                      icon: const Icon(Icons.link),
                       onPressed: () {
                         _launchUrl(Uri.parse(job.url));
                       },
@@ -129,7 +129,7 @@ class JobSearchDelegate extends SearchDelegate {
   List<Widget> buildActions(BuildContext context) {
     return [
       IconButton(
-        icon: Icon(Icons.clear),
+        icon: const Icon(Icons.clear),
         onPressed: () {
           query = '';
         },
@@ -140,7 +140,7 @@ class JobSearchDelegate extends SearchDelegate {
   @override
   Widget buildLeading(BuildContext context) {
     return IconButton(
-      icon: Icon(Icons.arrow_back),
+      icon: const Icon(Icons.arrow_back),
       onPressed: () {
         close(context, null);
       },
@@ -170,7 +170,7 @@ class JobSearchDelegate extends SearchDelegate {
                 title: Text(job.title),
                 subtitle: Text('${job.organization} - ${job.location}'),
                 trailing: IconButton(
-                  icon: Icon(Icons.link),
+                  icon: const Icon(Icons.link),
                   onPressed: () {
                     _launchUrl(Uri.parse(job.url));
                   },

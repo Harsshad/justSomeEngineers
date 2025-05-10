@@ -1,5 +1,8 @@
 name: codefusion
-description: "Start your Journey where Innovators Connect and Opportunities Ignite! 🚀 \nCodeFusion."
+description: "Start your Journey where Innovators Connect and Opportunities
+  Ignite! 🚀\
+
+  CodeFusion."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: "none" # Remove this line if you wish to publish to pub.dev
@@ -72,6 +75,7 @@ dependencies:
   web_socket_client: ^0.1.5
   xml: ^6.5.0
   youtube_explode_dart: ^1.10.0
+  youtube_player_flutter: ^9.1.1
 
 dev_dependencies:
   flutter_lints: ^4.0.0

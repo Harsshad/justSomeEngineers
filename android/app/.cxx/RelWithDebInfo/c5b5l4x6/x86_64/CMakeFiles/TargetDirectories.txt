@@ -1,0 +1,2 @@
+D:/My projects/Flutter/CodeFusion/codefusion/android/app/.cxx/RelWithDebInfo/c5b5l4x6/x86_64/CMakeFiles/edit_cache.dir
+D:/My projects/Flutter/CodeFusion/codefusion/android/app/.cxx/RelWithDebInfo/c5b5l4x6/x86_64/CMakeFiles/rebuild_cache.dir

@@ -9,7 +9,7 @@ class GeminiService {
 
   Future<String> getRoadmap(String query) async {
     final response = await Gemini.instance.prompt(parts: [
-      Part.text('Provide a detailed roadmap for $query. (add spacing between the heading and the content also if possible make the heading bold and make sure to add begin and end the heading with !!!)'),
+      Part.text('Provide a detailed roadmap for $query. (add spacing between the heading and the content also if possible make the heading bold and make sure to add !!! at the beginning and end of the heading )'),
     ]);
 
     if (response != null && response.output!=null) {

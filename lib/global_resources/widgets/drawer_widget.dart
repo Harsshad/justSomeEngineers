@@ -112,19 +112,26 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                       }
                     },
                   ),
-                  GestureDetector(
-                    onDoubleTap: () =>
-                        Navigator.pushNamed(context, '/chat-bot'),
-                    child: ListTile(
+                  // GestureDetector(
+                  //   onDoubleTap: () =>
+                  //       Navigator.pushNamed(context, '/chat-bot'),
+                  //   child: 
+                    ListTile(
                       title: const Text('CodeMate'),
                       leading: const Icon(Icons.smart_toy_outlined),
-                      tileColor: _currentPage == '/temp-job-screen'
-                          ? theme.colorScheme.primary.withOpacity(0.1)
-                          : null,
-                      onTap: () {
-                        navigateToPage('/temp-job-screen');
-                      },
-                    ),
+                      tileColor: _currentPage == '/chat-bot'
+                        ? theme.colorScheme.primary.withOpacity(0.1)
+                        : null,
+                    onTap: () {
+                      navigateToPage('/chat-bot');
+                    },
+                      // tileColor: _currentPage == '/temp-job-screen'
+                      //     ? theme.colorScheme.primary.withOpacity(0.1)
+                      //     : null,
+                      // onTap: () {
+                      //   navigateToPage('/temp-job-screen');
+                      // },
+                    // ),
                   ),
                   ListTile(
                     title: const Text('CodeQuery'),
@@ -286,20 +293,37 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                       navigateToPage('/resume');
                     },
                   ),
-                  GestureDetector(
-                    onDoubleTap: () =>
-                        Navigator.pushNamed(context, '/job-recommend'),
-                    child: ListTile(
+                  // GestureDetector(
+                  //   onDoubleTap: () =>
+                  //       Navigator.pushNamed(context, '/job-recommend'),
+                  //   child: 
+                    ListTile(
                       title: const Text('Job Board'),
                       leading: const Icon(Icons.business_center_rounded),
-                      tileColor: _currentPage == '/temp-job-screen'
-                          ? theme.colorScheme.primary.withOpacity(0.1)
-                          : null,
-                      onTap: () {
-                        navigateToPage('/temp-job-screen');
-                      },
-                    ),
+                      tileColor: _currentPage == '/job-recommend'
+                        ? theme.colorScheme.primary.withOpacity(0.1)
+                        : null,
+                    onTap: () {
+                      navigateToPage('/job-recommend');
+                    },
+                      // tileColor: _currentPage == '/temp-job-screen'
+                      //     ? theme.colorScheme.primary.withOpacity(0.1)
+                      //     : null,
+                      // onTap: () {
+                      //   navigateToPage('/temp-job-screen');
+                      // },
+                    // ),
                   ),
+                  // ListTile(
+                  //   title: const Text('Youtube'),
+                  //   leading: const Icon(Icons.settings),
+                  //   tileColor: _currentPage == '/youtube-home-screen'
+                  //       ? theme.colorScheme.primary.withOpacity(0.1)
+                  //       : null,
+                  //   onTap: () {
+                  //     navigateToPage('/youtube-home-screen');
+                  //   },
+                  // ),
                   ListTile(
                     title: const Text('Settings'),
                     leading: const Icon(Icons.settings),

@@ -2,6 +2,14 @@
 cmake_minimum_required(VERSION 3.14)
 project(codefusion LANGUAGES CXX)
 
+# ✅ Force C++17 compatibility
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+# ✅ Use the correct runtime linking
+set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+
+
 # The name of the executable created for the application. Change this to change
 # the on-disk name of your application.
 set(BINARY_NAME "codefusion")

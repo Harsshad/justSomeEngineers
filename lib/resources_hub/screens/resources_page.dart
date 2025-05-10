@@ -15,6 +15,8 @@ import 'package:codefusion/resources_hub/widgets/resources_tabbar.dart';
 import 'package:codefusion/resources_hub/widgets/resources_tabview.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
+import '../youtube/screens/youtube_home_screen.dart';
+
 class ResourcesPage extends StatefulWidget {
   const ResourcesPage({Key? key}) : super(key: key);
 
@@ -116,7 +118,7 @@ class _ResourcesPageState extends State<ResourcesPage>
                     style: TextStyle(
                       fontWeight:
                           isHeading ? FontWeight.bold : FontWeight.normal,
-                       color: (isDarkMode ? Colors.white :  Colors.black),
+                      color: (isDarkMode ? Colors.white : Colors.black),
                       shadows: isHeading
                           ? [
                               const Shadow(
@@ -228,50 +230,48 @@ class _ResourcesPageState extends State<ResourcesPage>
         ),
         body: Center(
           child: ConstrainedBox(
-            constraints: const BoxConstraints(
-              maxWidth: 900,
-            ),
-            child: Column(
-              children: [
-                if (_selectedIndex == 0 || _selectedIndex == 1) ...[
-                  ResourcesSearch(
-                    onSearchComplete: _onSearchComplete,
-                    searchController: _selectedIndex == 0
-                        ? _searchController
-                        : _videoSearchController,
-                    videoSearchController: _videoSearchController,
-                    resourcesService: _resourcesService,
-                    geminiService: _geminiService,
+            constraints: const BoxConstraints(maxWidth: 900),
+            child: _selectedIndex == 1
+                ? YoutubeHomeScreen()
+                : Column(
+                    children: [
+                      if (_selectedIndex == 0) ...[
+                        ResourcesSearch(
+                          onSearchComplete: _onSearchComplete,
+                          searchController: _searchController,
+                          videoSearchController: _videoSearchController,
+                          resourcesService: _resourcesService,
+                          geminiService: _geminiService,
+                        ),
+                        const SizedBox(height: 16),
+                      ] else if (_selectedIndex == 2) ...[
+                        ResourcesSearch(
+                          onSearchComplete: _onSearchComplete,
+                          searchController: _searchController,
+                          videoSearchController: _videoSearchController,
+                          resourcesService: _resourcesService,
+                          geminiService: _geminiService,
+                          isRoadmapSearch: true,
+                        ),
+                        const SizedBox(height: 16),
+                        Expanded(
+                          child: RoadmapWidget(roadmap: _roadmap),
+                        ),
+                        const SizedBox(height: 16),
+                      ],
+                      if (_selectedIndex != 2)
+                        Expanded(
+                          child: ResourcesTabView(
+                            tabController: _tabController,
+                            isLoading: _isLoading,
+                            articles: _articles,
+                            devToArticles: _devToArticles,
+                            videos: _videos,
+                            selectedIndex: _selectedIndex,
+                          ),
+                        ),
+                    ],
                   ),
-                  const SizedBox(height: 16),
-                ] else if (_selectedIndex == 2) ...[
-                  ResourcesSearch(
-                    onSearchComplete: _onSearchComplete,
-                    searchController: _searchController,
-                    videoSearchController: _videoSearchController,
-                    resourcesService: _resourcesService,
-                    geminiService: _geminiService,
-                    isRoadmapSearch: true,
-                  ),
-                  const SizedBox(height: 16),
-                  Expanded(
-                    child: RoadmapWidget(roadmap: _roadmap),
-                  ),
-                  const SizedBox(height: 16),
-                ],
-                if (_selectedIndex != 2)
-                  Expanded(
-                    child: ResourcesTabView(
-                      tabController: _tabController,
-                      isLoading: _isLoading,
-                      articles: _articles,
-                      devToArticles: _devToArticles,
-                      videos: _videos,
-                      selectedIndex: _selectedIndex,
-                    ),
-                  ),
-              ],
-            ),
           ),
         ),
         floatingActionButton: _selectedIndex == 2
