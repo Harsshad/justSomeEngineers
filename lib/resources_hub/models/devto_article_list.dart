@@ -5,10 +5,12 @@ import 'package:url_launcher/url_launcher.dart';
 class DevToArticleList extends StatelessWidget {
   final List<DevToArticle> devToArticles;
 
-  const DevToArticleList({Key? key, required this.devToArticles}) : super(key: key);
+  const DevToArticleList({Key? key, required this.devToArticles})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return ListView.builder(
       itemCount: devToArticles.length,
       itemBuilder: (context, index) {
@@ -16,9 +18,12 @@ class DevToArticleList extends StatelessWidget {
         return AnimatedContainer(
           duration: const Duration(milliseconds: 300),
           curve: Curves.easeInOut,
-          margin: const EdgeInsets.symmetric(vertical: 8.0),
+          margin: const EdgeInsets.symmetric(
+            vertical: 8.0,
+            horizontal: 18,
+          ),
           decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.background,
+            color: isDark ? Colors.white : Colors.black,
             borderRadius: BorderRadius.circular(12),
             boxShadow: [
               BoxShadow(
@@ -31,7 +36,7 @@ class DevToArticleList extends StatelessWidget {
           child: ListTile(
             title: Text(
               article.title,
-              style:  TextStyle(
+              style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 18,
                 color: Theme.of(context).colorScheme.inversePrimary,

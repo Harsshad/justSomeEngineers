@@ -5,10 +5,10 @@ class ResourcesTabBar extends StatelessWidget implements PreferredSizeWidget {
   final int selectedIndex;
 
   const ResourcesTabBar({
-    Key? key,
+    super.key,
     required this.tabController,
     required this.selectedIndex,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -35,5 +35,5 @@ class ResourcesTabBar extends StatelessWidget implements PreferredSizeWidget {
   }
 
   @override
-  Size get preferredSize => Size.fromHeight(kToolbarHeight);
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }

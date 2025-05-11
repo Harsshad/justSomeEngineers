@@ -9,6 +9,7 @@ class ArticleList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return ListView.builder(
       itemCount: articles.length,
       itemBuilder: (context, index) {
@@ -16,9 +17,10 @@ class ArticleList extends StatelessWidget {
         return AnimatedContainer(
           duration: const Duration(milliseconds: 300),
           curve: Curves.easeInOut,
-          margin: const EdgeInsets.symmetric(vertical: 8.0),
+          margin: const EdgeInsets.symmetric(vertical: 8.0,horizontal: 18),
           decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.background,
+            color: isDark ? Colors.white : Colors.black,
+            // color: Theme.of(context).colorScheme.background,
             borderRadius: BorderRadius.circular(12),
             boxShadow: [
               BoxShadow(
@@ -33,7 +35,8 @@ class ArticleList extends StatelessWidget {
               article.title,
               style: TextStyle(
                 fontWeight: FontWeight.bold,
-                color: Theme.of(context).colorScheme.inversePrimary,
+                color: isDark ? Colors.black : Colors.white,
+                // color: Theme.of(context).colorScheme.inversePrimary,
                 fontSize: 18,
               ),
             ),
@@ -44,7 +47,7 @@ class ArticleList extends StatelessWidget {
                 maxLines: 3,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
-                  color: Theme.of(context).colorScheme.inversePrimary,
+                  color: isDark ? Colors.black : Colors.white,
                 ),
               ),
             ),

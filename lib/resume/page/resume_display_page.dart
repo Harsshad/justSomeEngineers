@@ -1,3 +1,8 @@
+import 'dart:io';
+
+import 'package:codefusion/global_resources/constants/constants.dart';
+import 'package:codefusion/resume/page/pdf_generator.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class ResumeDisplayPage extends StatelessWidget {
@@ -28,6 +33,7 @@ class ResumeDisplayPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool isDark = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -54,76 +60,85 @@ class ResumeDisplayPage extends StatelessWidget {
                       CircleAvatar(
                         radius: 50,
                         backgroundImage: profileImage.isNotEmpty
-                            ? NetworkImage(profileImage)
-                            : const AssetImage('assets/images/default_profile.png')
-                                as ImageProvider,
+                            ? (kIsWeb
+                                    ? NetworkImage(profileImage)
+                                    : FileImage(File(profileImage)))
+                                as ImageProvider
+                            : const AssetImage(Constants.default_profile),
                         backgroundColor: Colors.grey[300],
                       ),
                       const SizedBox(height: 10),
                       Text(
                         fullName,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
-                          color: Colors.black87,
+                          color: isDark ? Colors.white : Colors.black87,
+                          // color: Colors.black87,
                         ),
                       ),
                       const SizedBox(height: 5),
                       Text(
                         currentPosition,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w500,
-                          color: Colors.blueGrey,
+                          color: isDark ? Colors.white : Colors.black87,
+                          // color: Colors.blueGrey,
                         ),
                       ),
                       const SizedBox(height: 10),
                       Text(
                         email,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 16,
-                          color: Colors.blueGrey,
+                          color: isDark ? Colors.white : Colors.black87,
+                          // color: Colors.blueGrey,
                         ),
                       ),
                       const SizedBox(height: 5),
                       Text(
                         address,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 16,
-                          color: Colors.blueGrey,
+                          color: isDark ? Colors.white : Colors.black87,
+                          // color: Colors.blueGrey,
                         ),
                       ),
                     ],
                   ),
                 ),
                 const SizedBox(height: 20),
-          
+
                 // Bio Section
-                const Text(
+                Text(
                   'Bio',
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
-                    color: Colors.black87,
+                    color: isDark ? Colors.white : Colors.black87,
+                    // color: Colors.black87,
                   ),
                 ),
                 const SizedBox(height: 10),
                 Text(
                   bio,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 16,
-                    color: Colors.black54,
+                    color: isDark ? Colors.white : Colors.black87,
+                    // color: Colors.black54,
                   ),
                 ),
                 const SizedBox(height: 20),
-          
+
                 // Experience Section
-                const Text(
+                Text(
                   'Experience',
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
-                    color: Colors.black87,
+                    color: isDark ? Colors.white : Colors.black87,
+                    // color: Colors.black87,
                   ),
                 ),
                 const SizedBox(height: 10),
@@ -131,14 +146,18 @@ class ResumeDisplayPage extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(vertical: 5.0),
                       child: Row(
                         children: [
-                          const Icon(Icons.work, color: Colors.blueGrey, size: 20),
+                          Icon(Icons.work,
+                              // color: Colors.blueGrey,
+                              color: isDark ? Colors.white : Colors.black87,
+                              size: 20),
                           const SizedBox(width: 10),
                           Expanded(
                             child: Text(
                               experience,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 16,
-                                color: Colors.black54,
+                                color: isDark ? Colors.white : Colors.black87,
+                                // color: Colors.black54,
                               ),
                             ),
                           ),
@@ -146,14 +165,15 @@ class ResumeDisplayPage extends StatelessWidget {
                       ),
                     )),
                 const SizedBox(height: 20),
-          
+
                 // Education Section
-                const Text(
+                Text(
                   'Education',
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
-                    color: Colors.black87,
+                    color: isDark ? Colors.white : Colors.black87,
+                    // color: Colors.black87,
                   ),
                 ),
                 const SizedBox(height: 10),
@@ -161,14 +181,18 @@ class ResumeDisplayPage extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(vertical: 5.0),
                       child: Row(
                         children: [
-                          const Icon(Icons.school, color: Colors.blueGrey, size: 20),
+                          Icon(Icons.school,
+                              // color: Colors.blueGrey,
+                              color: isDark ? Colors.white : Colors.black87,
+                              size: 20),
                           const SizedBox(width: 10),
                           Expanded(
                             child: Text(
                               education,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 16,
-                                color: Colors.black54,
+                                color: isDark ? Colors.white : Colors.black87,
+                                // color: Colors.black54,
                               ),
                             ),
                           ),
@@ -176,14 +200,15 @@ class ResumeDisplayPage extends StatelessWidget {
                       ),
                     )),
                 const SizedBox(height: 20),
-          
+
                 // Languages Section
-                const Text(
+                Text(
                   'Languages',
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
-                    color: Colors.black87,
+                    color: isDark ? Colors.white : Colors.black87,
+                    // color: Colors.black87,
                   ),
                 ),
                 const SizedBox(height: 10),
@@ -197,14 +222,15 @@ class ResumeDisplayPage extends StatelessWidget {
                       .toList(),
                 ),
                 const SizedBox(height: 20),
-          
+
                 // Hobbies Section
-                const Text(
+                Text(
                   'Hobbies',
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
-                    color: Colors.black87,
+                    // color: Colors.black87,
+                    color: isDark ? Colors.white : Colors.black87,
                   ),
                 ),
                 const SizedBox(height: 10),
@@ -224,13 +250,37 @@ class ResumeDisplayPage extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
-          // Add functionality to download the resume
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Download functionality coming soon!'),
-            ),
+          generateAndPreviewPdf(
+            fullName: fullName,
+            currentPosition: currentPosition,
+            bio: bio,
+            address: address,
+            experiences: experiences,
+            educationDetails: educationDetails,
+            languages: languages,
+            hobbies: hobbies,
+            email: email,
+            profileImage: profileImage,
+            onComplete: (bool success) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(success
+                      ? 'Preview generated successfully!'
+                      : 'Failed to generate preview.'),
+                ),
+              );
+            },
           );
         },
+
+        // onPressed: () {
+        //   // Add functionality to download the resume
+        //   ScaffoldMessenger.of(context).showSnackBar(
+        //     const SnackBar(
+        //       content: Text('Download functionality coming soon!'),
+        //     ),
+        //   );
+        // },
         label: const Text('Download Resume'),
         icon: const Icon(Icons.download),
         backgroundColor: Colors.blueGrey[900],

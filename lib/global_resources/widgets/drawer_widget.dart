@@ -85,7 +85,8 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                   ),
                   GestureDetector(
                     onDoubleTap: () =>
-                        Navigator.pushNamed(context, '/developer-screen'),
+                        Navigator.pushNamed(context, '/support-page'),
+                        // Navigator.pushNamed(context, '/developer-screen'),
                     child: ListTile(
                       title: const Text('Home'),
                       leading: const Icon(Icons.home),

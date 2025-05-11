@@ -58,11 +58,18 @@ class _ResumeInputPageState extends State<ResumeInputPage> {
     String address = addressController.text.trim();
     String hobbies = hobbiesController.text.trim();
 
-    if (fullName.isEmpty || currentPosition.isEmpty || hobbies.isEmpty) {
+    if (fullName.isEmpty ||
+        email.isEmpty ||
+        currentPosition.isEmpty ||
+        bio.isEmpty ||
+        address.isEmpty ||
+        experienceController.text.trim().isEmpty ||
+        educationController.text.trim().isEmpty ||
+        languagesController.text.trim().isEmpty ||
+        hobbies.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content:
-              Text('Full Name, Current Position, and Hobbies are required!'),
+          content: Text('All fields are required!'),
         ),
       );
       return;
@@ -132,7 +139,6 @@ class _ResumeInputPageState extends State<ResumeInputPage> {
 
   @override
   Widget build(BuildContext context) {
-    
     return Scaffold(
       appBar: _buildAppBar(context),
       body: Center(
@@ -207,7 +213,8 @@ class _ResumeInputPageState extends State<ResumeInputPage> {
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: TextField(
         controller: controller,
-        maxLines: hintText.contains('Enter') || hintText.contains('entries') ? 5 : 1,
+        maxLines:
+            hintText.contains('Enter') || hintText.contains('entries') ? 5 : 1,
         decoration: InputDecoration(
           labelText: hintText,
           border: const OutlineInputBorder(),

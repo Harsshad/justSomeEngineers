@@ -1,4 +1,5 @@
 
+import 'package:codefusion/global_resources/widgets/custom_app_bar.dart';
 import 'package:codefusion/global_resources/widgets/drawer_widget.dart';
 import 'package:codefusion/global_resources/widgets/responsive_layout.dart';
 import 'package:codefusion/news/screens/article_list.dart';
@@ -18,30 +19,31 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
   Widget build(BuildContext context) {
     return ResponsiveLayout(
       mobileLayout: Scaffold(
-        appBar: AppBar(
-          leading: Builder(
-            builder: (context) => IconButton(
-              onPressed: () => Scaffold.of(context).openDrawer(),
-              icon: Icon(
-                Icons.menu,
-                color: Theme.of(context).colorScheme.secondary,
-              ),
-            ),
-          ),
-          centerTitle: true,
-          title: const Text(
-            'CodeFusion',
-            style: TextStyle(fontWeight: FontWeight.bold),
-          ),
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.refresh),
-              onPressed: () {
-                _articleListKey.currentState?.refreshArticles();
-              },
-            ),
-          ],
-        ),
+        appBar:const CustomAppBar(title: 'CodeFusion',showBackButton: false,),
+        // appBar: AppBar(
+        //   leading: Builder(
+        //     builder: (context) => IconButton(
+        //       onPressed: () => Scaffold.of(context).openDrawer(),
+        //       icon: Icon(
+        //         Icons.menu,
+        //         color: Theme.of(context).colorScheme.secondary,
+        //       ),
+        //     ),
+        //   ),
+        //   centerTitle: true,
+        //   title: const Text(
+        //     'CodeFusion',
+        //     style: TextStyle(fontWeight: FontWeight.bold),
+        //   ),
+        //   actions: [
+        //     IconButton(
+        //       icon: const Icon(Icons.refresh),
+        //       onPressed: () {
+        //         _articleListKey.currentState?.refreshArticles();
+        //       },
+        //     ),
+        //   ],
+        // ),
         drawer: const DrawerWidget(),
         body: ArticleList(key: _articleListKey),
       ),

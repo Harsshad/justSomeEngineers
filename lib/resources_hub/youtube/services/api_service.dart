@@ -1,8 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:codefusion/resources_hub/youtube/models/video_model.dart';
-import 'package:codefusion/resources_hub/youtube/utils/keys.dart';
+import 'package:codefusion/config.dart';
 import 'package:http/http.dart' as http;
 
 
@@ -20,7 +19,7 @@ class APIService {
     'maxResults': '20',
     'q': query,
     'type': 'video',
-    'key': API_KEY,
+    'key': Config.yotubeApiKey,
   };
 
   Uri uri = Uri.https(_baseUrl, '/youtube/v3/search', parameters);

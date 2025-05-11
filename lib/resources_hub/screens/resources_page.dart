@@ -277,7 +277,7 @@ class _ResourcesPageState extends State<ResourcesPage>
         floatingActionButton: _selectedIndex == 2
             ? FloatingActionButton(
                 onPressed: () => _saveRoadmap(_roadmap),
-                child: const Icon(Icons.save),
+                child:  Icon(Icons.save,color: isDarkMode ? Colors.white : Colors.black,),
               )
             : null,
         bottomNavigationBar: CurvedNavigationBar(

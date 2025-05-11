@@ -3,10 +3,11 @@ import 'package:flutter/material.dart';
 class RoadmapWidget extends StatelessWidget {
   final String roadmap;
 
-  const RoadmapWidget({Key? key, required this.roadmap}) : super(key: key);
+  const RoadmapWidget({super.key, required this.roadmap});
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     if (roadmap.isEmpty) {
       return Container();
     }
@@ -20,15 +21,17 @@ class RoadmapWidget extends StatelessWidget {
         ),
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 500),
+          margin: const EdgeInsets.symmetric(vertical: 8.0,horizontal: 12),
           curve: Curves.easeInOut,
           decoration: BoxDecoration(
-            color: const Color(0xFF615D52).withOpacity(0.8),
+            // color: const Color(0xFF615D52).withOpacity(0.8),
+            color: isDark ? Colors.white : Colors.black,
             borderRadius: BorderRadius.circular(12),
             boxShadow: [
               BoxShadow(
                 color: Theme.of(context).colorScheme.shadow.withOpacity(0.5),
                 blurRadius: 10,
-                offset: Offset(0, 5),
+                offset: const Offset(0, 5),
               ),
             ],
           ),
@@ -49,7 +52,7 @@ class RoadmapWidget extends StatelessWidget {
         content,
         style: TextStyle(
           fontSize: 16,
-          color: (isDarkMode ? Colors.white : Colors.black),
+          color: (isDarkMode ? Colors.black : Colors.white),
         ),
       );
     }
@@ -63,7 +66,7 @@ class RoadmapWidget extends StatelessWidget {
           text: content.substring(lastMatchEnd, match.start),
           style: TextStyle(
             fontSize: 16,
-            color: (isDarkMode ? Colors.white : Colors.black),
+            color: (isDarkMode ? Colors.black : Colors.white),
           ),
         ));
       }
@@ -72,7 +75,7 @@ class RoadmapWidget extends StatelessWidget {
         style: TextStyle(
           fontSize: 16,
           fontWeight: FontWeight.bold,
-          color: (isDarkMode ? Colors.white : Colors.black),
+          color: (isDarkMode ? Colors.black : Colors.white),
         ),
       ));
       lastMatchEnd = match.end;
@@ -83,7 +86,7 @@ class RoadmapWidget extends StatelessWidget {
         text: content.substring(lastMatchEnd),
         style: TextStyle(
           fontSize: 16,
-          color: (isDarkMode ? Colors.white : Colors.black),
+          color: (isDarkMode ? Colors.black : Colors.white),
         ),
       ));
     }

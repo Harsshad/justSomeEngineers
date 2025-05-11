@@ -52,7 +52,7 @@ class ResourcesTabView extends StatelessWidget {
                                 child: Container(
                                   height: 180,
                                   width: double.infinity,
-                                  color: Colors.grey[300],
+                                  color: Colors.red[300],
                                 ),
                               ),
                               Padding(
@@ -116,6 +116,7 @@ class ResourcesTabView extends StatelessWidget {
                         return Column(
                           children: [
                             Card(
+                              
                               margin: const EdgeInsets.only(bottom: 22),
                               elevation: 4,
                               shape: RoundedRectangleBorder(

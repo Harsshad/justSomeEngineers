@@ -1,8 +1,6 @@
 name: codefusion
 description: "Start your Journey where Innovators Connect and Opportunities
-  Ignite! 🚀\
-
-  CodeFusion."
+  Ignite! 🚀 CodeFusion."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: "none" # Remove this line if you wish to publish to pub.dev
@@ -65,10 +63,14 @@ dependencies:
   intl: ^0.20.1
   jitsi_meet_wrapper: ^0.2.0+1
   lottie: ^3.0.0
+  path_provider: ^2.1.5
+  pdf: ^3.11.3
   photo_view: ^0.15.0
+  printing: ^5.14.2
   provider: ^6.1.2
   skeletonizer: ^1.4.2
   table_calendar: ^3.2.0
+  universal_html: ^2.2.4
   url_launcher: ^6.3.1
   uuid: ^4.5.1
   vertical_card_pager: ^1.6.3
@@ -103,6 +105,7 @@ flutter:
     - assets/images/default_profile.png
     - assets/images/default_banner.png
     - assets/images/default_coder_banner.png
+    - assets/images/support.jpeg
     - assets/gifs/laptop_gif.json
     - assets/gifs/profile_gif.json
   #   - images/a_dot_ham.jpeg
