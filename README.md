@@ -27,7 +27,7 @@
 
 <p align="center">
   <a href="https://codefusion-f6d69.web.app/" target="_blank">
-    <img src="assets/images/logo.png" height="50" width="210" alt="Launch CodeFusion" />
+    <img src="assets/images/logo.png" height="120" width="140" alt="Launch CodeFusion" />
   </a>
 </p>
 
