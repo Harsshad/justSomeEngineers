@@ -1,5 +1,5 @@
 <h1 align="center">
-  <img src="assets/icons/Fusion.png" width="36px" />
+  <img src="assets/images/logo.png" width="36px" /><br>
   Welcome to <span style="color:#00BFA6;">CodeFusion</span>
 </h1>
 
@@ -27,7 +27,7 @@
 
 <p align="center">
   <a href="https://codefusion-f6d69.web.app/" target="_blank">
-    <img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" height="50" width="210" alt="Launch CodeFusion" />
+    <img src="assets/images/logo.png" height="50" width="210" alt="Launch CodeFusion" />
   </a>
 </p>
 
