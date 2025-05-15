@@ -360,6 +360,16 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                       navigateToPage('/support-page');
                     },
                   ),
+                  ListTile(
+                    title: const Text('Mentor Approval'),
+                    leading: const Icon(Icons.code),
+                    tileColor: _currentPage == '/mentor-approval-screen'
+                        ? theme.colorScheme.primary.withOpacity(0.1)
+                        : null,
+                    onTap: () {
+                      navigateToPage('/mentor-approval-screen');
+                    },
+                  ),
                 ],
               ),
             ),

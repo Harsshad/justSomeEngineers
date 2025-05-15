@@ -143,7 +143,7 @@ class _MentorFormsState extends State<MentorForms> {
 
             DocumentSnapshot mentorSnapshot =
                 await transaction.get(mentorDocRef);
-            Navigator.pushNamed(context, '/onboard-screen');
+            Navigator.pushNamed(context, '/mentor-approval-screen');
             // Navigator.pushNamed(context, '/main-home');
             if (mentorSnapshot.exists) {
               transaction.update(mentorDocRef, mentorData);
