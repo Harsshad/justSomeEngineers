@@ -11,6 +11,7 @@ import 'package:codefusion/mentorship/screens/mentees_list_screen.dart';
 import 'package:codefusion/mentorship/screens/mentor_profile_page.dart';
 import 'package:codefusion/resources_hub/youtube/screens/youtube_home_screen.dart';
 import 'package:codefusion/screens/developer_screen.dart';
+import 'package:codefusion/screens/onboarding_screen.dart';
 import 'package:codefusion/screens/support_page.dart';
 import 'package:codefusion/screens/temp_job_screen.dart';
 import 'package:flutter/material.dart';
@@ -71,6 +72,7 @@ Map<String, WidgetBuilder> getAppRoutes() {
     '/user-chat-screen': (context) =>  ChatScreen(),
     '/youtube-home-screen': (context) =>  YoutubeHomeScreen(),
     '/support-page': (context) =>  SupportPage(),
+    '/onboard-screen': (context) =>  OnboardingScreen(),
 
 
     

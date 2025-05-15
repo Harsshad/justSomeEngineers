@@ -79,6 +79,7 @@ class _UserProfileFormState extends State<UserProfileForm> {
         // Save user details
         await UserService.saveUserDetails(
           user.uid,
+          'user',
           fullNameController.text,
           roleController.text,
           githubController.text,
@@ -94,7 +95,8 @@ class _UserProfileFormState extends State<UserProfileForm> {
           const SnackBar(content: Text('Profile updated successfully!')),
         );
 
-        Navigator.pushNamed(context, '/main-home');
+        Navigator.pushNamed(context, '/onboard-screen');
+        // Navigator.pushNamed(context, '/main-home');
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Error: $e')),
@@ -207,7 +209,7 @@ class _UserProfileFormState extends State<UserProfileForm> {
                     )
                   : (_bgBannerImageUrl != null
                       ? DecorationImage(
-                          image: NetworkImage(_bgBannerImageUrl!),
+                          image: AssetImage(_bgBannerImageUrl!),
                           fit: BoxFit.cover,
                         )
                       : null),
@@ -229,7 +231,7 @@ class _UserProfileFormState extends State<UserProfileForm> {
               backgroundImage: _profileImage != null
                   ? MemoryImage(_profileImage!)
                   : (_profileImageUrl != null
-                      ? NetworkImage(_profileImageUrl!)
+                      ? AssetImage(_profileImageUrl!)
                       : const AssetImage(Constants.default_profile) as ImageProvider),
               child: _profileImage == null && _profileImageUrl == null
                   ? const Icon(Icons.add_a_photo, size: 30, color: Colors.white)

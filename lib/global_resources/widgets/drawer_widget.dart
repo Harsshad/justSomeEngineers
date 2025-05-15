@@ -325,7 +325,11 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                   //     navigateToPage('/youtube-home-screen');
                   //   },
                   // ),
-                  ListTile(
+                  GestureDetector(
+                    onDoubleTap: () =>
+                        Navigator.pushNamed(context, '/developer-screen'),
+                        // Navigator.pushNamed(context, '/developer-screen'),
+                    child: ListTile(
                     title: const Text('Settings'),
                     leading: const Icon(Icons.settings),
                     tileColor: _currentPage == '/settings'
@@ -333,6 +337,27 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                         : null,
                     onTap: () {
                       navigateToPage('/settings');
+                    },
+                  ),
+                  ),
+                  ListTile(
+                    title: const Text('Intro Screen'),
+                    leading: const Icon(Icons.interests_rounded),
+                    tileColor: _currentPage == '/onboard-screen'
+                        ? theme.colorScheme.primary.withOpacity(0.1)
+                        : null,
+                    onTap: () {
+                      navigateToPage('/onboard-screen');
+                    },
+                  ),
+                  ListTile(
+                    title: const Text('Dev Support'),
+                    leading: const Icon(Icons.code),
+                    tileColor: _currentPage == '/support-page'
+                        ? theme.colorScheme.primary.withOpacity(0.1)
+                        : null,
+                    onTap: () {
+                      navigateToPage('/support-page');
                     },
                   ),
                 ],

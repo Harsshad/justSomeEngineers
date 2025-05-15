@@ -143,7 +143,7 @@ class _UserProfileState extends State<UserProfile> {
             end: Alignment.bottomRight,
           ),
           image: DecorationImage(
-            image: NetworkImage(bgBannerImageUrl ?? Constants.default_banner),
+            image: AssetImage(bgBannerImageUrl ?? Constants.default_banner),
             fit: BoxFit.cover,
             opacity: 0.3, // Adjust opacity to make background image subtle
           ),

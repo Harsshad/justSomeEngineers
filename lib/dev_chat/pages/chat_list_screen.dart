@@ -195,8 +195,10 @@ class _ChatScreenState extends State<ChatScreen>
         var users = snapshot.data!
             .where((user) =>
                 (showMentors
-                    ? user["role"] == "Mentor"
-                    : user["role"] == "User") &&
+                    ? user["usertype"] == "Mentor"
+                    : user["usertype"] == "User")
+                // : user["role"] == "User")
+                &&
                 user["email"] != _authService.getCurrentUser()?.email &&
                 (user["fullName"]
                         ?.toLowerCase()
@@ -223,101 +225,101 @@ class _ChatScreenState extends State<ChatScreen>
   }
 
   // User List Tile
- Widget _buildUserListItem(Map<String, dynamic> userData) {
-  final currentUserID = _authService.getCurrentUser()?.uid;
+  Widget _buildUserListItem(Map<String, dynamic> userData) {
+    final currentUserID = _authService.getCurrentUser()?.uid;
 
-  return StreamBuilder<QuerySnapshot>(
-    stream: FirebaseFirestore.instance
-        .collection("chat_rooms")
-        .doc(_chatService.getChatRoomID(currentUserID!, userData["uid"]))
-        .collection("messages")
-        .where("receiverID", isEqualTo: currentUserID)
-        .where("isRead", isEqualTo: false)
-        .snapshots(),
-    builder: (context, snapshot) {
-      int unreadCount = 0;
+    return StreamBuilder<QuerySnapshot>(
+      stream: FirebaseFirestore.instance
+          .collection("chat_rooms")
+          .doc(_chatService.getChatRoomID(currentUserID!, userData["uid"]))
+          .collection("messages")
+          .where("receiverID", isEqualTo: currentUserID)
+          .where("isRead", isEqualTo: false)
+          .snapshots(),
+      builder: (context, snapshot) {
+        int unreadCount = 0;
 
-      if (snapshot.hasData) {
-        unreadCount = snapshot.data!.docs.length;
-      }
+        if (snapshot.hasData) {
+          unreadCount = snapshot.data!.docs.length;
+        }
 
-      return InkWell(
-        onTap: () {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => UserChatPage(
-                  receiverName:
-                      userData["fullName"] ?? userData["email"] ?? 'No data',
-                  receiverID: userData["uid"] ?? "Invalid Mentor ID",
-                ),
-              ),
-            );
-          });
-        },
-        child: Container(
-          margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
-          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-          decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.secondary,
-            borderRadius: BorderRadius.circular(12),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.15),
-                blurRadius: 6,
-                spreadRadius: 2,
-                offset: const Offset(2, 3),
-              ),
-            ],
-          ),
-          child: Row(
-            children: [
-              CircleAvatar(
-                radius: 28,
-                backgroundColor: Colors.grey[300],
-                backgroundImage: userData["profileImage"] != null &&
-                        userData["profileImage"].isNotEmpty
-                    ? NetworkImage(userData["profileImage"])
-                    : const AssetImage('assets/images/default_profile.png')
-                        as ImageProvider,
-                onBackgroundImageError: (_, __) {
-                  debugPrint('Failed to load profile image');
-                },
-              ),
-              const SizedBox(width: 15),
-              Expanded(
-                child: Text(
-                  userData["fullName"] ?? userData["email"] ?? 'No data',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Theme.of(context).colorScheme.inversePrimary,
+        return InkWell(
+          onTap: () {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => UserChatPage(
+                    receiverName:
+                        userData["fullName"] ?? userData["email"] ?? 'No data',
+                    receiverID: userData["uid"] ?? "Invalid Mentor ID",
                   ),
-                  overflow: TextOverflow.ellipsis,
                 ),
-              ),
-              if (unreadCount > 0)
-                Container(
-                  padding: const EdgeInsets.all(6),
-                  decoration: BoxDecoration(
-                    color: Colors.red,
-                    shape: BoxShape.circle,
-                  ),
+              );
+            });
+          },
+          child: Container(
+            margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
+            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.secondary,
+              borderRadius: BorderRadius.circular(12),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.15),
+                  blurRadius: 6,
+                  spreadRadius: 2,
+                  offset: const Offset(2, 3),
+                ),
+              ],
+            ),
+            child: Row(
+              children: [
+                CircleAvatar(
+                  radius: 28,
+                  backgroundColor: Colors.grey[300],
+                  backgroundImage: userData["profileImage"] != null &&
+                          userData["profileImage"].isNotEmpty
+                      ? NetworkImage(userData["profileImage"])
+                      : const AssetImage(Constants.default_profile)
+                          as ImageProvider,
+                  onBackgroundImageError: (_, __) {
+                    debugPrint('Failed to load profile image');
+                  },
+                ),
+                const SizedBox(width: 15),
+                Expanded(
                   child: Text(
-                    unreadCount.toString(),
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 12,
+                    userData["fullName"] ?? userData["email"] ?? 'No data',
+                    style: TextStyle(
+                      fontSize: 16,
                       fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.inversePrimary,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                if (unreadCount > 0)
+                  Container(
+                    padding: const EdgeInsets.all(6),
+                    decoration: const BoxDecoration(
+                      color: Colors.red,
+                      shape: BoxShape.circle,
+                    ),
+                    child: Text(
+                      unreadCount.toString(),
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
-                ),
-            ],
+              ],
+            ),
           ),
-        ),
-      );
-    },
-  );
-}
+        );
+      },
+    );
+  }
 }

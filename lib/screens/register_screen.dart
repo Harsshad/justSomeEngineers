@@ -21,10 +21,8 @@ class RegisterScreen extends StatelessWidget {
 
   //register function
   void register(BuildContext context) async {
-    //get auth service
     final _auth = AuthService();
 
-    //password match -> create new user
     if (_passwordController.text == _confirmPwController.text) {
       try {
         await _auth.signUpWithEmailPassword(
@@ -32,9 +30,8 @@ class RegisterScreen extends StatelessWidget {
           _passwordController.text,
           _fullNameController.text,
         );
-        // Navigate to user profile form after successful registration
+
         Navigator.pushReplacementNamed(context, '/user-profile-form');
-        // print('user registered successfully');
       } catch (e) {
         showDialog(
           context: context,
@@ -43,9 +40,7 @@ class RegisterScreen extends StatelessWidget {
           ),
         );
       }
-    }
-    //passwords don't match -> show error
-    else {
+    } else {
       showDialog(
         context: context,
         builder: (context) => const AlertDialog(

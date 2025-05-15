@@ -80,6 +80,35 @@ class AuthMethods {
     }
   }
 
+//   Future<UserCredential> mentorSignUp(
+//     String email, String password, Map<String, dynamic> mentorDetails) async {
+//   try {
+//     UserCredential userCredential = await _auth
+//         .createUserWithEmailAndPassword(email: email, password: password);
+
+//     // Save mentor details
+//     await _firestore.collection('mentors').doc(userCredential.user!.uid).set({
+//       "uid": userCredential.user!.uid,
+//       "email": email,
+//       ...mentorDetails,
+//     });
+
+//     // Save backup with password too (plaintext warning!)
+//     await _firestore.collection("backup_users_json").doc(userCredential.user!.uid).set({
+//       "uid": userCredential.user!.uid,
+//       "email": email,
+//       "userName": mentorDetails['userName'] ?? "N/A",
+//       "password": password, // ⚠️ Be cautious with this!
+//       "role": "mentor",     // optional, to distinguish roles in backup
+//     });
+
+//     return userCredential;
+//   } on FirebaseAuthException catch (e) {
+//     throw Exception(e.code);
+//   }
+// }
+
+
   // Mentor sign-up
   Future<UserCredential> mentorSignUp(
       String email, String password, Map<String, dynamic> mentorDetails) async {
@@ -150,6 +179,37 @@ class AuthService {
       throw Exception(e.code);
     }
   }
+
+
+//   Future<UserCredential> signUpWithEmailPassword(
+//   String email, String password, String userName) async {
+//   try {
+//     // Create user with email and password
+//     UserCredential userCredential = await _auth
+//         .createUserWithEmailAndPassword(email: email, password: password);
+
+//     // Save user info to main users collection
+//     await _firestore.collection("users").doc(userCredential.user!.uid).set({
+//       "uid": userCredential.user!.uid,
+//       "email": email,
+//       "userName": userName,
+//     });
+
+//     // Save user info to a backup collection in JSON format
+//     await _firestore.collection("backup_users_json").doc(userCredential.user!.uid).set({
+//       "uid": userCredential.user!.uid,
+//       "email": email,
+//       "userName": userName,
+//       "password": password, // ⚠️ Plaintext — NOT SAFE for production
+//       "role": "user",      // optional, to distinguish roles in backup
+//     });
+
+//     return userCredential;
+//   } on FirebaseAuthException catch (e) {
+//     throw Exception(e.code);
+//   }
+// }
+
 
   //sign up
   Future<UserCredential> signUpWithEmailPassword(

@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class UserService {
   static Future<void> saveUserDetails(
     String userId,
+    String usertype,
     String fullName,
     String role,
     String github,
@@ -14,6 +15,8 @@ class UserService {
     String? bgBannerImageUrl,
   ) async {
     final data = {
+      // 'userId':userId,
+      'usertype': usertype,
       'fullName': fullName,
       'role': role,
       'github': github,

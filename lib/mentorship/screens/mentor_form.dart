@@ -122,6 +122,7 @@ class _MentorFormsState extends State<MentorForms> {
       if (user != null) {
         Map<String, dynamic> mentorData = {
           'uid': user.uid,
+          'usertype': 'mentor',
           'role': role,
           'experience': experience,
           'expertise': expertise,
@@ -142,7 +143,8 @@ class _MentorFormsState extends State<MentorForms> {
 
             DocumentSnapshot mentorSnapshot =
                 await transaction.get(mentorDocRef);
-            Navigator.pushNamed(context, '/main-home');
+            Navigator.pushNamed(context, '/onboard-screen');
+            // Navigator.pushNamed(context, '/main-home');
             if (mentorSnapshot.exists) {
               transaction.update(mentorDocRef, mentorData);
             } else {
@@ -193,7 +195,8 @@ class _MentorFormsState extends State<MentorForms> {
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
-                      const SizedBox(height: 20), // Add spacing above CircleAvatar
+                      const SizedBox(
+                          height: 20), // Add spacing above CircleAvatar
                       Stack(
                         children: [
                           GestureDetector(
@@ -241,7 +244,8 @@ class _MentorFormsState extends State<MentorForms> {
                       const SizedBox(height: 16),
                       const Text(
                         "Upload an Image ",
-                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 16),
                       ),
                       const SizedBox(height: 16),
                       ..._buildFormFields(),
@@ -257,7 +261,8 @@ class _MentorFormsState extends State<MentorForms> {
                       ElevatedButton(
                         onPressed: _saveDetails,
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Theme.of(context).colorScheme.primary,
+                          backgroundColor:
+                              Theme.of(context).colorScheme.primary,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
@@ -271,11 +276,10 @@ class _MentorFormsState extends State<MentorForms> {
                             style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
-                              color: (isDarkMode ? Colors.white :  Colors.black),
+                              color: (isDarkMode ? Colors.white : Colors.black),
                             ),
                           ),
                         ),
-                        
                       ),
                       const SizedBox(height: 90),
                     ],
